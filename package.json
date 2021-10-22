@@ -1,5 +1,6 @@
 {
   "workspaces": [
-    "packages/prismic-next"
+    "package",
+    "examples/preview"
   ]
 }
