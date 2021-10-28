@@ -2,9 +2,6 @@
 	"name": "prismic-next",
 	"version": "0.0.0",
 	"description": "Prismic library for NextJS",
-	"workspaces": [
-		"example"
-	],
 	"keywords": [
 		"typescript",
 		"prismic"
