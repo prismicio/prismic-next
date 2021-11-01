@@ -1,3 +1,7 @@
+import { NextApiResponse, NextApiRequest } from "next";
+import { LinkResolverFunction } from "@prismicio/helpers";
+import { Client } from "@prismicio/client";
+
 /**
  * TODO
  * Create preview endpoint config
@@ -5,21 +9,28 @@
  * import nextJS types for req and res
  */
 
-export async function prismicNextPreview({ req, res, Client, linkResolver }) {
-	const { token: ref, documentId } = req.query;
+export type PreviewConfig = {
+	req: NextApiRequest;
+	res: NextApiResponse;
+	client: Client;
+	linkResolver: LinkResolverFunction;
+};
 
-	const redirectUrl = await Client(req)
-		.getPreviewResolver(ref, documentId)
-		.resolve(linkResolver, "/");
+export async function createPreviewEndpoint({
+	req,
+	res,
+	client,
+	linkResolver,
+}: PreviewConfig) {
+	const { token: ref } = req.query;
 
-	if (!redirectUrl) {
-		return res.status(401).json({ message: "Invalid token" });
-	}
+	await client.enableAutoPreviewsFromReq(req);
+
+	const previewUrl = await client.resolvePreviewURL({
+		linkResolver,
+		defaultURL: "/",
+	});
 
 	res.setPreviewData({ ref });
-
-	// Redirect the user to the share endpoint from same origin. This is
-	// necessary due to a Chrome bug:
-	// https://bugs.chromium.org/p/chromium/issues/detail?id=696204
-	res.redirect(redirectUrl);
+	await res.redirect(previewUrl);
 }

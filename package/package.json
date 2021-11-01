@@ -44,9 +44,6 @@
 		"test": "npm run lint && npm run unit",
 		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
 	},
-	"dependencies": {
-		"example": "^0.1.0"
-	},
 	"devDependencies": {
 		"@prismicio/client": "^6.0.0-beta.0",
 		"@prismicio/types": "^0.1.13",
