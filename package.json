@@ -1,6 +1,9 @@
 {
   "workspaces": [
     "package",
-    "examples/preview"
-  ]
+    "example"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workshop=package"
+  }
 }
