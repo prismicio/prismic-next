@@ -14,10 +14,8 @@ export async function createPreviewEndpoint({
 	res,
 	client,
 	linkResolver,
-}: PreviewConfig) {
+}: PreviewConfig): Promise<void> {
 	const { token: ref } = req.query;
-
-	console.log({ ref });
 
 	client.enableAutoPreviewsFromReq(req);
 
