@@ -4,6 +4,7 @@
     "example"
   ],
   "scripts": {
-    "dev": "npm run dev --workshop=package"
+    "dev:example": "npm run dev -w example",
+    "dev:package": "npm run dev -w package"
   }
 }
