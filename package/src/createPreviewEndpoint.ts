@@ -25,5 +25,6 @@ export async function createPreviewEndpoint({
 	});
 
 	res.setPreviewData({ ref });
+
 	await res.redirect(previewUrl);
 }
