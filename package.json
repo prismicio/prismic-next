@@ -1,0 +1,10 @@
+{
+  "workspaces": [
+    "package",
+    "example"
+  ],
+  "scripts": {
+    "dev:example": "npm run dev -w example",
+    "dev:package": "npm run dev -w package"
+  }
+}
