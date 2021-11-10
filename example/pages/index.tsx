@@ -25,16 +25,6 @@ export async function getStaticProps(context: NextPageContext) {
 }
 
 const Home: NextPage = (props) => {
-  useEffect(() => {
-    updateNextPreview();
-
-    if (window) {
-      window.addEventListener('prismicPreviewEnd', async (event: Event) => {
-        fetch('/api/exit-preview');
-      });
-    }
-  });
-
   return (
     <div className={styles.container}>
       <Head>

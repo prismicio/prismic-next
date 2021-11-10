@@ -1,21 +1,44 @@
-import React, { createContext, useContext } from "react";
+import React, { useEffect } from "react";
 
-export const PreviewContext = createContext({});
-
-type PreviewProviderConfig = {
+type PrismicPreviewConfig = {
 	repoName: string;
 	children: React.ReactChild[] | React.ReactChild;
 };
 
-export function PreviewProvider({ repoName, children }: PreviewProviderConfig) {
+// TODO: removeEventListener for when component unmounts
+// TODO: No need for this to be a Provider, make it a component
+
+export function PrismicPreview({ repoName, children }: PrismicPreviewConfig) {
+	useEffect(() => {
+		if (window) {
+			window.addEventListener("prismicPreviewUpdate", async (event: Event) => {
+				console.log("update fires");
+				// Prevent the toolbar from reloading the page.
+				event.preventDefault();
+
+				const detail = (event as CustomEvent<{ ref: string }>).detail;
+
+				// Update the preview cookie.
+				await fetch(`/api/preview?token=${detail.ref}`);
+
+				// Reload the page with the updated token.
+				window.location.reload();
+			});
+
+			window.addEventListener("prismicPreviewEnd", async (event: Event) => {
+				console.log("exit fires");
+				fetch("/api/exit-preview");
+			});
+		}
+	}, []);
 	return (
-		<PreviewContext.Provider value={repoName}>
+		<React.Fragment>
 			<script
 				async
 				defer
 				src={`https://static.cdn.prismic.io/prismic.js?new=true&repo=${repoName}`}
 			></script>
 			{children}
-		</PreviewContext.Provider>
+		</React.Fragment>
 	);
 }

@@ -1,5 +1,4 @@
 import test from "ava";
-import { NextApiRequest, NextApiResponse } from "next";
 import * as sinon from "sinon";
 import * as prismic from "@prismicio/client";
 import * as msw from "msw";
