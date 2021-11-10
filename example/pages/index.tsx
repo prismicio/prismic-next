@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import type { NextPage, NextPageContext } from 'next';
+import type { GetStaticPropsContext, NextPage, NextPageContext } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
@@ -7,13 +7,8 @@ import { createClient } from '../prismic-config';
 import { asText } from '@prismicio/helpers';
 import { updateNextPreview, exitPreview } from 'prismic-next';
 
-export async function getStaticProps(context: NextPageContext) {
-  const { previewData } = context;
-
-  const client = createClient();
-  if (previewData?.ref) {
-    client.queryContentFromRef(previewData.ref);
-  }
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const client = createClient(context);
 
   const home = await client.getByUID('page', 'home');
 
