@@ -6,7 +6,6 @@ type PrismicPreviewConfig = {
 };
 
 // TODO: removeEventListener for when component unmounts
-// TODO: No need for this to be a Provider, make it a component
 
 export function PrismicPreview({ repoName, children }: PrismicPreviewConfig) {
 	useEffect(() => {
@@ -26,7 +25,6 @@ export function PrismicPreview({ repoName, children }: PrismicPreviewConfig) {
 			});
 
 			window.addEventListener("prismicPreviewEnd", async (event: Event) => {
-				console.log("exit fires");
 				fetch("/api/exit-preview");
 			});
 		}

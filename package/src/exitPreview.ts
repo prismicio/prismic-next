@@ -1,6 +1,11 @@
 import { NextApiResponse } from "next";
 
-export async function exitPreview(_: any, res: NextApiResponse) {
+export type ExitPreviewParams = {
+	res: NextApiResponse;
+	_: any;
+};
+
+export async function exitPreview(_: any, res: NextApiResponse): Promise<void> {
 	// Exit the current user from "Preview Mode". This function accepts no args.
 	res.clearPreviewData();
 
