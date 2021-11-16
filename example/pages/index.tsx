@@ -5,10 +5,9 @@ import Image from 'next/image';
 import styles from '../styles/Home.module.css';
 import { createClient } from '../prismic-config';
 import { asText } from '@prismicio/helpers';
-import { updateNextPreview, exitPreview } from 'prismic-next';
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const client = createClient(context);
+  const client = createClient({ context });
 
   const home = await client.getByUID('page', 'home');
 

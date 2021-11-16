@@ -5,10 +5,7 @@ import * as msw from "msw";
 import * as mswNode from "msw/node";
 import fetch from "node-fetch";
 
-import {
-	createPreviewEndpoint,
-	PreviewConfig,
-} from "../src/createPreviewEndpoint";
+import { createPreviewEndpoint, PreviewConfig } from "../src/setPreviewData";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));

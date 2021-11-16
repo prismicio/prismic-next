@@ -3,11 +3,18 @@ import React, { useEffect } from "react";
 type PrismicPreviewConfig = {
 	repoName: string;
 	children: React.ReactChild[] | React.ReactChild;
+	updatePreviewURL?: string;
+	exitPreviewURL?: string;
 };
 
 // TODO: removeEventListener for when component unmounts
 
-export function PrismicPreview({ repoName, children }: PrismicPreviewConfig) {
+export function PrismicPreview({
+	repoName,
+	children,
+	updatePreviewURL = "/api/preview",
+	exitPreviewURL = "/api/exit-preview",
+}: PrismicPreviewConfig) {
 	useEffect(() => {
 		if (window) {
 			window.addEventListener("prismicPreviewUpdate", async (event: Event) => {
@@ -18,14 +25,14 @@ export function PrismicPreview({ repoName, children }: PrismicPreviewConfig) {
 				const detail = (event as CustomEvent<{ ref: string }>).detail;
 
 				// Update the preview cookie.
-				await fetch(`/api/preview?token=${detail.ref}`);
+				await fetch(`${updatePreviewURL}?token=${detail.ref}`);
 
 				// Reload the page with the updated token.
 				window.location.reload();
 			});
 
 			window.addEventListener("prismicPreviewEnd", async (event: Event) => {
-				fetch("/api/exit-preview");
+				fetch(exitPreviewURL);
 			});
 		}
 	}, []);
