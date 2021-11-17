@@ -1,15 +1,16 @@
 import { NextApiResponse } from "next";
 
 export type ExitPreviewParams = {
-	res: NextApiResponse;
-	_: any;
+	res: {
+		clearPreviewData: NextApiResponse["clearPreviewData"];
+	};
 };
 
-export async function exitPreview(_: any, res: NextApiResponse): Promise<void> {
+export async function exitPreview(config: ExitPreviewParams): Promise<void> {
 	// Exit the current user from "Preview Mode". This function accepts no args.
-	res.clearPreviewData();
+	config.res.clearPreviewData();
 
 	// Redirect the user back to the index page.
-	res.writeHead(307, { Location: "/" });
-	res.end();
+	// config.res.writeHead(307, { Location: "/" });
+	// config.res.end();
 }
