@@ -2,10 +2,9 @@ import test from "ava";
 import * as sinon from "sinon";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
-import fetch from "node-fetch";
 
 import { exitPreview } from "../src/exitPreview";
-import { NextApiResponse } from "next";
+import { ExitPreviewParams } from "../src/exitPreview";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -14,16 +13,10 @@ test.after(() => server.close());
 test("exitPreview runs clearPreviewData", async (t) => {
 	// const res: NextApiResponse = { clearPreviewData: sinon.stub() };
 
-	type ExitPreviewParams = {
-		res: NextApiResponse;
-		_: any;
-	};
-
-	const params = {
+	const config: ExitPreviewParams = {
 		res: {
 			clearPreviewData: sinon.stub(),
 		},
-		_: "",
 	};
 	server.use(
 		msw.rest.get("qwerty", (req, res, ctx) => {
@@ -31,5 +24,7 @@ test("exitPreview runs clearPreviewData", async (t) => {
 		}),
 	);
 
-	await exitPreview(params._, params.res);
+	await exitPreview(config);
+
+	t.true((config.res.clearPreviewData as sinon.SinonStub).calledWith());
 });
