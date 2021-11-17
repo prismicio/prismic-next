@@ -3,15 +3,14 @@ import * as sinon from "sinon";
 import * as prismic from "@prismicio/client";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
-import fetch from "node-fetch";
 
-import { createPreviewEndpoint, PreviewConfig } from "../src/setPreviewData";
+import { SetPreviewDataConfig } from "../src/setPreviewData";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("createPreviewEndpoint runs setPreviewData", async (t) => {
+test.todo("createPreviewEndpoint runs setPreviewData", async (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
 	const client = prismic.createClient(endpoint, { fetch });
 
