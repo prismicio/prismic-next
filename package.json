@@ -5,6 +5,7 @@
   ],
   "scripts": {
     "dev:example": "npm run dev -w example",
-    "dev:package": "npm run dev -w package"
+    "dev:package": "npm run dev -w package",
+    "test": "npm run unit -w package -- --watch"
   }
 }
