@@ -1,14 +1,26 @@
 import { NextApiResponse, NextApiRequest } from "next";
 
-export type PreviewConfig = {
-	req: NextApiRequest;
-	res: NextApiResponse;
+export type ExitPreviewParams = {
+	res: {
+		clearPreviewData: NextApiResponse["clearPreviewData"];
+	};
+};
+
+export type SetPreviewDataConfig = {
+	req: {
+		query: {
+			token: string;
+		};
+	};
+	res: {
+		setPreviewData: NextApiResponse["setPreviewData"];
+	};
 };
 
 export async function setPreviewData({
 	req,
 	res,
-}: PreviewConfig): Promise<void> {
+}: SetPreviewDataConfig): Promise<void> {
 	const { token: ref } = req.query;
 
 	res.setPreviewData({ ref });
