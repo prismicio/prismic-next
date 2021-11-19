@@ -1,4 +1,4 @@
-export { setPreviewData } from "./setPreviewData";
+export { setPreviewData, SetPreviewDataConfig } from "./setPreviewData";
 export { exitPreview } from "./exitPreview";
 export { updateNextPreview } from "./updateNextPreview";
 export { PrismicPreview } from "./preview";
