@@ -1,11 +1,5 @@
 import { NextApiResponse, NextApiRequest } from "next";
 
-export type ExitPreviewParams = {
-	res: {
-		clearPreviewData: NextApiResponse["clearPreviewData"];
-	};
-};
-
 export type SetPreviewDataConfig = {
 	req: {
 		query: {
