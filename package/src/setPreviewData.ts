@@ -21,7 +21,8 @@ export async function setPreviewData({
 	req,
 	res,
 }: SetPreviewDataConfig): Promise<void> {
-	const { token: ref } = req.query;
-
-	res.setPreviewData({ ref });
+	if (req.query.token) {
+		const { token: ref } = req.query;
+		res.setPreviewData({ ref });
+	}
 }
