@@ -1,6 +1,5 @@
 export { setPreviewData, SetPreviewDataConfig } from "./setPreviewData";
 export { exitPreview } from "./exitPreview";
-export { updateNextPreview } from "./updateNextPreview";
 export { PrismicPreview } from "./preview";
 export { enableClientServerSupport } from "./enableClientServerSupport";
 export { redirectToPreviewURL } from "./redirectToPreviewURL";
