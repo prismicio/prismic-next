@@ -26,7 +26,6 @@ test("redirectToPreviewURL calls redirect", async (t) => {
 			},
 		},
 		res: {
-			setPreviewData: sinon.stub(),
 			redirect: sinon.stub(),
 		},
 		client,
@@ -57,11 +56,7 @@ test("redirectToPreviewURL calls redirect", async (t) => {
 		}),
 	);
 
-	await redirectToPreviewURL({
-		res: config.res,
-		client,
-		linkResolver: config.linkResolver,
-	});
+	await redirectToPreviewURL(config);
 
 	t.true((config.res.redirect as sinon.SinonStub).calledWith("url"));
 });
