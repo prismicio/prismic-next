@@ -3,14 +3,15 @@ import * as sinon from "sinon";
 import * as prismic from "@prismicio/client";
 import * as msw from "msw";
 import * as mswNode from "msw/node";
-
-import { SetPreviewDataConfig } from "../src/setPreviewData";
+import { PreviewConfig } from "../src/redirectToPreviewURL";
+import { redirectToPreviewURL } from "../src";
+import fetch from "node-fetch";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test.skip("createPreviewEndpoint runs setPreviewData", async (t) => {
+test("redirectToPreviewURL calls redirect", async (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
 	const client = prismic.createClient(endpoint, { fetch });
 
@@ -56,13 +57,11 @@ test.skip("createPreviewEndpoint runs setPreviewData", async (t) => {
 		}),
 	);
 
-	await createPreviewEndpoint(config);
-
-	t.true(
-		(config.res.setPreviewData as sinon.SinonStub).calledWith({
-			ref: token,
-		}),
-	);
+	await redirectToPreviewURL({
+		res: config.res,
+		client,
+		linkResolver: config.linkResolver,
+	});
 
 	t.true((config.res.redirect as sinon.SinonStub).calledWith("url"));
 });
