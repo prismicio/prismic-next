@@ -1,4 +1,4 @@
-import { NextApiResponse, NextApiRequest } from "next";
+import { NextApiResponse } from "next";
 
 export type SetPreviewDataConfig = {
 	req: {

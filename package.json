@@ -7,5 +7,8 @@
     "dev:example": "npm run dev -w example",
     "dev:package": "npm run dev -w package",
     "test": "npm run unit -w package -- --watch"
+  },
+  "devDependencies": {
+    "@types/react-test-renderer": "^17.0.1"
   }
 }

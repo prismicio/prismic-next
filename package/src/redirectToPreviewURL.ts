@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiResponse } from "next";
 import { Client } from "@prismicio/client";
 import { LinkResolverFunction } from "@prismicio/helpers";
 
@@ -27,6 +27,8 @@ export async function redirectToPreviewURL({
 		documentID: documentId,
 		previewToken: token,
 	});
+
+	console.log("bro?", previewUrl);
 
 	res.redirect(previewUrl);
 }

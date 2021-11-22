@@ -1,4 +1,6 @@
-export { setPreviewData, SetPreviewDataConfig } from "./setPreviewData";
+import type { SetPreviewDataConfig } from "./setPreviewData";
+export { SetPreviewDataConfig };
+export { setPreviewData } from "./setPreviewData";
 export { exitPreview } from "./exitPreview";
 export { PrismicPreview } from "./preview";
 export { enableClientServerSupport } from "./enableClientServerSupport";

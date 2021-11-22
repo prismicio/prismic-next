@@ -58,5 +58,5 @@ test("redirectToPreviewURL calls redirect", async (t) => {
 
 	await redirectToPreviewURL(config);
 
-	t.true((config.res.redirect as sinon.SinonStub).calledWith("url"));
+	t.true((config.res.redirect as sinon.SinonStub).calledWith("/documentId"));
 });
