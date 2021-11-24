@@ -16,29 +16,28 @@ export function PrismicPreview({
 	exitPreviewURL = "/api/exit-preview",
 }: PrismicPreviewConfig) {
 	useEffect(() => {
-		const prismicPreviewUpdate = (event: Event) => {
-			window.addEventListener("prismicPreviewUpdate", async (event: Event) => {
-				// Prevent the toolbar from reloading the page.
-				event.preventDefault();
+		const prismicPreviewUpdate = async (event: Event) => {
+			// Prevent the toolbar from reloading the page.
+			event.preventDefault();
 
-				const detail = (event as CustomEvent<{ ref: string }>).detail;
+			const detail = (event as CustomEvent<{ ref: string }>).detail;
 
-				// Update the preview cookie.
-				await fetch(`${updatePreviewURL}?token=${detail.ref}`);
+			// Update the preview cookie.
+			await fetch(`${updatePreviewURL}?token=${detail.ref}`);
 
-				// Reload the page with the updated token.
-				window.location.reload();
-			});
+			// Reload the page with the updated token.
+			window.location.reload();
 		};
 
 		const prismicPreviewEnd = (event: Event) => {
 			fetch(exitPreviewURL);
+			window.location.reload();
 		};
 
 		if (window) {
 			window.addEventListener("prismicPreviewUpdate", prismicPreviewUpdate);
 
-			window.addEventListener("prismicPreviewEnd", async (event: Event) => {});
+			window.addEventListener("prismicPreviewEnd", prismicPreviewEnd);
 
 			return () => {
 				window.removeEventListener(

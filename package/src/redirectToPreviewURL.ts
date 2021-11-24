@@ -28,7 +28,5 @@ export async function redirectToPreviewURL({
 		previewToken: token,
 	});
 
-	console.log("bro?", previewUrl);
-
 	res.redirect(previewUrl);
 }
