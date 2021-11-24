@@ -6,7 +6,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const client = createClient({ req });
 
-  prismicNext.setPreviewData({ req, res });
+  await prismicNext.setPreviewData({ req, res });
 
-  await prismicNext.redirectToPreviewURL({ res, client, linkResolver });
+  await prismicNext.redirectToPreviewURL({ req, res, client, linkResolver });
 };

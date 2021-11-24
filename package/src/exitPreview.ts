@@ -11,6 +11,7 @@ export async function exitPreview(config: ExitPreviewParams): Promise<void> {
 	config.res.clearPreviewData();
 
 	// Redirect the user back to the index page.
+	config.res.redirect("/");
 	// config.res.writeHead(307, { Location: "/" });
 	// config.res.end();
 }

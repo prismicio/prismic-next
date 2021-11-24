@@ -1,4 +1,4 @@
-import { GetStaticPropsContext, NextApiRequest, PreviewData } from "next";
+import { PreviewData } from "next";
 import * as prismic from "@prismicio/client";
 import { NextContextLike } from "./types";
 
@@ -11,19 +11,23 @@ const isPrismicNextPreviewData = (
 ): previewData is PrismicNextPreviewData =>
 	typeof previewData === "object" && "ref" in previewData;
 
-type EnableClientServerSupportConfig = {
+export type EnableAutoPreviewsConfig<
+	TPreviewData extends PreviewData = PreviewData,
+> = {
 	client: prismic.Client;
 } & (
 	| {
-			context?: NextContextLike;
+			context?: NextContextLike<TPreviewData>;
 	  }
 	| {
-			req?: NextApiRequest;
+			req?: prismic.HttpRequestLike;
 	  }
 );
 
-export const enableClientServerSupport = (
-	config: EnableClientServerSupportConfig,
+export const enableAutoPreviews = <
+	TPreviewData extends PreviewData = PreviewData,
+>(
+	config: EnableAutoPreviewsConfig<TPreviewData>,
 ): void => {
 	if ("context" in config && config.context) {
 		const previewData = config.context.previewData;

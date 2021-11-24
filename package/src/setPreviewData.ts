@@ -1,10 +1,8 @@
-import { NextApiResponse } from "next";
+import { NextApiResponse, NextApiRequest } from "next";
 
 export type SetPreviewDataConfig = {
 	req: {
-		query: {
-			token: string;
-		};
+		query: NextApiRequest["query"];
 	};
 	res: {
 		setPreviewData: NextApiResponse["setPreviewData"];

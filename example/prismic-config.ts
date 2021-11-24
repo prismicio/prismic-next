@@ -2,7 +2,7 @@
 
 import * as Prismic from '@prismicio/client';
 import { LinkResolverFunction } from '@prismicio/helpers';
-import { enableClientServerSupport, CreateClientConfig } from 'prismic-next';
+import { enableAutoPreviews, CreateClientConfig } from 'prismic-next';
 
 export const apiEndpoint = Prismic.getEndpoint('smashing-mag-nick-1');
 
@@ -16,7 +16,7 @@ export const linkResolver: LinkResolverFunction = (doc) => {
 export const createClient = (config: CreateClientConfig) => {
   const client = Prismic.createClient(apiEndpoint);
 
-  enableClientServerSupport({
+  enableAutoPreviews({
     client,
     context: config.context,
     req: config.req,

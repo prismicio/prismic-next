@@ -1,7 +1,7 @@
 import { PreviewData, NextApiRequest } from "next";
 
-export type NextContextLike = {
-	previewData?: PreviewData;
+export type NextContextLike<TPreviewData extends PreviewData = PreviewData> = {
+	previewData?: TPreviewData;
 };
 
 export type CreateClientConfig = {

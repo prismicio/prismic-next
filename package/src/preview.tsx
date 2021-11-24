@@ -29,8 +29,9 @@ export function PrismicPreview({
 			window.location.reload();
 		};
 
-		const prismicPreviewEnd = (event: Event) => {
-			fetch(exitPreviewURL);
+		const prismicPreviewEnd = async (e: Event) => {
+			e.preventDefault();
+			await fetch(exitPreviewURL);
 			window.location.reload();
 		};
 
@@ -38,19 +39,23 @@ export function PrismicPreview({
 			window.addEventListener("prismicPreviewUpdate", prismicPreviewUpdate);
 
 			window.addEventListener("prismicPreviewEnd", prismicPreviewEnd);
+		}
 
-			return () => {
+		return () => {
+			if (window) {
 				window.removeEventListener(
 					"prismicPreviewUpdate",
 					prismicPreviewUpdate,
 				);
 				window.removeEventListener("prismicPreviewEnd", prismicPreviewEnd);
-			};
-		}
+			}
+		};
 	}, []);
 	return (
 		<React.Fragment>
 			<script
+				data-prismic-toolbar=""
+				data-repository-name={repoName}
 				async
 				defer
 				src={`https://static.cdn.prismic.io/prismic.js?new=true&repo=${repoName}`}

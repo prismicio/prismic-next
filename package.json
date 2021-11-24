@@ -6,9 +6,13 @@
   "scripts": {
     "dev:example": "npm run dev -w example",
     "dev:package": "npm run dev -w package",
-    "test": "npm run unit -w package -- --watch"
+    "test:watch": "npm run unit -w package -- --watch",
+    "test": "npm run unit -w package"
   },
   "devDependencies": {
     "@types/react-test-renderer": "^17.0.1"
+  },
+  "dependencies": {
+    "prismic-next": "file:package"
   }
 }
