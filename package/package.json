@@ -5,7 +5,10 @@
 	"description": "Prismic library for NextJS",
 	"keywords": [
 		"typescript",
-		"prismic"
+		"prismic",
+		"next",
+		"vercel",
+		"preview"
 	],
 	"repository": {
 		"type": "git",
