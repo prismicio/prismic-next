@@ -3,10 +3,11 @@ import { NextApiResponse } from "next";
 export type ExitPreviewParams = {
 	res: {
 		clearPreviewData: NextApiResponse["clearPreviewData"];
+		redirect: NextApiResponse["redirect"];
 	};
 };
 
-export async function exitPreview(config: ExitPreviewParams): Promise<void> {
+export function exitPreview(config: ExitPreviewParams) {
 	// Exit the current user from "Preview Mode". This function accepts no args.
 	config.res.clearPreviewData();
 
