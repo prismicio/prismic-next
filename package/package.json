@@ -75,8 +75,7 @@
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^6.0.0-beta.0",
-		"next": "^11 || ^12",
-		"react": "^17 || ^18"
+		"next": "^11 || ^12"
 	},
 	"engines": {
 		"node": ">=12.7.0"
