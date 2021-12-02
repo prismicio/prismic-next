@@ -27,9 +27,6 @@
 	"main": "./dist/index.cjs",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
-	"directories": {
-		"test": "test"
-	},
 	"files": [
 		"dist",
 		"src"
@@ -66,7 +63,6 @@
 		"jsdom": "^18.1.1",
 		"jsdom-global": "^3.0.2",
 		"msw": "^0.35.0",
-		"next": "^11.1.2",
 		"node-fetch": "^2.6.6",
 		"nyc": "^15.1.0",
 		"prettier": "^2.3.2",
@@ -79,7 +75,7 @@
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^6.0.0-beta.0",
-		"next": "^11.1.2",
+		"next": "^11 || ^12",
 		"react": "^17 || ^18"
 	},
 	"engines": {
