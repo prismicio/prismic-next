@@ -1,6 +1,5 @@
-import type { SetPreviewDataConfig } from "./setPreviewData";
-import type { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
-export { SetPreviewDataConfig, EnableAutoPreviewsConfig };
+export type { SetPreviewDataConfig } from "./setPreviewData";
+export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
 export { setPreviewData } from "./setPreviewData";
 export { exitPreview } from "./exitPreview";
 export { PrismicPreview } from "./preview";
