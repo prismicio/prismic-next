@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 
 type PrismicPreviewConfig = {
-	repoName: string;
+	repositoryName: string;
 	children: React.ReactChild[] | React.ReactChild;
 	updatePreviewURL?: string;
 	exitPreviewURL?: string;
 };
 
 export function PrismicPreview({
-	repoName,
+	repositoryName,
 	children,
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
@@ -53,10 +53,10 @@ export function PrismicPreview({
 		<React.Fragment>
 			<script
 				data-prismic-toolbar=""
-				data-repository-name={repoName}
+				data-repository-name={repositoryName}
 				async
 				defer
-				src={`https://static.cdn.prismic.io/prismic.js?new=true&repo=${repoName}`}
+				src={`https://static.cdn.prismic.io/prismic.js?new=true&repo=${repositoryName}`}
 			></script>
 			{children}
 		</React.Fragment>
