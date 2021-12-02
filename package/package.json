@@ -1,5 +1,5 @@
 {
-	"name": "prismic-next",
+	"name": "@prismicio/next",
 	"version": "0.0.0",
 	"private": "true",
 	"description": "Prismic library for NextJS",
