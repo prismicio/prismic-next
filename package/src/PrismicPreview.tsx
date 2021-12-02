@@ -14,7 +14,9 @@ export function PrismicPreview({
 	exitPreviewURL = "/api/exit-preview",
 }: PrismicPreviewConfig) {
 	useEffect(() => {
-		const prismicPreviewUpdate = async (event: Event) => {
+		const prismicPreviewUpdate = async (
+			event: CustomEvent<{ ref: string }>,
+		) => {
 			// Prevent the toolbar from reloading the page.
 			event.preventDefault();
 
