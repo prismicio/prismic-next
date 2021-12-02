@@ -7,8 +7,6 @@ type PrismicPreviewConfig = {
 	exitPreviewURL?: string;
 };
 
-// TODO: removeEventListener for when component unmounts
-
 export function PrismicPreview({
 	repoName,
 	children,
