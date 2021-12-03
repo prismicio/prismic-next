@@ -8,7 +8,7 @@ export type PreviewConfig = {
 	};
 	res: NextApiResponse;
 	client: Client;
-	linkResolver: LinkResolverFunction;
+	linkResolver?: LinkResolverFunction;
 };
 
 type PrismicNextQuery = {
