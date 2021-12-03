@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 
 type PrismicPreviewConfig = {
 	repositoryName: string;
-	children: React.ReactNode;
+	children?: React.ReactNode;
 	updatePreviewURL?: string;
 	exitPreviewURL?: string;
 };
