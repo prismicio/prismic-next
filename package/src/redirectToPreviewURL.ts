@@ -6,7 +6,9 @@ export type PreviewConfig = {
 	req: {
 		query: NextApiRequest["query"];
 	};
-	res: NextApiResponse;
+	res: {
+		redirect: NextApiResponse["redirect"];
+	};
 	client: Client;
 	linkResolver?: LinkResolverFunction;
 };
