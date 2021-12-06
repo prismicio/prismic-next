@@ -1,6 +1,6 @@
 /** Example file */
 
-import * as Prismic from '@prismicio/client';
+import { createClient as prismicCreateClient } from '@prismicio/client';
 import { LinkResolverFunction } from '@prismicio/helpers';
 import { enableAutoPreviews, CreateClientConfig } from 'prismic-next';
 
@@ -14,7 +14,7 @@ export const linkResolver: LinkResolverFunction = (doc) => {
 };
 
 export const createClient = (config: CreateClientConfig) => {
-  const client = Prismic.createClient(apiEndpoint);
+  const client = prismicCreateClient(apiEndpoint);
 
   enableAutoPreviews({
     client,

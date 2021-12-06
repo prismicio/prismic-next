@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest } from "next";
 import { PreviewConfig } from "./";
 
 type PrismicNextQuery = {
@@ -11,6 +11,11 @@ const isPrismicNextQuery = (
 ): query is PrismicNextQuery =>
 	typeof query.documentId === "string" && typeof query.token === "string";
 
+/**
+ * @name redirectToPreviewURL
+ * @param PreviewConfig
+ * @description Redirects to preview URL based on whether or not it's a Prismic query or not
+ */
 export async function redirectToPreviewURL({
 	req,
 	res,

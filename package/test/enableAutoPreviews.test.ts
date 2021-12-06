@@ -1,8 +1,6 @@
 import test from "ava";
 import * as sinon from "sinon";
 import { enableAutoPreviews, EnableAutoPreviewsConfig } from "../src";
-import { NextApiRequest } from "next";
-import * as prismicMock from "@prismicio/mock";
 
 import * as prismic from "@prismicio/client";
 

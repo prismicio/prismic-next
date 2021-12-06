@@ -1,5 +1,5 @@
 import { PreviewData } from "next";
-import * as prismic from "@prismicio/client";
+import { Client, HttpRequestLike } from "@prismicio/client";
 import { NextContextLike } from "./types";
 
 interface PrismicNextPreviewData {
@@ -14,13 +14,13 @@ const isPrismicNextPreviewData = (
 export type EnableAutoPreviewsConfig<
 	TPreviewData extends PreviewData = PreviewData,
 > = {
-	client: prismic.Client;
+	client: Client;
 } & (
 	| {
 			context?: NextContextLike<TPreviewData>;
 	  }
 	| {
-			req?: prismic.HttpRequestLike;
+			req?: HttpRequestLike;
 	  }
 );
 
