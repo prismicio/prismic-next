@@ -1,18 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { Client } from "@prismicio/client";
-import { LinkResolverFunction } from "@prismicio/helpers";
-
-export type PreviewConfig = {
-	req: {
-		query: NextApiRequest["query"];
-	};
-	res: {
-		redirect: NextApiResponse["redirect"];
-	};
-	client: Client;
-	linkResolver?: LinkResolverFunction;
-	defaultURL?: string;
-};
+import { PreviewConfig } from "./";
 
 type PrismicNextQuery = {
 	documentId: string;
