@@ -1,8 +1,7 @@
 import test from "ava";
 import * as sinon from "sinon";
-import { enableAutoPreviews, EnableAutoPreviewsConfig } from "../src";
-
 import * as prismic from "@prismicio/client";
+import { enableAutoPreviews, EnableAutoPreviewsConfig } from "../src";
 
 test("enableAutoPreviews enables previews with req passed to it", (t) => {
 	globalThis.fetch = sinon.stub();
@@ -35,5 +34,3 @@ test("enableAutoPreviews enables previews with Context passed to it", (t) => {
 		),
 	);
 });
-
-// TODO check what happens if ref is undefined
