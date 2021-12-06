@@ -11,6 +11,7 @@ export type PreviewConfig = {
 	};
 	client: Client;
 	linkResolver?: LinkResolverFunction;
+	defaultURL?: string;
 };
 
 type PrismicNextQuery = {
@@ -28,12 +29,13 @@ export async function redirectToPreviewURL({
 	res,
 	client,
 	linkResolver,
+	defaultURL = "/",
 }: PreviewConfig): Promise<void> {
 	if (isPrismicNextQuery(req.query)) {
 		const { documentId, token } = req.query;
 		const previewUrl = await client.resolvePreviewURL({
 			linkResolver,
-			defaultURL: "/",
+			defaultURL,
 			documentID: documentId,
 			previewToken: token,
 		});
