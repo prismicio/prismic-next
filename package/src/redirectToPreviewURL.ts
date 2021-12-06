@@ -43,5 +43,5 @@ export async function redirectToPreviewURL({
 		res.redirect(previewUrl);
 	}
 
-	res.redirect("/");
+	res.redirect(defaultURL);
 }
