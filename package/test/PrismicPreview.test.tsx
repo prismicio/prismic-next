@@ -1,7 +1,7 @@
 import test from "ava";
 import React from "react";
 import { PrismicPreview } from "../src";
-import * as sinon from "sinon";
+import sinon from "sinon";
 import { render, cleanup } from "@testing-library/react";
 
 // TODO Figure out why there is a navigation error when it comes to window.reload
@@ -30,7 +30,7 @@ test.serial(
 	"renders <PrismicPreview/> with the correct repoName in the script tag",
 	async (t) => {
 		const { container } = render(
-			<PrismicPreview repoName={repoName}>
+			<PrismicPreview repositoryName={repoName}>
 				<div>test</div>
 			</PrismicPreview>,
 		);
@@ -56,14 +56,18 @@ test.serial(
 		const updatePreviewURL = "/api/preview";
 		const detail = { ref: "ref" };
 
-		render(<PrismicPreview repoName="test" children={<div>test</div>} />);
+		render(
+			<PrismicPreview repositoryName="test">
+				<div>test</div>
+			</PrismicPreview>,
+		);
 
 		window.dispatchEvent(
 			new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
 		);
 
 		t.true(
-			(fetch as sinon.SinonStub).calledWith(
+			(globalThis.fetch as sinon.SinonStub).calledWith(
 				`${updatePreviewURL}?token=${detail.ref}`,
 			),
 		);
@@ -73,11 +77,15 @@ test.serial(
 test.serial(
 	"<PrismicPreview /> adds the prismicPreviewEnd event listener to the window",
 	async (t) => {
-		render(<PrismicPreview repoName="test" children={<div>test</div>} />);
+		render(
+			<PrismicPreview repositoryName="test">
+				<div>test</div>
+			</PrismicPreview>,
+		);
 
 		window.dispatchEvent(new CustomEvent("prismicPreviewEnd"));
 
-		t.true((fetch as sinon.SinonStub).called);
+		t.true((globalThis.fetch as sinon.SinonStub).called);
 	},
 );
 
@@ -88,7 +96,7 @@ test.serial(
 		const detail = { ref: "ref" };
 
 		const { unmount } = render(
-			<PrismicPreview repoName="test" children={<div>test</div>} />,
+			<PrismicPreview repositoryName="test" children={<div>test</div>} />,
 		);
 
 		unmount();
