@@ -24,32 +24,6 @@ test.afterEach(() => {
 	cleanup();
 });
 
-const repoName = "test";
-
-test.serial(
-	"renders <PrismicPreview/> with the correct repoName in the script tag",
-	async (t) => {
-		const { container } = render(
-			<PrismicPreview repositoryName={repoName}>
-				<div>test</div>
-			</PrismicPreview>,
-		);
-
-		const actual = container.querySelector(
-			`script[data-prismic-toolbar][data-repository-name="${repoName}"]`,
-		);
-
-		t.is(
-			actual?.getAttribute("src"),
-			`https://static.cdn.prismic.io/prismic.js?new=true&repo=${repoName}`,
-		);
-
-		t.is(actual?.getAttribute("async"), "");
-
-		t.is(actual?.getAttribute("defer"), "");
-	},
-);
-
 test.serial(
 	"<PrismicPreview /> adds the prismicEventUpdate event listener to the window",
 	async (t) => {
@@ -83,7 +57,9 @@ test.serial(
 			</PrismicPreview>,
 		);
 
-		window.dispatchEvent(new CustomEvent("prismicPreviewEnd"));
+		window.dispatchEvent(
+			new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+		);
 
 		t.true((globalThis.fetch as sinon.SinonStub).called);
 	},
