@@ -9,6 +9,11 @@ export type SetPreviewDataConfig = {
 	};
 };
 
+/**
+ * @name setPreviewData
+ * @description Sets preview data
+ * @param SetPreviewDataConfig
+ */
 export async function setPreviewData({
 	req,
 	res,
