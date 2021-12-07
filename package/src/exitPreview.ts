@@ -7,6 +7,11 @@ export type ExitPreviewParams = {
 	};
 };
 
+/**
+ * @name exitPreview
+ * @param config
+ * @description Exits preview mode
+ */
 export function exitPreview(config: ExitPreviewParams) {
 	// Exit the current user from "Preview Mode". This function accepts no args.
 	config.res.clearPreviewData();
