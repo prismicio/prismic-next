@@ -4,11 +4,10 @@ import { exitPreview } from "../src";
 import { ExitPreviewParams } from "../src";
 
 test("exitPreview runs clearPreviewData", async (t) => {
-	// const res: NextApiResponse = { clearPreviewData: sinon.stub() };
-
 	const config: ExitPreviewParams = {
 		res: {
 			clearPreviewData: sinon.stub(),
+			redirect: sinon.stub(),
 		},
 	};
 
