@@ -1,6 +1,5 @@
 import test from "ava";
-import * as sinon from "sinon";
-import * as prismic from "@prismicio/client";
+import sinon from "sinon";
 import { SetPreviewDataConfig, setPreviewData } from "../src";
 
 test("setPreviewData sets PreviewData", (t) => {

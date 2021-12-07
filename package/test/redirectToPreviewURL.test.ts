@@ -1,9 +1,9 @@
 import test from "ava";
-import * as sinon from "sinon";
-import * as prismic from "@prismicio/client";
-import * as msw from "msw";
-import * as mswNode from "msw/node";
-import { PreviewConfig } from "../src/redirectToPreviewURL";
+import sinon from "sinon";
+import prismic from "@prismicio/client";
+import msw from "msw";
+import mswNode from "msw/node";
+import { PreviewConfig } from "../src/";
 import { redirectToPreviewURL } from "../src";
 import fetch from "node-fetch";
 
