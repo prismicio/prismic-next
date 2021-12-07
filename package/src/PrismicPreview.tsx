@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { PrismicToolbar } from "@prismicio/react";
 
 type PrismicPreviewConfig = {
 	repositoryName: string;
@@ -10,7 +11,7 @@ type PrismicPreviewConfig = {
 const isPrismicToolbarEvent = (
 	event: Event,
 ): event is CustomEvent<{ ref: string }> =>
-	"detail" in event && typeof (event as CustomEvent).detail.ref === "string";
+	"detail" in event && typeof (event as CustomEvent).detail?.ref === "string";
 
 export function PrismicPreview({
 	repositoryName,
@@ -58,13 +59,7 @@ export function PrismicPreview({
 
 	return (
 		<React.Fragment>
-			<script
-				data-prismic-toolbar=""
-				data-repository-name={repositoryName}
-				async
-				defer
-				src={`https://static.cdn.prismic.io/prismic.js?new=true&repo=${repositoryName}`}
-			></script>
+			<PrismicToolbar repositoryName={repositoryName} />
 			{children}
 		</React.Fragment>
 	);
