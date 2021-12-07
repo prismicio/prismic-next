@@ -82,5 +82,8 @@
 	},
 	"publishConfig": {
 		"access": "public"
+	},
+	"dependencies": {
+		"@prismicio/react": "^2.0.0"
 	}
 }
