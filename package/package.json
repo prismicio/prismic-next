@@ -44,6 +44,9 @@
 		"test": "npm run lint && npm run unit",
 		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
 	},
+	"dependencies": {
+		"@prismicio/react": "^2.0.0"
+	},
 	"devDependencies": {
 		"@prismicio/client": "^6.0.0-beta.0",
 		"@prismicio/mock": "^0.0.6",
@@ -75,15 +78,13 @@
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^6.0.0-beta.0",
-		"next": "^11 || ^12"
+		"next": "^11 || ^12",
+		"react": "^17"
 	},
 	"engines": {
 		"node": ">=12.7.0"
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"dependencies": {
-		"@prismicio/react": "^2.0.0"
 	}
 }

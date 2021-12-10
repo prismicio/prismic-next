@@ -1,13 +1,12 @@
-import { useEffect } from 'react';
-import type { GetStaticPropsContext, NextPage, NextPageContext } from 'next';
+import type { GetStaticPropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../styles/Home.module.css';
-import { createClient } from '../prismic-config';
+import { createPrismicClient } from '../prismic-config';
 import { asText } from '@prismicio/helpers';
 
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const client = createClient({ context });
+  const client = createPrismicClient({ context });
 
   const home = await client.getByUID('page', 'home');
 

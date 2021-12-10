@@ -22,14 +22,16 @@ export function exitPreview(config: ExitPreviewParams) {
 	// Exit the current user from "Preview Mode". This function accepts no args.
 	config.res.clearPreviewData();
 
-	if (req.headers.referer) {
-		const url = new URL(req.headers.referer);
+	// console.log("preview data cleared");
 
-		if (url.pathname !== "/api/exit-preview") {
-			// Redirect the user to the referrer page.
-			config.res.redirect(req.headers.referer);
-		}
-	}
+	// if (req.headers.referer) {
+	// 	const url = new URL(req.headers.referer);
+
+	// 	if (url.pathname !== "/api/exit-preview") {
+	// 		// Redirect the user to the referrer page.
+	// 		config.res.redirect(req.headers.referer);
+	// 	}
+	// }
 
 	config.res.redirect("/");
 }

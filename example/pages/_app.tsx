@@ -5,7 +5,7 @@ import { PrismicPreview } from 'prismic-next';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <PrismicPreview repoName='smashing-mag-nick-1'>
+    <PrismicPreview repositoryName='smashing-mag-nick-1'>
       <Component {...pageProps} />;
     </PrismicPreview>
   );

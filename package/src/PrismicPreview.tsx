@@ -8,10 +8,10 @@ type PrismicPreviewConfig = {
 	exitPreviewURL?: string;
 };
 
-const isPrismicToolbarEvent = (
+const isPrismicUpdateToolbarEvent = (
 	event: Event,
 ): event is CustomEvent<{ ref: string }> =>
-	"detail" in event && typeof (event as CustomEvent).detail?.ref === "string";
+	"detail" in event && typeof (event as CustomEvent).detail.ref === "string";
 
 export function PrismicPreview({
 	repositoryName,
@@ -21,7 +21,8 @@ export function PrismicPreview({
 }: PrismicPreviewConfig) {
 	useEffect(() => {
 		const prismicPreviewUpdate = async (event: Event) => {
-			if (isPrismicToolbarEvent(event)) {
+			console.log("run previewUpdate");
+			if (isPrismicUpdateToolbarEvent(event)) {
 				// Prevent the toolbar from reloading the page.
 				event.preventDefault();
 				// Update the preview cookie.
@@ -33,11 +34,10 @@ export function PrismicPreview({
 		};
 
 		const prismicPreviewEnd = async (event: Event) => {
-			if (isPrismicToolbarEvent(event)) {
-				event.preventDefault();
-				await fetch(exitPreviewURL);
-				window.location.reload();
-			}
+			console.log("prismic exit runs", event);
+			event.preventDefault();
+			await fetch(exitPreviewURL);
+			window.location.reload();
 		};
 
 		if (window) {
