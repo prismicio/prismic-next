@@ -23,7 +23,11 @@ export type EnableAutoPreviewsConfig<
 			req?: HttpRequestLike;
 	  }
 );
-
+/**
+ * @name enableAutoPreviews
+ * @param config
+ * @description Enables previews for prismic. Either takes in context data from Next's getStaticProps or request object to enable
+ */
 export const enableAutoPreviews = <
 	TPreviewData extends PreviewData = PreviewData,
 >(
