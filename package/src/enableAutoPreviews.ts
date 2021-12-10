@@ -33,12 +33,18 @@ export const enableAutoPreviews = <
 >(
 	config: EnableAutoPreviewsConfig<TPreviewData>,
 ): void => {
+	/**
+	 * If preview data is being passed from Next Context then use queryContentFromRef
+	 */
 	if ("context" in config && config.context) {
 		const previewData = config.context.previewData;
 
 		if (isPrismicNextPreviewData(previewData) && previewData.ref) {
 			config.client.queryContentFromRef(previewData.ref);
 		}
+		/**
+		 * If the req object is passed then use enableAutoPreviewsFromReq
+		 */
 	} else if ("req" in config && config.req) {
 		config.client.enableAutoPreviewsFromReq(config.req);
 	}
