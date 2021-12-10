@@ -13,6 +13,12 @@ const isPrismicUpdateToolbarEvent = (
 ): event is CustomEvent<{ ref: string }> =>
 	"detail" in event && typeof (event as CustomEvent).detail.ref === "string";
 
+/**
+ * @name PrismicPreview
+ * @param PrismicPreviewConfig
+ * @description Component that initiates the Prismic Tool bar from @prismicio/react. It uses hooks to addEventListeners for Prismic Tool Bar updates. Optionally can be wrapped around an entire Next.js app
+ * @returns PrismicToolBar
+ */
 export function PrismicPreview({
 	repositoryName,
 	children,
