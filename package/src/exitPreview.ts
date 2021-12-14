@@ -22,8 +22,6 @@ export function exitPreview(config: ExitPreviewParams) {
 	// Exit the current user from "Preview Mode". This function accepts no args.
 	config.res.clearPreviewData();
 
-	// console.log("preview data cleared");
-
 	// if (req.headers.referer) {
 	// 	const url = new URL(req.headers.referer);
 

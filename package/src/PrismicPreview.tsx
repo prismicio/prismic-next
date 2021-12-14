@@ -27,7 +27,6 @@ export function PrismicPreview({
 }: PrismicPreviewConfig) {
 	useEffect(() => {
 		const prismicPreviewUpdate = async (event: Event) => {
-			console.log("run previewUpdate");
 			if (isPrismicUpdateToolbarEvent(event)) {
 				// Prevent the toolbar from reloading the page.
 				event.preventDefault();
@@ -40,7 +39,6 @@ export function PrismicPreview({
 		};
 
 		const prismicPreviewEnd = async (event: Event) => {
-			console.log("prismic exit runs", event);
 			event.preventDefault();
 			await fetch(exitPreviewURL);
 			window.location.reload();
