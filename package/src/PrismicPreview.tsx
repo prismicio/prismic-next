@@ -62,9 +62,9 @@ export function PrismicPreview({
 	}, []);
 
 	return (
-		<React.Fragment>
+		<>
 			<PrismicToolbar repositoryName={repositoryName} />
 			{children}
-		</React.Fragment>
+		</>
 	);
 }
