@@ -3,7 +3,6 @@
 TODO: Go through all "TODO" comments in the project
 
 TODO: Replace all on all files (README.md, CONTRIBUTING.md, bug_report.md, package.json):
-- package_name
 - package_description
 - github_org_slash_github_repo
 - github_repo
@@ -21,24 +20,14 @@ TODO: Replace all on all files (README.md, CONTRIBUTING.md, bug_report.md, packa
 
 <!-- TODO: Replacing link to Prismic with [Prismic][prismic] is useful here -->
 
-package_description.
+A Next.js Integration with Prismic that makes it easier to take advantage of Next.js features.
 
-<!--
-
-TODO: Create a small list of package features:
-
-- 🤔 &nbsp;A useful feature;
-- 🥴 &nbsp;Another useful feature;
-- 🙃 &nbsp;A final useful feature.
-
-Non-breaking space: &nbsp; are here on purpose to fix emoji rendering on certain systems.
-
--->
+- 🎥 &nbsp;Easily set up Prismic Previews;
 
 ## Install
 
 ```bash
-npm install package_name
+npm install @prismicio/next
 ```
 
 ## Documentation
@@ -53,9 +42,9 @@ Whether you're helping us fix bugs, improve the docs, or spread the word, we'd l
 
 **Reporting a bug**: [Open an issue][repo-bug-report] explaining your application's setup and the bug you're encountering.
 
-**Suggesting an improvement**: [Open an issue][repo-feature-request] explaining your improvement or feature so we can discuss and learn more.
+**Suggesting an improvement**: [Open an issue][https://github.com/prismicio/prismic-next/issues] explaining your improvement or feature so we can discuss and learn more.
 
-**Submitting code changes**: For small fixes, feel free to [open a pull request][repo-pull-requests] with a description of your changes. For large changes, please first [open an issue][repo-feature-request] so we can discuss if and how the changes should be implemented.
+**Submitting code changes**: For small fixes, feel free to [open a pull request][https://github.com/prismicio/prismic-next/pulls] with a description of your changes. For large changes, please first [open an issue][https://github.com/prismicio/prismic-next/issues] so we can discuss if and how the changes should be implemented.
 
 For more clarity on this project and its structure you can also check out the detailed [CONTRIBUTING.md][contributing] document.
 
@@ -96,15 +85,15 @@ For more clarity on this project and its structure you can also check out the de
 
 <!-- Badges -->
 
-[npm-version-src]: https://img.shields.io/npm/v/package_name/latest.svg
-[npm-version-href]: https://npmjs.com/package/package_name
-[npm-downloads-src]: https://img.shields.io/npm/dm/package_name.svg
-[npm-downloads-href]: https://npmjs.com/package/package_name
+[npm-version-src]: https://img.shields.io/npm/v/@prismicio/next/latest.svg
+[npm-version-href]: https://npmjs.com/package/@prismicio/next
+[npm-downloads-src]: https://img.shields.io/npm/dm/@prismicio/next.svg
+[npm-downloads-href]: https://npmjs.com/package/@prismicio/next
 [github-actions-ci-src]: https://github.com/github_org_slash_github_repo/workflows/ci/badge.svg
 [github-actions-ci-href]: https://github.com/github_org_slash_github_repo/actions?query=workflow%3Aci
 [codecov-src]: https://img.shields.io/codecov/c/github/github_org_slash_github_repo.svg
 [codecov-href]: https://codecov.io/gh/github_org_slash_github_repo
 [conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
 [conventional-commits-href]: https://conventionalcommits.org
-[license-src]: https://img.shields.io/npm/l/package_name.svg
-[license-href]: https://npmjs.com/package/package_name
+[license-src]: https://img.shields.io/npm/l/@prismicio/next.svg
+[license-href]: https://npmjs.com/package/@prismicio/next
