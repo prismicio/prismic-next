@@ -2,7 +2,7 @@ import test from "ava";
 import React from "react";
 import { PrismicPreview } from "../src";
 import sinon from "sinon";
-import { render, cleanup } from "@testing-library/react";
+import { render, cleanup, waitFor } from "@testing-library/react";
 
 // TODO Figure out why there is a navigation error when it comes to window.reload
 
@@ -88,3 +88,26 @@ test.serial(
 		);
 	},
 );
+
+test.only("renders <PrismicPreview/> with the correct repositoryName in the script tag", async (t) => {
+	const repoName = "test";
+	render(
+		<PrismicPreview repositoryName={repoName}>
+			<div>test</div>
+		</PrismicPreview>,
+	);
+
+	const script = await waitFor(() => {
+		const result = document.body.querySelector(
+			`script[src="https://static.cdn.prismic.io/prismic.js?repo=${repoName}&new=true"]`,
+		);
+
+		if (result === null) {
+			throw new Error();
+		} else {
+			return result;
+		}
+	});
+
+	t.not(script, null);
+});
