@@ -6,15 +6,22 @@ type PrismicNextQuery = {
 	token: string;
 };
 
+/**
+ * Determines if a query object from a Next.js API route request contains
+ * Prismic preview data.
+ *
+ * @param query - Query object to check.
+ *
+ * @returns `true` if `query` contains Prismic preview data, `false` otherwise.
+ */
 const isPrismicNextQuery = (
 	query: NextApiRequest["query"],
 ): query is PrismicNextQuery =>
 	typeof query.documentId === "string" && typeof query.token === "string";
 
 /**
- * Redirects to preview URL based on whether or not it's a Prismic query or not
- *
- * @param PrismicNextQuery -
+ * Redirects a user to the URL of a previewed Prismic document from within a
+ * Next.js API route.
  */
 export async function redirectToPreviewURL({
 	req,

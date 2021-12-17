@@ -1,22 +1,32 @@
 import { NextApiResponse, NextApiRequest } from "next";
 
 /**
- * SetPreviewDataConfig Accepts Next.js request object with the Prismic Token in
- * a query param and Next.js Response object.
+ * Configuration for `setPreviewData`.
  */
 export type SetPreviewDataConfig = {
+	/**
+	 * The `req` object from a Next.js API route. This is given as a parameter to
+	 * the API route.
+	 *
+	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 */
 	req: {
 		query: NextApiRequest["query"];
 	};
+
+	/**
+	 * The `res` object from a Next.js API route. This is given as a parameter to
+	 * the API route.
+	 *
+	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 */
 	res: {
 		setPreviewData: NextApiResponse["setPreviewData"];
 	};
 };
 
 /**
- * Sets up Preview data based on token coming from query params.
- *
- * @param SetPreviewDataConfig -
+ * Set Prismic preview data for Next.js's Preview Mode.
  */
 export async function setPreviewData({
 	req,
