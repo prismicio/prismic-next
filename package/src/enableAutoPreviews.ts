@@ -25,8 +25,8 @@ export type EnableAutoPreviewsConfig<
 );
 /**
  * Configures a Prismic client to automatically query draft content during a
- * preview session. Either takes in a Next.js `getStaticProps` context object
- * or a Next.js API endpoint request object.
+ * preview session. Either takes in a Next.js `getStaticProps` context object or
+ * a Next.js API endpoint request object.
  *
  * @param config - Configuration for the function.
  */

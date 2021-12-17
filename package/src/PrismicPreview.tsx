@@ -2,7 +2,8 @@ import React, { useEffect } from "react";
 import { PrismicToolbar } from "@prismicio/react";
 
 /**
- * props for PrismicPreview, only required param is repositoryName which is the name of your Prismic Repository
+ * Props for PrismicPreview, only required param is repositoryName which is the
+ * name of your Prismic Repository
  */
 type PrismicPreviewConfig = {
 	repositoryName: string;
@@ -17,7 +18,10 @@ const isPrismicUpdateToolbarEvent = (
 	"detail" in event && typeof (event as CustomEvent).detail.ref === "string";
 
 /**
- *  Component that initiates the Prismic Tool bar from @prismicio/react. It uses hooks to addEventListeners for Prismic Tool Bar updates. Optionally can be wrapped around an entire Next.js app
+ * Component that initiates the Prismic Tool bar from @prismicio/react. It uses
+ * hooks to addEventListeners for Prismic Tool Bar updates. Optionally can be
+ * wrapped around an entire Next.js app
+ *
  * @param PrismicPreviewConfig -
  */
 export function PrismicPreview({

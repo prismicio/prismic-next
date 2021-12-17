@@ -1,8 +1,8 @@
 import { NextApiResponse, NextApiRequest } from "next";
 
 /**
- * SetPreviewDataConfig
- * Accepts Next.js request object with the Prismic Token in a query param and Next.js Response object.
+ * SetPreviewDataConfig Accepts Next.js request object with the Prismic Token in
+ * a query param and Next.js Response object.
  */
 export type SetPreviewDataConfig = {
 	req: {
@@ -15,6 +15,7 @@ export type SetPreviewDataConfig = {
 
 /**
  * Sets up Preview data based on token coming from query params.
+ *
  * @param SetPreviewDataConfig -
  */
 export async function setPreviewData({
