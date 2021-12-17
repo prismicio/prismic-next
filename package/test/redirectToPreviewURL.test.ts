@@ -1,21 +1,17 @@
 import test from "ava";
-import { NextApiRequest, NextApiResponse } from "next";
-import * as sinon from "sinon";
-import * as prismic from "@prismicio/client";
-import * as msw from "msw";
-import * as mswNode from "msw/node";
+import sinon from "sinon";
+import prismic from "@prismicio/client";
+import msw from "msw";
+import mswNode from "msw/node";
+import { PreviewConfig } from "../src/";
+import { redirectToPreviewURL } from "../src";
 import fetch from "node-fetch";
-
-import {
-	createPreviewEndpoint,
-	PreviewConfig,
-} from "../src/createPreviewEndpoint";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
 test.after(() => server.close());
 
-test("createPreviewEndpoint runs setPreviewData", async (t) => {
+test("redirectToPreviewURL calls redirect", async (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
 	const client = prismic.createClient(endpoint, { fetch });
 
@@ -30,7 +26,6 @@ test("createPreviewEndpoint runs setPreviewData", async (t) => {
 			},
 		},
 		res: {
-			setPreviewData: sinon.stub(),
 			redirect: sinon.stub(),
 		},
 		client,
@@ -61,13 +56,7 @@ test("createPreviewEndpoint runs setPreviewData", async (t) => {
 		}),
 	);
 
-	await createPreviewEndpoint(config);
+	await redirectToPreviewURL(config);
 
-	t.true(
-		(config.res.setPreviewData as sinon.SinonStub).calledWith({
-			ref: token,
-		}),
-	);
-
-	t.true((config.res.redirect as sinon.SinonStub).calledWith("url"));
+	t.true((config.res.redirect as sinon.SinonStub).calledWith("/documentId"));
 });

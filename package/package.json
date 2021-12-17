@@ -1,15 +1,18 @@
 {
-	"name": "prismic-next",
+	"name": "@prismicio/next",
 	"version": "0.0.0",
 	"private": "true",
 	"description": "Prismic library for NextJS",
 	"keywords": [
 		"typescript",
-		"prismic"
+		"prismic",
+		"next",
+		"vercel",
+		"preview"
 	],
 	"repository": {
 		"type": "git",
-		"url": "ssh://git@github.com/github_org_slash_github_repo.git"
+		"url": "https://github.com/prismicio/prismic-next"
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
@@ -24,9 +27,6 @@
 	"main": "./dist/index.cjs",
 	"module": "dist/index.mjs",
 	"types": "dist/index.d.ts",
-	"directories": {
-		"test": "test"
-	},
 	"files": [
 		"dist",
 		"src"
@@ -44,9 +44,16 @@
 		"test": "npm run lint && npm run unit",
 		"unit": "nyc --reporter=lcovonly --reporter=text --exclude-after-remap=false ava"
 	},
+	"dependencies": {
+		"@prismicio/react": "^2.0.2"
+	},
 	"devDependencies": {
 		"@prismicio/client": "^6.0.0-beta.0",
+		"@prismicio/mock": "^0.0.6",
 		"@prismicio/types": "^0.1.13",
+		"@testing-library/react": "^12.1.2",
+		"@types/jsdom": "^16.2.13",
+		"@types/jsdom-global": "^3.0.2",
 		"@types/node-fetch": "^3.0.3",
 		"@types/sinon": "^10.0.6",
 		"@typescript-eslint/eslint-plugin": "^4.29.1",
@@ -56,11 +63,13 @@
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
 		"eslint-plugin-tsdoc": "^0.2.14",
+		"jsdom": "^18.1.1",
+		"jsdom-global": "^3.0.2",
 		"msw": "^0.35.0",
-		"next": "^11.1.2",
 		"node-fetch": "^2.6.6",
 		"nyc": "^15.1.0",
 		"prettier": "^2.3.2",
+		"react-test-renderer": "^17.0.2",
 		"sinon": "^12.0.1",
 		"siroc": "^0.15.0",
 		"standard-version": "^9.3.1",
@@ -69,7 +78,8 @@
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^6.0.0-beta.0",
-		"next": "^11.1.2"
+		"next": "^11 || ^12",
+		"react": "^17"
 	},
 	"engines": {
 		"node": ">=12.7.0"
