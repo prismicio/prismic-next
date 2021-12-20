@@ -34,7 +34,7 @@ export type ExitPreviewConfig = {
  * If the user was sent to the endpoint from a page, the user will be redirected
  * back to that page after exiting Preview Mode.
  */
-export function exitPreview(config: ExitPreviewConfig) {
+export function exitPreview(config: ExitPreviewConfig): void {
 	const { req } = config;
 	// Exit the current user from "Preview Mode". This function accepts no args.
 	config.res.clearPreviewData();

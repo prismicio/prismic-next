@@ -1,14 +1,17 @@
 import test from "ava";
 import * as sinon from "sinon";
-import { stub } from "sinon";
 import { exitPreview } from "../src";
 import { ExitPreviewParams } from "../src";
+
+const noop = () => {
+	// noop
+};
 
 test("exitPreview runs clearPreviewData", async (t) => {
 	const config: ExitPreviewParams = {
 		res: {
 			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(() => {}),
+			redirect: sinon.stub().callsFake(noop),
 		},
 		req: {
 			headers: { referer: "https://example.com" },
@@ -24,7 +27,7 @@ test("exitPreview runs clearPreviewData and redirects to the referrer page", asy
 	const config: ExitPreviewParams = {
 		res: {
 			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(() => {}),
+			redirect: sinon.stub().callsFake(noop),
 		},
 		req: {
 			headers: { referer: "https://example.com/page" },
@@ -44,7 +47,7 @@ test("exitPreview runs clearPreviewData and redirects to the index page if the r
 	const config: ExitPreviewParams = {
 		res: {
 			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(() => {}),
+			redirect: sinon.stub().callsFake(noop),
 		},
 		req: {
 			headers: { referer: "https://example.com/api/exit-preview" },
@@ -60,7 +63,7 @@ test("exitPreview runs clearPreviewData and redirects to the index page if the r
 	const config: ExitPreviewParams = {
 		res: {
 			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(() => {}),
+			redirect: sinon.stub().callsFake(noop),
 		},
 		req: {
 			headers: {},
