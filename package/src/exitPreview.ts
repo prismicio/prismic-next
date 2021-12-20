@@ -1,21 +1,40 @@
 import { NextApiResponse, NextApiRequest } from "next";
 
-export type ExitPreviewParams = {
-	res: {
-		clearPreviewData: NextApiResponse["clearPreviewData"];
-		redirect: NextApiResponse["redirect"];
-	};
+/**
+ * Configuration for `exitPreview`.
+ */
+export type ExitPreviewConfig = {
+	/**
+	 * The `req` object from a Next.js API route. This is given as a parameter to
+	 * the API route.
+	 *
+	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 */
 	req: {
 		headers: {
 			referer?: NextApiRequest["headers"]["referer"];
 		};
 	};
+
+	/**
+	 * The `res` object from a Next.js API route. This is given as a parameter to
+	 * the API route.
+	 *
+	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 */
+	res: {
+		clearPreviewData: NextApiResponse["clearPreviewData"];
+		redirect: NextApiResponse["redirect"];
+	};
 };
 
 /**
- * Exit the current user from "Preview Mode". This function accepts no arguments.
+ * Exits Next.js's Preview Mode from within a Next.js API route.
+ *
+ * If the user was sent to the endpoint from a page, the user will be redirected
+ * back to that page after exiting Preview Mode.
  */
-export function exitPreview(config: ExitPreviewParams) {
+export function exitPreview(config: ExitPreviewConfig) {
 	const { req } = config;
 	// Exit the current user from "Preview Mode". This function accepts no args.
 	config.res.clearPreviewData();
