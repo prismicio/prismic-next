@@ -1,10 +1,54 @@
-import { NextApiResponse } from "next";
+import { NextApiResponse, NextApiRequest } from "next";
 
-export async function exitPreview(_: any, res: NextApiResponse) {
+/**
+ * Configuration for `exitPreview`.
+ */
+export type ExitPreviewConfig = {
+	/**
+	 * The `req` object from a Next.js API route. This is given as a parameter to
+	 * the API route.
+	 *
+	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 */
+	req: {
+		headers: {
+			referer?: NextApiRequest["headers"]["referer"];
+		};
+	};
+
+	/**
+	 * The `res` object from a Next.js API route. This is given as a parameter to
+	 * the API route.
+	 *
+	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 */
+	res: {
+		clearPreviewData: NextApiResponse["clearPreviewData"];
+		redirect: NextApiResponse["redirect"];
+	};
+};
+
+/**
+ * Exits Next.js's Preview Mode from within a Next.js API route.
+ *
+ * If the user was sent to the endpoint from a page, the user will be redirected
+ * back to that page after exiting Preview Mode.
+ */
+export function exitPreview(config: ExitPreviewConfig): void {
+	const { req } = config;
 	// Exit the current user from "Preview Mode". This function accepts no args.
-	res.clearPreviewData();
+	config.res.clearPreviewData();
 
-	// Redirect the user back to the index page.
-	res.writeHead(307, { Location: "/" });
-	res.end();
+	if (req.headers.referer) {
+		const url = new URL(req.headers.referer);
+
+		if (url.pathname !== "/api/exit-preview") {
+			// Redirect the user to the referrer page.
+			config.res.redirect(req.headers.referer);
+
+			return;
+		}
+	}
+
+	config.res.redirect("/");
 }

@@ -1,12 +1,13 @@
+import { useEffect } from 'react';
 import '../styles/globals.css';
 import type { AppProps } from 'next/app';
-import { PreviewProvider } from 'prismic-next';
+import { PrismicPreview } from 'prismic-next';
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <PreviewProvider repoName='smashing-mag-nick-1'>
+    <PrismicPreview repositoryName='smashing-mag-nick-1'>
       <Component {...pageProps} />;
-    </PreviewProvider>
+    </PrismicPreview>
   );
 }
 
