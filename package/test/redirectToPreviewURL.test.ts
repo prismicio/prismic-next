@@ -60,3 +60,53 @@ test("redirectToPreviewURL calls redirect", async (t) => {
 
 	t.true((config.res.redirect as sinon.SinonStub).calledWith("/documentId"));
 });
+
+test("redirectToPreviewURL calls redirect only once", async (t) => {
+	const endpoint = prismic.getEndpoint("qwerty");
+	const client = prismic.createClient(endpoint, { fetch });
+
+	const documentId = "documentId";
+	const token = "token";
+
+	const config: PreviewConfig = {
+		req: {
+			query: {
+				documentId,
+				token,
+			},
+		},
+		res: {
+			redirect: sinon.stub(),
+		},
+		client,
+		linkResolver: (doc) => `/${doc.id}`,
+	};
+
+	server.use(
+		msw.rest.get(endpoint, (_req, res, ctx) => {
+			return res(ctx.json({}));
+		}),
+		msw.rest.get(`${endpoint}/documents/search`, (req, res, ctx) => {
+			const predicate = req.url.searchParams.get("q");
+
+			if (predicate === `[[at(document.id, "${documentId}")]]`) {
+				return res(
+					ctx.json({
+						results: [
+							{
+								id: documentId,
+								url: "url",
+								slugs: [],
+								data: {},
+							},
+						],
+					}),
+				);
+			}
+		}),
+	);
+
+	await redirectToPreviewURL(config);
+
+	t.true((config.res.redirect as sinon.SinonStub).calledOnce);
+});
