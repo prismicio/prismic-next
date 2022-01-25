@@ -1,15 +1,4 @@
-<!--
-
-TODO: Go through all "TODO" comments in the project
-
-TODO: Replace all on all files (README.md, CONTRIBUTING.md, bug_report.md, package.json):
-- package_description
-- github_org_slash_github_repo
-- github_repo
-
--->
-
-# package_name
+# @prismicio/next
 
 [![npm version][npm-version-src]][npm-version-href]
 [![npm downloads][npm-downloads-src]][npm-downloads-href]
@@ -81,9 +70,9 @@ For more clarity on this project and its structure you can also check out the de
 <!-- TODO: Replace link with a more useful one if available -->
 
 [forum-question]: https://community.prismic.io
-[repo-bug-report]: https://github.com/github_org_slash_github_repo/issues/new?assignees=&labels=bug&template=bug_report.md&title=
-[repo-feature-request]: https://github.com/github_org_slash_github_repo/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
-[repo-pull-requests]: https://github.com/github_org_slash_github_repo/pulls
+[repo-bug-report]: https://github.com/prismicio/prismic-next/issues/new?assignees=&labels=bug&template=bug_report.md&title=
+[repo-feature-request]: https://github.com/prismicio/prismic-next/issues/new?assignees=&labels=enhancement&template=feature_request.md&title=
+[repo-pull-requests]: https://github.com/prismicio/prismic-next/pulls
 
 <!-- Badges -->
 
@@ -91,10 +80,10 @@ For more clarity on this project and its structure you can also check out the de
 [npm-version-href]: https://npmjs.com/package/@prismicio/next
 [npm-downloads-src]: https://img.shields.io/npm/dm/@prismicio/next.svg
 [npm-downloads-href]: https://npmjs.com/package/@prismicio/next
-[github-actions-ci-src]: https://github.com/github_org_slash_github_repo/workflows/ci/badge.svg
-[github-actions-ci-href]: https://github.com/github_org_slash_github_repo/actions?query=workflow%3Aci
-[codecov-src]: https://img.shields.io/codecov/c/github/github_org_slash_github_repo.svg
-[codecov-href]: https://codecov.io/gh/github_org_slash_github_repo
+[github-actions-ci-src]: https://github.com/prismicio/prismic-next/workflows/ci/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio/prismic-next/actions?query=workflow%3Aci
+[codecov-src]: https://img.shields.io/codecov/c/github/prismicio/prismic-next.svg
+[codecov-href]: https://codecov.io/gh/prismicio/prismic-next
 [conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
 [conventional-commits-href]: https://conventionalcommits.org
 [license-src]: https://img.shields.io/npm/l/@prismicio/next.svg

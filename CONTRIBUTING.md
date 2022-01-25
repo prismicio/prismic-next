@@ -12,7 +12,7 @@ For the latter, the [Quick Start](#quick-start) section below can help you. You 
 # First, fork the repository to your GitHub account if you aren't an existing maintainer
 
 # Clone your fork
-git clone git@github.com:<your-username>/github_repo.git
+git clone git@github.com:<your-username>/prismic-next.git
 
 # Create a feature branch with your initials and feature name
 git checkout -b <your-initials>/<feature-or-fix-description> # e.g. `lh/fix-win32-paths`
@@ -415,5 +415,5 @@ The minimum Node version supported by the project is stated under the `engines` 
 [template-issue]: https://github.com/prismicio/prismic-typescript-template/issues/new/choose
 [changelog]: ./CHANGELOG.md
 [forum-question]: https://community.prismic.io
-[repo-issue]: https://github.com/github_org_slash_github_repo/issues/new/choose
-[repo-pull-requests]: https://github.com/github_org_slash_github_repo/pulls
+[repo-issue]: https://github.com/prismicio/prismic-next/issues/new/choose
+[repo-pull-requests]: https://github.com/prismicio/prismic-next/pulls
