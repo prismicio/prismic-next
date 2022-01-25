@@ -40,6 +40,8 @@ export async function redirectToPreviewURL({
 		});
 
 		res.redirect(previewUrl);
+
+		return;
 	}
 
 	res.redirect(defaultURL);
