@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.3](https://github.com/prismicio/prismic-next/compare/v0.0.2...v0.0.3) (2022-01-25)
+
+
+### Chore
+
+* add symlink for README ([6e94087](https://github.com/prismicio/prismic-next/commit/6e94087552304560ce70120a0ea46dcbd0ac4a47))
+* adding script back to release ([4cdac7c](https://github.com/prismicio/prismic-next/commit/4cdac7c46ba1bbe4cff64245b270e1f89055dcf7))
+* update repo links and add package name ([a186468](https://github.com/prismicio/prismic-next/commit/a18646854d4b47ad3d9981012814b03438dfca21))
+
 ### 0.0.2 (2022-01-25)
 
 
