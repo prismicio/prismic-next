@@ -4,7 +4,7 @@ import { PrismicToolbar } from "@prismicio/react";
 /**
  * Props for `<PrismicPreview>`.
  */
-type PrismicPreviewProps = {
+export type PrismicPreviewProps = {
 	/**
 	 * The name of your Prismic repository. A Prismic Toolbar will be registered
 	 * using this repository.
