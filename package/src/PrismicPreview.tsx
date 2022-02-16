@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { PrismicToolbar } from "@prismicio/react";
+import { getCookie } from "../lib/getCookie";
+import { useRouter } from "next/router";
+import { extractPreviewRefRepositoryName } from "../lib/extractPreviewRefRepositoryName";
 
 /**
  * Props for `<PrismicPreview>`.
@@ -56,7 +59,22 @@ export function PrismicPreview({
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
 }: PrismicPreviewProps): JSX.Element {
+	const { isPreview } = useRouter();
+
 	useEffect(() => {
+		const prismicCookie = extractPreviewRefRepositoryName(
+			getCookie("io.prismic.preview", globalThis.document.cookie) as string,
+		);
+
+		const prismicPreviewUpdateFromCookie = async () => {
+			if (prismicCookie && !isPreview) {
+				await fetch(`${updatePreviewURL}?token=${prismicCookie}`);
+				window.location.reload();
+			}
+
+			return;
+		};
+
 		const prismicPreviewUpdate = async (event: Event) => {
 			if (isPrismicUpdateToolbarEvent(event)) {
 				// Prevent the toolbar from reloading the page.
@@ -76,6 +94,7 @@ export function PrismicPreview({
 		};
 
 		if (window) {
+			prismicPreviewUpdateFromCookie();
 			window.addEventListener("prismicPreviewUpdate", prismicPreviewUpdate);
 
 			window.addEventListener("prismicPreviewEnd", prismicPreviewEnd);
