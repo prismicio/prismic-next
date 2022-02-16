@@ -34,10 +34,9 @@ export async function setPreviewData({
 	req,
 	res,
 }: SetPreviewDataConfig): Promise<void> {
-	if (req.query.token) {
-		const { token: queryRef } = req.query;
-		const { [prismic.cookie.preview]: cookieRef } = req.query;
+	const ref = req.query.token || req.cookies[prismic.cookie.preview];
 
-		res.setPreviewData({ ref: queryRef || cookieRef });
+	if (ref) {
+		res.setPreviewData({ ref });
 	}
 }

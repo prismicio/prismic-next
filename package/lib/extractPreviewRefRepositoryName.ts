@@ -13,13 +13,17 @@ const extractFirstSubdomain = (host: string): string => host.split(".")[0];
 const extractRepositoryNameFromObjectRef = (
 	previewRef: string,
 ): string | undefined => {
-	const parsed = JSON.parse(decodeURIComponent(previewRef));
-	const keys = Object.keys(parsed);
-	const domainKey = keys.find((key) => /\.prismic\.io$/.test(key));
+	try {
+		const parsed = JSON.parse(decodeURIComponent(previewRef));
+		const keys = Object.keys(parsed);
+		const domainKey = keys.find((key) => /\.prismic\.io$/.test(key));
 
-	if (domainKey) {
-		return extractFirstSubdomain(domainKey);
-	} else {
+		if (domainKey) {
+			return extractFirstSubdomain(domainKey);
+		} else {
+			return undefined;
+		}
+	} catch {
 		return undefined;
 	}
 };

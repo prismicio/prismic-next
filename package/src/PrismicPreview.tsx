@@ -59,54 +59,66 @@ export function PrismicPreview({
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
 }: PrismicPreviewProps): JSX.Element {
-	const { isPreview } = useRouter();
+	const router = useRouter();
 
 	useEffect(() => {
-		const prismicCookie = extractPreviewRefRepositoryName(
+		const previewRefRepositoryName = extractPreviewRefRepositoryName(
 			getCookie("io.prismic.preview", globalThis.document.cookie) as string,
 		);
 
-		const prismicPreviewUpdateFromCookie = async () => {
-			if (prismicCookie && !isPreview) {
-				await fetch(`${updatePreviewURL}?token=${prismicCookie}`);
+		const startPreviewIfLoadedFromSharedLink = async () => {
+			if (previewRefRepositoryName === repositoryName && !router.isPreview) {
+				await fetch(updatePreviewURL);
 				window.location.reload();
 			}
-
-			return;
 		};
 
-		const prismicPreviewUpdate = async (event: Event) => {
+		startPreviewIfLoadedFromSharedLink();
+
+		const handlePrismicPreviewUpdate = async (event: Event) => {
 			if (isPrismicUpdateToolbarEvent(event)) {
 				// Prevent the toolbar from reloading the page.
 				event.preventDefault();
-				// Update the preview cookie.
-				await fetch(`${updatePreviewURL}?token=${event.detail.ref}`);
 
-				// Reload the page with the updated token.
+				// Start Next.js Preview Mode via the given preview API endpoint.
+				await fetch(updatePreviewURL);
+
+				// Reload the page with an active Preview Mode.
 				window.location.reload();
 			}
 		};
 
-		const prismicPreviewEnd = async (event: Event) => {
+		const handlePrismicPreviewEnd = async (event: Event) => {
+			// Prevent the toolbar from reloading the page.
 			event.preventDefault();
+
+			// Exit Next.js Preview Mode via the given preview API endpoint.
 			await fetch(exitPreviewURL);
+
+			// Reload the page with an active Preview Mode.
 			window.location.reload();
 		};
 
+		// Register Prismic Toolbar event handlers.
 		if (window) {
-			prismicPreviewUpdateFromCookie();
-			window.addEventListener("prismicPreviewUpdate", prismicPreviewUpdate);
-
-			window.addEventListener("prismicPreviewEnd", prismicPreviewEnd);
+			window.addEventListener(
+				"prismicPreviewUpdate",
+				handlePrismicPreviewUpdate,
+			);
+			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 		}
 
+		// On cleanup, unregister Prismic Toolbar event handlers.
 		return () => {
 			if (window) {
 				window.removeEventListener(
 					"prismicPreviewUpdate",
-					prismicPreviewUpdate,
+					handlePrismicPreviewUpdate,
 				);
-				window.removeEventListener("prismicPreviewEnd", prismicPreviewEnd);
+				window.removeEventListener(
+					"prismicPreviewEnd",
+					handlePrismicPreviewEnd,
+				);
 			}
 		};
 	}, []);
