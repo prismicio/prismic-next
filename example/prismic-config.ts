@@ -1,26 +1,29 @@
-/** Example file */
+/**
+ * Example file
+ */
 
-import { createClient, getEndpoint } from '@prismicio/client';
-import { LinkResolverFunction } from '@prismicio/helpers';
-import { enableAutoPreviews, CreateClientConfig } from 'prismic-next';
+import { Client, createClient, getEndpoint } from "@prismicio/client";
+import { LinkResolverFunction } from "@prismicio/helpers";
+import { enableAutoPreviews, CreateClientConfig } from "prismic-next";
 
-export const apiEndpoint = getEndpoint('smashing-mag-nick-1');
+export const apiEndpoint = getEndpoint("smashing-mag-nick-1");
 
 export const linkResolver: LinkResolverFunction = (doc) => {
-  if (doc.type === 'product') {
-    return `/products/${doc.uid}`;
-  }
-  return '/';
+	if (doc.type === "product") {
+		return `/products/${doc.uid}`;
+	}
+
+	return "/";
 };
 
-export const createPrismicClient = (config: CreateClientConfig) => {
-  const client = createClient(apiEndpoint);
+export const createPrismicClient = (config: CreateClientConfig): Client => {
+	const client = createClient(apiEndpoint);
 
-  enableAutoPreviews({
-    client,
-    context: config.context,
-    req: config.req,
-  });
+	enableAutoPreviews({
+		client,
+		previewData: config.previewData,
+		req: config.req,
+	});
 
-  return client;
+	return client;
 };
