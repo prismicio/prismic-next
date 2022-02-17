@@ -6,8 +6,4 @@ export { exitPreview } from "./exitPreview";
 export { PrismicPreview } from "./PrismicPreview";
 export { enableAutoPreviews } from "./enableAutoPreviews";
 export { redirectToPreviewURL } from "./redirectToPreviewURL";
-export type {
-	NextContextLike,
-	CreateClientConfig,
-	PreviewConfig,
-} from "./types";
+export type { CreateClientConfig, PreviewConfig } from "./types";

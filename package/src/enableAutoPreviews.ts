@@ -1,6 +1,5 @@
 import { PreviewData } from "next";
 import { Client, HttpRequestLike } from "@prismicio/client";
-import { NextContextLike } from "./types";
 
 interface PrismicNextPreviewData {
 	ref: string;
@@ -24,9 +23,7 @@ const isPrismicNextPreviewData = (
  *
  * @typeParam TPreviewData - Next.js preview data object.
  */
-export type EnableAutoPreviewsConfig<
-	TPreviewData extends PreviewData = PreviewData,
-> = {
+export type EnableAutoPreviewsConfig = {
 	/**
 	 * Prismic client with which automatic previews will be enabled.
 	 */
@@ -40,7 +37,7 @@ export type EnableAutoPreviewsConfig<
 			 * Pass a `context` object when using `enableAutoPreviews` outside a
 			 * Next.js API endpoint.
 			 */
-			context?: NextContextLike<TPreviewData>;
+			previewData?: PreviewData;
 	  }
 	| {
 			/**
@@ -58,16 +55,12 @@ export type EnableAutoPreviewsConfig<
  *
  * @param config - Configuration for the function.
  */
-export const enableAutoPreviews = <
-	TPreviewData extends PreviewData = PreviewData,
->(
-	config: EnableAutoPreviewsConfig<TPreviewData>,
-): void => {
+export const enableAutoPreviews = (config: EnableAutoPreviewsConfig): void => {
 	/**
 	 * If preview data is being passed from Next Context then use queryContentFromRef
 	 */
-	if ("context" in config && config.context) {
-		const previewData = config.context.previewData;
+	if ("previewData" in config && config.previewData) {
+		const { previewData } = config;
 
 		if (isPrismicNextPreviewData(previewData) && previewData.ref) {
 			config.client.queryContentFromRef(previewData.ref);
