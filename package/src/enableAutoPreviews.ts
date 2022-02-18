@@ -23,7 +23,9 @@ const isPrismicNextPreviewData = (
  *
  * @typeParam TPreviewData - Next.js preview data object.
  */
-export type EnableAutoPreviewsConfig = {
+export type EnableAutoPreviewsConfig<
+	TPreviewData extends PreviewData = PreviewData,
+> = {
 	/**
 	 * Prismic client with which automatic previews will be enabled.
 	 */
@@ -37,7 +39,7 @@ export type EnableAutoPreviewsConfig = {
 			 * Pass a `context` object when using `enableAutoPreviews` outside a
 			 * Next.js API endpoint.
 			 */
-			previewData?: PreviewData;
+			previewData?: TPreviewData;
 	  }
 	| {
 			/**
@@ -55,7 +57,9 @@ export type EnableAutoPreviewsConfig = {
  *
  * @param config - Configuration for the function.
  */
-export const enableAutoPreviews = (config: EnableAutoPreviewsConfig): void => {
+export const enableAutoPreviews = <TPreviewData extends PreviewData>(
+	config: EnableAutoPreviewsConfig<TPreviewData>,
+): void => {
 	/**
 	 * If preview data is being passed from Next Context then use queryContentFromRef
 	 */
