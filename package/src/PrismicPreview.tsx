@@ -1,5 +1,9 @@
 import React, { useEffect } from "react";
 import { PrismicToolbar } from "@prismicio/react";
+import { useRouter } from "next/router";
+
+import { getCookie } from "../lib/getCookie";
+import { extractPreviewRefRepositoryName } from "../lib/extractPreviewRefRepositoryName";
 
 /**
  * Props for `<PrismicPreview>`.
@@ -56,38 +60,66 @@ export function PrismicPreview({
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
 }: PrismicPreviewProps): JSX.Element {
-	useEffect(() => {
-		const prismicPreviewUpdate = async (event: Event) => {
-			if (isPrismicUpdateToolbarEvent(event)) {
-				// Prevent the toolbar from reloading the page.
-				event.preventDefault();
-				// Update the preview cookie.
-				await fetch(`${updatePreviewURL}?token=${event.detail.ref}`);
+	const router = useRouter();
 
-				// Reload the page with the updated token.
+	useEffect(() => {
+		const previewRefRepositoryName = extractPreviewRefRepositoryName(
+			getCookie("io.prismic.preview", globalThis.document.cookie) as string,
+		);
+
+		const startPreviewIfLoadedFromSharedLink = async () => {
+			if (previewRefRepositoryName === repositoryName && !router.isPreview) {
+				await fetch(updatePreviewURL);
 				window.location.reload();
 			}
 		};
 
-		const prismicPreviewEnd = async (event: Event) => {
+		startPreviewIfLoadedFromSharedLink();
+
+		const handlePrismicPreviewUpdate = async (event: Event) => {
+			if (isPrismicUpdateToolbarEvent(event)) {
+				// Prevent the toolbar from reloading the page.
+				event.preventDefault();
+
+				// Start Next.js Preview Mode via the given preview API endpoint.
+				await fetch(updatePreviewURL);
+
+				// Reload the page with an active Preview Mode.
+				window.location.reload();
+			}
+		};
+
+		const handlePrismicPreviewEnd = async (event: Event) => {
+			// Prevent the toolbar from reloading the page.
 			event.preventDefault();
+
+			// Exit Next.js Preview Mode via the given preview API endpoint.
 			await fetch(exitPreviewURL);
+
+			// Reload the page with an active Preview Mode.
 			window.location.reload();
 		};
 
+		// Register Prismic Toolbar event handlers.
 		if (window) {
-			window.addEventListener("prismicPreviewUpdate", prismicPreviewUpdate);
-
-			window.addEventListener("prismicPreviewEnd", prismicPreviewEnd);
+			window.addEventListener(
+				"prismicPreviewUpdate",
+				handlePrismicPreviewUpdate,
+			);
+			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 		}
 
+		// On cleanup, unregister Prismic Toolbar event handlers.
 		return () => {
 			if (window) {
 				window.removeEventListener(
 					"prismicPreviewUpdate",
-					prismicPreviewUpdate,
+					handlePrismicPreviewUpdate,
 				);
-				window.removeEventListener("prismicPreviewEnd", prismicPreviewEnd);
+				window.removeEventListener(
+					"prismicPreviewEnd",
+					handlePrismicPreviewEnd,
+				);
 			}
 		};
 	}, []);

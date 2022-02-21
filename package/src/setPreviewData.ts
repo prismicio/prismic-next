@@ -1,4 +1,5 @@
 import { NextApiResponse, NextApiRequest } from "next";
+import * as prismic from "@prismicio/client";
 
 /**
  * Configuration for `setPreviewData`.
@@ -12,6 +13,7 @@ export type SetPreviewDataConfig = {
 	 */
 	req: {
 		query: NextApiRequest["query"];
+		cookies: NextApiRequest["cookies"];
 	};
 
 	/**
@@ -32,8 +34,9 @@ export async function setPreviewData({
 	req,
 	res,
 }: SetPreviewDataConfig): Promise<void> {
-	if (req.query.token) {
-		const { token: ref } = req.query;
+	const ref = req.query.token || req.cookies[prismic.cookie.preview];
+
+	if (ref) {
 		res.setPreviewData({ ref });
 	}
 }
