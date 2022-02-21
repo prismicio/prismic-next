@@ -46,7 +46,7 @@ const extractRepositoryNameFromURLRef = (
 };
 
 /**
- * Extracts preview reference repo name from stringified cookie
+ * Extracts preview reference repo name from stringified Prismic preview cookie
  *
  * @param previewRef - Preview Reference
  */
