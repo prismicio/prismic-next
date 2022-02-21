@@ -1,7 +1,8 @@
 import React, { useEffect } from "react";
 import { PrismicToolbar } from "@prismicio/react";
-import { getCookie } from "../lib/getCookie";
 import { useRouter } from "next/router";
+
+import { getCookie } from "../lib/getCookie";
 import { extractPreviewRefRepositoryName } from "../lib/extractPreviewRefRepositoryName";
 
 /**
