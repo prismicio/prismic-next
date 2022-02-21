@@ -3,25 +3,17 @@ import { LinkResolverFunction } from "@prismicio/helpers";
 import { Client } from "@prismicio/client";
 
 /**
- * Next.js context object from APIs supporting Preview Mode. This includes the
- * context object from `getStaticProps` and `getServerSideProps`.
- */
-export type NextContextLike<TPreviewData extends PreviewData = PreviewData> = {
-	previewData?: TPreviewData;
-};
-
-/**
  * Configuration for creating a Prismic client with automatic preview support in
  * Next.js apps.
  */
 export type CreateClientConfig = {
 	/**
-	 * A Next.js context object (such as the context object from `getStaticProps`
-	 * or `getServerSideProps`).
+	 * Preview data coming from Next.js context object. This context object comes
+	 * from `getStaticProps` or `getServerSideProps`.
 	 *
-	 * Pass a `context` when using outside a Next.js API endpoint.
+	 * Pass `previewData` when using outside a Next.js API endpoint.
 	 */
-	context?: NextContextLike;
+	previewData?: PreviewData;
 
 	/**
 	 * A Next.js API endpoint request object.
