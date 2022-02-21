@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.5](https://github.com/prismicio/prismic-next/compare/v0.0.4...v0.0.5) (2022-02-21)
+
+
+### Features
+
+* replace `enableAutoPreviews()`'s `context` option with `previewData` ([#12](https://github.com/prismicio/prismic-next/issues/12)) ([435b8eb](https://github.com/prismicio/prismic-next/commit/435b8eb06356829b3cabc34152a31661feba6d41))
+* support shareable Preview links ([#11](https://github.com/prismicio/prismic-next/issues/11)) ([180fee8](https://github.com/prismicio/prismic-next/commit/180fee8358d58f71d99b4e20d8bb99bab22724f3))
+
+
+### Chore
+
+* link root README to package README ([609a1f3](https://github.com/prismicio/prismic-next/commit/609a1f3d4e2fe0c15571f73acec92b5921835d13))
+
 ### [0.0.4](https://github.com/prismicio/prismic-next/compare/v0.0.3...v0.0.4) (2022-01-25)
 
 
