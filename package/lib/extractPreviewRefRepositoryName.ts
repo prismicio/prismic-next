@@ -1,5 +1,5 @@
 /**
- * Accepts the host string and returns the host name.
+ * Returns the repository name from an object-style Prismic ref.
  *
  * @param host - Host string
  */
@@ -29,7 +29,7 @@ const extractRepositoryNameFromObjectRef = (
 };
 
 /**
- * Formats preview ref to URL and returns first subdomain
+ * Returns the repository name from a URL-style Prismic ref.
  *
  * @param previewRef - Preview ref from getCookie()
  */
