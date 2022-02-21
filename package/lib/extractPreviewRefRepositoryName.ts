@@ -45,6 +45,11 @@ const extractRepositoryNameFromURLRef = (
 	}
 };
 
+/**
+ * Extracts preview reference repo name from stringified cookie
+ *
+ * @param previewRef - Preview Reference
+ */
 export const extractPreviewRefRepositoryName = (
 	previewRef: string,
 ): string | undefined => {
