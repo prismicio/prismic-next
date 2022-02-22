@@ -2,11 +2,11 @@
  * Example file
  */
 
-import { Client, createClient, getEndpoint } from "@prismicio/client";
+import * as Prismic from "@prismicio/client";
 import { LinkResolverFunction } from "@prismicio/helpers";
-import { enableAutoPreviews, CreateClientConfig } from "prismic-next";
+import { enableAutoPreviews, CreateClientConfig } from "@prismicio/next";
 
-export const apiEndpoint = getEndpoint("smashing-mag-nick-1");
+export const apiEndpoint = Prismic.getEndpoint("smashing-mag-nick-1");
 
 export const linkResolver: LinkResolverFunction = (doc) => {
 	if (doc.type === "product") {
@@ -16,8 +16,8 @@ export const linkResolver: LinkResolverFunction = (doc) => {
 	return "/";
 };
 
-export const createPrismicClient = (config: CreateClientConfig): Client => {
-	const client = createClient(apiEndpoint);
+export const createClient = (config: CreateClientConfig): Prismic.Client => {
+	const client = Prismic.createClient(apiEndpoint);
 
 	enableAutoPreviews({
 		client,

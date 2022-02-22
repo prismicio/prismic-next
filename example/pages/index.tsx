@@ -2,11 +2,11 @@ import type { GetStaticPropsContext, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
 import styles from "../styles/Home.module.css";
-import { createPrismicClient } from "../prismic-config";
+import { createClient } from "../prismicio";
 import { asText } from "@prismicio/helpers";
 
 export async function getStaticProps({ previewData }: GetStaticPropsContext) {
-	const client = createPrismicClient({ previewData });
+	const client = createClient({ previewData });
 
 	const home = await client.getByUID("page", "home");
 
