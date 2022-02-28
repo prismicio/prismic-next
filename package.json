@@ -14,5 +14,6 @@
   },
   "dependencies": {
     "@prismicio/next": "file:package"
-  }
+  },
+  "version": "0.1.0"
 }
