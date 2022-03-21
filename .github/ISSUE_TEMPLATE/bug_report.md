@@ -1,9 +1,10 @@
 ---
-name: 🚨 Bug report
+name: "\U0001F6A8 Bug report"
 about: Report a bug report to help improve the package.
-title: ""
-labels: "bug"
-assignees: ""
+title: ''
+labels: bug
+assignees: ''
+
 ---
 
 <!-- 💙 Thanks for your time to make this package better with your feedback 💙
