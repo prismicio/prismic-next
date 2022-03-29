@@ -7,8 +7,6 @@
 [![Conventional Commits][conventional-commits-src]][conventional-commits-href]
 [![License][license-src]][license-href]
 
-> ⚠ This project is currently in beta with plans for a full release in late April. We encourage users to try out this library and would love feedback on your experiences. To learn more about this package, including how to provide feedback during the beta period, check out the [announcement blog post](https://prismic.io/blog/prismic-next-library-beta)
-
 <!-- TODO: Replacing link to Prismic with [Prismic][prismic] is useful here -->
 
 A Next.js Integration with Prismic that makes it easier to take advantage of Next.js features.
