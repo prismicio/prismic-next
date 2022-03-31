@@ -1,10 +1,9 @@
 ---
-name: "\U0001F6A8 Bug report"
+name: 🚨 Bug report
 about: Report a bug report to help improve the package.
-title: ''
-labels: bug
-assignees: ''
-
+title: ""
+labels: "bug"
+assignees: ""
 ---
 
 <!-- 💙 Thanks for your time to make this package better with your feedback 💙
@@ -17,7 +16,8 @@ assignees: ''
 
 ### Versions
 
-- package_name: <!-- ex: v0.1.0 -->
+- `@prismicio/next`: <!-- ex: v0.1.0 -->
+- `next`: <!-- ex: v12.1.0 -->
 - node: <!-- ex: v12.14.0 -->
 
 ### Reproduction

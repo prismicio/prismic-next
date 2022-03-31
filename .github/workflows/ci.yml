@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  ci:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node: [14]
+
+    steps:
+      - name: Set up Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-node-v${{ matrix.node }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/package-lock.json')) }}
+
+      - name: Install dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint -w package
+
+      - name: Unit
+        run: npm run unit -w package
+
+      - name: Build
+        run: npm run build -w package
+
+      - name: Coverage
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 14
+        uses: codecov/codecov-action@v1
+
+      # - name: Size
+      #   if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 14
+      #   uses: andresz1/size-limit-action@v1
+      #   with:
+      #     github_token: ${{ secrets.GITHUB_TOKEN }}
