@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.1](https://github.com/prismicio/prismic-next/compare/v0.1.0...v0.1.1) (2022-03-31)
+
+
+### Features
+
+* expose PrismicPreview props ([#10](https://github.com/prismicio/prismic-next/issues/10)) ([f15f064](https://github.com/prismicio/prismic-next/commit/f15f06478f0d375568f5c2f8e806dac33032793a)), closes [#9](https://github.com/prismicio/prismic-next/issues/9)
+
+
+### Bug Fixes
+
+* support React 18 ([9b90977](https://github.com/prismicio/prismic-next/commit/9b909775d9ad5fcd92754fedd6def03932762e63))
+
+
+### Chore
+
+* update warning label ([8d58178](https://github.com/prismicio/prismic-next/commit/8d58178e89afce2bd64660be5dcee4d6ecacf56c))
+
+
+### Documentation
+
+* remove experimental/beta message ([d7f1b55](https://github.com/prismicio/prismic-next/commit/d7f1b55c7fcbc68795dcf45a48be1dad12d073f8))
+
 ## [0.1.0](https://github.com/prismicio/prismic-next/compare/v0.0.5...v0.1.0) (2022-02-28)
 
 ### [0.0.5](https://github.com/prismicio/prismic-next/compare/v0.0.4...v0.0.5) (2022-02-21)
