@@ -6,7 +6,7 @@ import { enableAutoPreviews } from "../src";
 test("enableAutoPreviews enables previews with req passed to it", (t) => {
 	globalThis.fetch = sinon.stub();
 	const config = {
-		client: sinon.stub(prismic.createClient("url")),
+		client: sinon.stub(prismic.createClient(prismic.getEndpoint("qwerty"))),
 		req: {},
 	};
 
@@ -22,7 +22,7 @@ test("enableAutoPreviews enables previews with req passed to it", (t) => {
 test("enableAutoPreviews enables previews with previewData passed to it", (t) => {
 	globalThis.fetch = sinon.stub();
 	const config = {
-		client: sinon.stub(prismic.createClient("url")),
+		client: sinon.stub(prismic.createClient(prismic.getEndpoint("qwerty"))),
 		previewData: { ref: "ref" },
 	};
 
