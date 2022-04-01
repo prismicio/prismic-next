@@ -1,76 +1,74 @@
-import test from "ava";
-import * as sinon from "sinon";
-import { exitPreview } from "../src";
-import { ExitPreviewParams } from "../src";
+import { test, expect, fn } from "vitest";
 
-const noop = () => {
-	// noop
-};
+import { exitPreview, ExitPreviewConfig } from "../src";
 
-test("exitPreview runs clearPreviewData", async (t) => {
-	const config: ExitPreviewParams = {
-		res: {
-			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(noop),
-		},
+test("clears preview data", () => {
+	const config: ExitPreviewConfig = {
 		req: {
-			headers: { referer: "https://example.com" },
+			headers: {
+				referer: "https://example.com/foo",
+			},
+		},
+		res: {
+			clearPreviewData: fn(),
+			redirect: fn().mockImplementation(() => void 0),
 		},
 	};
 
 	exitPreview(config);
 
-	t.true((config.res.clearPreviewData as sinon.SinonStub).calledWith());
+	expect(config.res.clearPreviewData).toHaveBeenCalled();
 });
 
-test("exitPreview runs clearPreviewData and redirects to the referrer page", async (t) => {
-	const config: ExitPreviewParams = {
-		res: {
-			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(noop),
-		},
+test("redirects to referrer if present", () => {
+	const config: ExitPreviewConfig = {
 		req: {
-			headers: { referer: "https://example.com/page" },
+			headers: {
+				referer: "https://example.com/foo",
+			},
+		},
+		res: {
+			clearPreviewData: fn(),
+			redirect: fn().mockImplementation(() => void 0),
 		},
 	};
 
 	exitPreview(config);
 
-	t.true(
-		(config.res.redirect as sinon.SinonStub).calledWith(
-			"https://example.com/page",
-		),
-	);
+	expect(config.res.redirect).toHaveBeenCalledWith(config.req.headers.referer);
 });
 
-test("exitPreview runs clearPreviewData and redirects to the index page if the referrer was itself", async (t) => {
-	const config: ExitPreviewParams = {
-		res: {
-			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(noop),
-		},
-		req: {
-			headers: { referer: "https://example.com/api/exit-preview" },
-		},
-	};
-
-	exitPreview(config);
-
-	t.true((config.res.redirect as sinon.SinonStub).calledWith("/"));
-});
-
-test("exitPreview runs clearPreviewData and redirects to the index page if the referrer was undefined", async (t) => {
-	const config: ExitPreviewParams = {
-		res: {
-			clearPreviewData: sinon.stub(),
-			redirect: sinon.stub().callsFake(noop),
-		},
+test("redirects to `/` if no referrer", () => {
+	const config: ExitPreviewConfig = {
 		req: {
 			headers: {},
 		},
+		res: {
+			clearPreviewData: fn(),
+			redirect: fn().mockImplementation(() => void 0),
+		},
 	};
 
 	exitPreview(config);
 
-	t.true((config.res.redirect as sinon.SinonStub).calledWith("/"));
+	expect(config.res.redirect).toHaveBeenCalledWith("/");
+});
+
+test("redirects to `/` if referrer is exit preview api route", () => {
+	const config: ExitPreviewConfig = {
+		req: {
+			headers: {
+				referer: "https://example.com/foo",
+			},
+		},
+		res: {
+			clearPreviewData: fn(),
+			redirect: fn().mockImplementation(() => void 0),
+		},
+		exitPreviewURL: "/foo",
+	};
+
+	exitPreview(config);
+
+	expect(config.res.redirect).toHaveBeenCalledWith("/");
 });

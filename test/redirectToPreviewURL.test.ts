@@ -1,117 +1,120 @@
-import test from "ava";
-import sinon from "sinon";
-import prismic from "@prismicio/client";
-import msw from "msw";
-import mswNode from "msw/node";
-import { PreviewConfig } from "../src/";
-import { redirectToPreviewURL } from "../src";
+import { test, expect, fn, spyOn } from "vitest";
+import * as prismic from "@prismicio/client";
 
-const server = mswNode.setupServer();
-test.before(() => server.listen({ onUnhandledRequest: "error" }));
-test.after(() => server.close());
+import { redirectToPreviewURL, RedirectToPreviewURLConfig } from "../src";
 
-test("redirectToPreviewURL calls redirect", async (t) => {
-	const endpoint = prismic.getEndpoint("qwerty");
-	const client = prismic.createClient(endpoint, {
-		fetch: (...args) =>
-			import("node-fetch").then(({ default: fetch }) => fetch(...args)),
-	});
-
-	const documentId = "documentId";
-	const token = "token";
-
-	const config: PreviewConfig = {
+test("redirects to the previewed document's URL", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
 		req: {
 			query: {
-				documentId,
-				token,
+				documentId: "foo",
+				token: "bar",
 			},
 		},
 		res: {
-			redirect: sinon.stub().callsFake(() => void 0),
+			redirect: fn().mockImplementation(() => void 0),
 		},
-		client,
-		linkResolver: (doc) => `/${doc.id}`,
 	};
 
-	server.use(
-		msw.rest.get(endpoint, (_req, res, ctx) => {
-			return res(ctx.json({}));
-		}),
-		msw.rest.get(`${endpoint}/documents/search`, (req, res, ctx) => {
-			const predicate = req.url.searchParams.get("q");
-
-			if (predicate === `[[at(document.id, "${documentId}")]]`) {
-				return res(
-					ctx.json({
-						results: [
-							{
-								id: documentId,
-								url: "url",
-								slugs: [],
-								data: {},
-							},
-						],
-					}),
-				);
-			}
-		}),
+	spyOn(config.client, "resolvePreviewURL").mockImplementation(
+		async () => "/baz",
 	);
 
 	await redirectToPreviewURL(config);
 
-	t.true((config.res.redirect as sinon.SinonStub).calledWith("/documentId"));
+	expect(config.res.redirect).toHaveBeenCalledWith("/baz");
 });
 
-test("redirectToPreviewURL calls redirect only once", async (t) => {
-	const endpoint = prismic.getEndpoint("qwerty");
-	const client = prismic.createClient(endpoint, {
-		fetch: (...args) =>
-			import("node-fetch").then(({ default: fetch }) => fetch(...args)),
-	});
-
-	const documentId = "documentId";
-	const token = "token";
-
-	const config: PreviewConfig = {
+test("passes the given link resolver to client.resolvePreviewURL", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
 		req: {
 			query: {
-				documentId,
-				token,
+				documentId: "foo",
+				token: "bar",
 			},
 		},
 		res: {
-			redirect: sinon.stub().callsFake(() => void 0),
+			redirect: fn().mockImplementation(() => void 0),
 		},
-		client,
-		linkResolver: (doc) => `/${doc.id}`,
+		linkResolver: () => "linkResolver",
 	};
 
-	server.use(
-		msw.rest.get(endpoint, (_req, res, ctx) => {
-			return res(ctx.json({}));
-		}),
-		msw.rest.get(`${endpoint}/documents/search`, (req, res, ctx) => {
-			const predicate = req.url.searchParams.get("q");
-
-			if (predicate === `[[at(document.id, "${documentId}")]]`) {
-				return res(
-					ctx.json({
-						results: [
-							{
-								id: documentId,
-								url: "url",
-								slugs: [],
-								data: {},
-							},
-						],
-					}),
-				);
-			}
-		}),
-	);
+	const resolvePreviewURLSpy = spyOn(
+		config.client,
+		"resolvePreviewURL",
+	).mockImplementation(async () => "/baz");
 
 	await redirectToPreviewURL(config);
 
-	t.true((config.res.redirect as sinon.SinonStub).calledOnce);
+	expect(resolvePreviewURLSpy).toHaveBeenCalledWith({
+		linkResolver: config.linkResolver,
+		defaultURL: "/",
+		documentID: config.req.query.documentId,
+		previewToken: config.req.query.token,
+	});
+});
+
+test("passes the given default URL to client.resolvePreviewURL", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
+		req: {
+			query: {
+				documentId: "foo",
+				token: "bar",
+			},
+		},
+		res: {
+			redirect: fn().mockImplementation(() => void 0),
+		},
+		defaultURL: "/baz",
+	};
+
+	const resolvePreviewURLSpy = spyOn(
+		config.client,
+		"resolvePreviewURL",
+	).mockImplementation(async () => "/qux");
+
+	await redirectToPreviewURL(config);
+
+	expect(resolvePreviewURLSpy).toHaveBeenCalledWith({
+		linkResolver: config.linkResolver,
+		defaultURL: config.defaultURL,
+		documentID: config.req.query.documentId,
+		previewToken: config.req.query.token,
+	});
+});
+
+test("redirects to `/` by default if the URL params do not contain documentId or token", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
+		req: {
+			query: {},
+		},
+		res: {
+			redirect: fn().mockImplementation(() => void 0),
+		},
+	};
+
+	await redirectToPreviewURL(config);
+
+	expect(config.res.redirect).toHaveBeenCalledWith("/");
+});
+
+test("redirects to the given default URL if the URL params do not contain documentId or token", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
+		req: {
+			query: {},
+		},
+		res: {
+			redirect: fn().mockImplementation(() => void 0),
+		},
+		defaultURL: "/foo",
+	};
+
+	await redirectToPreviewURL(config);
+
+	expect(config.res.redirect).toHaveBeenCalledWith("/foo");
 });

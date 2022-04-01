@@ -1,36 +1,42 @@
-import test from "ava";
-import * as sinon from "sinon";
+import { test, spyOn, expect, fn } from "vitest";
 import * as prismic from "@prismicio/client";
-import { enableAutoPreviews } from "../src";
 
-test("enableAutoPreviews enables previews with req passed to it", (t) => {
-	globalThis.fetch = sinon.stub();
-	const config = {
-		client: sinon.stub(prismic.createClient(prismic.getEndpoint("qwerty"))),
+import { enableAutoPreviews, EnableAutoPreviewsConfig } from "../src";
+
+test("enables auto previews for the given client and server req", () => {
+	const config: EnableAutoPreviewsConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
 		req: {},
 	};
+	const spy = spyOn(config.client, "enableAutoPreviewsFromReq");
 
 	enableAutoPreviews(config);
 
-	t.true(
-		(config.client.enableAutoPreviewsFromReq as sinon.SinonStub).calledWith(
-			config.req,
-		),
-	);
+	expect(spy).toHaveBeenCalledWith(config.req);
 });
 
-test("enableAutoPreviews enables previews with previewData passed to it", (t) => {
-	globalThis.fetch = sinon.stub();
-	const config = {
-		client: sinon.stub(prismic.createClient(prismic.getEndpoint("qwerty"))),
+test("enables auto previews for the given client and previewData", () => {
+	const config: EnableAutoPreviewsConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
 		previewData: { ref: "ref" },
 	};
+	const spy = spyOn(config.client, "queryContentFromRef");
 
 	enableAutoPreviews(config);
 
-	t.true(
-		(config.client.queryContentFromRef as sinon.SinonStub).calledWith(
-			config.previewData?.ref,
-		),
+	expect(spy).toHaveBeenCalledWith("ref");
+});
+
+test("does not enable auto previews for the given client if a server req or previewData is not given", () => {
+	const client = prismic.createClient("qwerty", { fetch: fn() });
+	const enableAutoPreviewsFromReqSpy = spyOn(
+		client,
+		"enableAutoPreviewsFromReq",
 	);
+	const queryContentFromRefSpy = spyOn(client, "queryContentFromRef");
+
+	enableAutoPreviews({ client });
+
+	expect(enableAutoPreviewsFromReqSpy).not.toHaveBeenCalled();
+	expect(queryContentFromRefSpy).not.toHaveBeenCalled();
 });
