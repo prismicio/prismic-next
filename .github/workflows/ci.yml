@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        node: [16]
+        node: [14]
 
     steps:
       - name: Set up Node
@@ -37,20 +37,20 @@ jobs:
         run: npm ci
 
       - name: Lint
-        run: npm run lint -w package
+        run: npm run lint
 
       - name: Unit
-        run: npm run unit -w package
+        run: npm run unit
 
       - name: Build
-        run: npm run build -w package
+        run: npm run build
 
       - name: Coverage
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 16
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 14
         uses: codecov/codecov-action@v1
 
       - name: Size
-        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 16
+        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 14
         uses: andresz1/size-limit-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
