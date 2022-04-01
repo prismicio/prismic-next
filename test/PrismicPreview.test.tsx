@@ -189,6 +189,54 @@ test("supports shared links", async () => {
 	renderer.act(() => unmount());
 });
 
+test("ignores invalid preview cookie", async () => {
+	vi.mock("next/router", () => {
+		return {
+			useRouter: () => {
+				return {
+					isPreview: false,
+				};
+			},
+		};
+	});
+
+	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
+		"invalid.example.com": {},
+	})}`;
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	await tick();
+
+	expect(globalThis.fetch).not.toHaveBeenCalled();
+	expect(globalThis.location.reload).not.toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("does nothing if not an active preview session", async () => {
+	vi.mock("next/router", () => {
+		return {
+			useRouter: () => {
+				return {
+					isPreview: false,
+				};
+			},
+		};
+	});
+
+	globalThis.document.cookie = `io.prismic.preview=`;
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	await tick();
+
+	expect(globalThis.fetch).not.toHaveBeenCalled();
+	expect(globalThis.location.reload).not.toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
 test("renders children untouched", () => {
 	const actual = render(
 		<PrismicPreview repositoryName="qwerty">

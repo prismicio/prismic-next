@@ -27,7 +27,7 @@ const readValue = (value: string): string => {
 	return value.replace(/%3B/g, ";");
 };
 
-export const parse = (cookieString: string): { [name: string]: string } => {
+const parse = (cookieString: string): { [name: string]: string } => {
 	const result: { [name: string]: string } = {};
 	const cookies = cookieString.split("; ");
 
@@ -41,9 +41,6 @@ export const parse = (cookieString: string): { [name: string]: string } => {
 	return result;
 };
 
-const getAll = (cookieStore: string): { [name: string]: string } =>
-	parse(cookieStore);
-
 /**
  * Returns the value of a cookie from a given cookie store.
  *
@@ -55,4 +52,6 @@ const getAll = (cookieStore: string): { [name: string]: string } =>
 export const getCookie = (
 	name: string,
 	cookieStore: string,
-): string | undefined => getAll(cookieStore)[name];
+): string | undefined => {
+	return parse(cookieStore)[name];
+};
