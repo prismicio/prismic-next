@@ -9,7 +9,7 @@
 
 Helpers to integrate Prismic into Next.js apps.
 
-- 𝨩👁️ &nbsp;Easily set up Prismic Preview
+- 👁️ &nbsp;Easily set up Prismic Preview
 - _More features coming!_
 
 ## Install
