@@ -72,7 +72,7 @@
 		"nyc": "^15.1.0",
 		"prettier": "^2.6.1",
 		"prettier-plugin-jsdoc": "^0.3.35",
-		"react-test-renderer": "^18.0.0",
+		"react": "^18.0.0",
 		"sinon": "^13.0.1",
 		"siroc": "^0.16.0",
 		"size-limit": "^7.0.8",
