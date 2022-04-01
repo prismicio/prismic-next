@@ -47,7 +47,7 @@ const getAll = (cookieStore: string): { [name: string]: string } =>
 /**
  * Returns the value of a cookie from a given cookie store.
  *
- * @param Name - Of the cookie.
+ * @param name - Of the cookie.
  * @param cookieStore - The stringified cookie store from which to read the cookie.
  *
  * @returns The value of the cookie, if it exists.

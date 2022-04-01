@@ -5,7 +5,6 @@ import msw from "msw";
 import mswNode from "msw/node";
 import { PreviewConfig } from "../src/";
 import { redirectToPreviewURL } from "../src";
-import fetch from "node-fetch";
 
 const server = mswNode.setupServer();
 test.before(() => server.listen({ onUnhandledRequest: "error" }));
@@ -13,7 +12,10 @@ test.after(() => server.close());
 
 test("redirectToPreviewURL calls redirect", async (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
-	const client = prismic.createClient(endpoint, { fetch });
+	const client = prismic.createClient(endpoint, {
+		fetch: (...args) =>
+			import("node-fetch").then(({ default: fetch }) => fetch(...args)),
+	});
 
 	const documentId = "documentId";
 	const token = "token";
@@ -26,7 +28,7 @@ test("redirectToPreviewURL calls redirect", async (t) => {
 			},
 		},
 		res: {
-			redirect: sinon.stub(),
+			redirect: sinon.stub().callsFake(() => void 0),
 		},
 		client,
 		linkResolver: (doc) => `/${doc.id}`,
@@ -63,7 +65,10 @@ test("redirectToPreviewURL calls redirect", async (t) => {
 
 test("redirectToPreviewURL calls redirect only once", async (t) => {
 	const endpoint = prismic.getEndpoint("qwerty");
-	const client = prismic.createClient(endpoint, { fetch });
+	const client = prismic.createClient(endpoint, {
+		fetch: (...args) =>
+			import("node-fetch").then(({ default: fetch }) => fetch(...args)),
+	});
 
 	const documentId = "documentId";
 	const token = "token";
@@ -76,7 +81,7 @@ test("redirectToPreviewURL calls redirect only once", async (t) => {
 			},
 		},
 		res: {
-			redirect: sinon.stub(),
+			redirect: sinon.stub().callsFake(() => void 0),
 		},
 		client,
 		linkResolver: (doc) => `/${doc.id}`,

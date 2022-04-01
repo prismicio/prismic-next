@@ -1,4 +1,6 @@
 import { NextApiRequest } from "next";
+import { LinkResolverFunction } from "@prismicio/helpers";
+
 import { PreviewConfig } from "./";
 
 type PrismicNextQuery = {
@@ -23,13 +25,16 @@ const isPrismicNextQuery = (
  * Redirects a user to the URL of a previewed Prismic document from within a
  * Next.js API route.
  */
-export async function redirectToPreviewURL({
+export async function redirectToPreviewURL<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	TLinkResolverFunction extends LinkResolverFunction<any>,
+>({
 	req,
 	res,
 	client,
 	linkResolver,
 	defaultURL = "/",
-}: PreviewConfig): Promise<void> {
+}: PreviewConfig<TLinkResolverFunction>): Promise<void> {
 	if (isPrismicNextQuery(req.query)) {
 		const { documentId, token } = req.query;
 		const previewUrl = await client.resolvePreviewURL({

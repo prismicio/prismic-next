@@ -1,0 +1,5 @@
+{
+	"_latest": "0.3.4",
+	"apiEndpoint": "https://prismic-next-example.prismic.io/api/v2",
+	"libraries": ["@/slices"]
+}

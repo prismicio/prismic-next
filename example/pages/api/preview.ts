@@ -1,12 +1,15 @@
-/* eslint-disable import/no-anonymous-default-export */
-import { linkResolver, createPrismicClient } from '../../prismic-config';
-import { setPreviewData, redirectToPreviewURL } from 'prismic-next';
-import { NextApiRequest, NextApiResponse } from 'next';
+import { setPreviewData, redirectToPreviewURL } from "@prismicio/next";
+import { NextApiRequest, NextApiResponse } from "next";
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const client = createPrismicClient({ req });
+import { createClient, linkResolver } from "../../prismicio";
 
-  await setPreviewData({ req, res });
+export default async function handler(
+	req: NextApiRequest,
+	res: NextApiResponse,
+): Promise<void> {
+	const client = createClient({ req });
 
-  await redirectToPreviewURL({ req, res, client, linkResolver });
-};
+	setPreviewData({ req, res });
+
+	await redirectToPreviewURL({ req, res, client, linkResolver });
+}

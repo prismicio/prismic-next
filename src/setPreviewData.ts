@@ -30,10 +30,7 @@ export type SetPreviewDataConfig = {
 /**
  * Set Prismic preview data for Next.js's Preview Mode.
  */
-export async function setPreviewData({
-	req,
-	res,
-}: SetPreviewDataConfig): Promise<void> {
+export function setPreviewData({ req, res }: SetPreviewDataConfig): void {
 	const ref = req.query.token || req.cookies[prismic.cookie.preview];
 
 	if (ref) {
