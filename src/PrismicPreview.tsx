@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import { PrismicToolbar } from "@prismicio/react";
 import { useRouter } from "next/router";
 
-import { getCookie } from "../lib/getCookie";
-import { extractPreviewRefRepositoryName } from "../lib/extractPreviewRefRepositoryName";
+import { getCookie } from "./lib/getCookie";
+import { extractPreviewRefRepositoryName } from "./lib/extractPreviewRefRepositoryName";
 
 /**
  * Props for `<PrismicPreview>`.

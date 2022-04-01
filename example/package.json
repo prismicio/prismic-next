@@ -1,27 +1,26 @@
 {
-  "name": "example",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@prismicio/client": "^6.0.0-beta.0",
-    "next": "12.0.2",
-    "prismic-reactjs": "^1.3.4",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
-    "theme-ui": "^0.12.0"
-  },
-  "devDependencies": {
-    "@prismicio/helpers": "^2.0.0-beta.1",
-    "@prismicio/types": "^0.1.15",
-    "@types/node": "16.11.6",
-    "@types/react": "17.0.33",
-    "eslint": "7.32.0",
-    "eslint-config-next": "12.0.2",
-    "typescript": "4.4.4"
-  }
+	"name": "example",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@prismicio/next": "latest",
+		"@prismicio/client": "^6.0.0-beta.0",
+		"next": "12.0.2",
+		"prismic-reactjs": "^1.3.4",
+		"theme-ui": "^0.12.0"
+	},
+	"devDependencies": {
+		"@prismicio/helpers": "^2.0.0-beta.1",
+		"@prismicio/types": "^0.1.15",
+		"@types/node": "16.11.6",
+		"@types/react": "17.0.33",
+		"eslint": "7.32.0",
+		"eslint-config-next": "12.0.2",
+		"typescript": "4.4.4"
+	}
 }

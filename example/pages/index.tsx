@@ -1,11 +1,20 @@
-import type { GetStaticPropsContext, NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import styles from "../styles/Home.module.css";
-import { createPrismicClient } from "../prismic-config";
+import * as prismicT from "@prismicio/types";
 import { asText } from "@prismicio/helpers";
 
-export async function getStaticProps({ previewData }: GetStaticPropsContext) {
+import { createPrismicClient } from "../prismicio";
+
+import styles from "../styles/Home.module.css";
+
+type HomepageProps = {
+	home: prismicT.PrismicDocument;
+};
+
+export const getStaticProps: GetStaticProps<HomepageProps> = async ({
+	previewData,
+}) => {
 	const client = createPrismicClient({ previewData });
 
 	const home = await client.getByUID("page", "home");
@@ -15,9 +24,9 @@ export async function getStaticProps({ previewData }: GetStaticPropsContext) {
 			home,
 		},
 	};
-}
+};
 
-const Home: NextPage = (props) => {
+const Home: NextPage<HomepageProps> = (props) => {
 	return (
 		<div className={styles.container}>
 			<Head>
