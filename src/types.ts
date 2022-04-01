@@ -26,7 +26,10 @@ export type CreateClientConfig = {
 /**
  * Preview config for enabling previews with redirectToPreviewURL
  */
-export type PreviewConfig = {
+export type PreviewConfig<
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	TLinkResolverFunction extends LinkResolverFunction<any> = LinkResolverFunction,
+> = {
 	/**
 	 * The `req` object from a Next.js API route. This is given as a parameter to
 	 * the API route.
@@ -57,7 +60,7 @@ export type PreviewConfig = {
 	 *
 	 * @see To learn more about Link Resolver: {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver}
 	 */
-	linkResolver?: LinkResolverFunction;
+	linkResolver?: TLinkResolverFunction;
 
 	/**
 	 * The default redirect URL if a URL cannot be determined for the previewed document.

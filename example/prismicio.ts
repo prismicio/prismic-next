@@ -1,23 +1,29 @@
-/**
- * Example file
- */
-
-import { Client, createClient } from "@prismicio/client";
+import * as prismic from "@prismicio/client";
 import { LinkResolverFunction } from "@prismicio/helpers";
-import { enableAutoPreviews, CreateClientConfig } from "@prismicio/next";
+import { enableAutoPreviews } from "@prismicio/next";
+import type { CreateClientConfig } from "@prismicio/next";
 
-export const repositoryName = "smashing-mag-nick-1";
+import sm from "./sm.json";
 
-export const linkResolver: LinkResolverFunction = (doc) => {
-	if (doc.type === "product") {
-		return `/products/${doc.uid}`;
+export const repositoryName = prismic.getRepositoryName(sm.apiEndpoint);
+
+export const linkResolver: LinkResolverFunction<string | null> = (doc) => {
+	if (doc.type === "page" && doc.uid === "home") {
+		return "/";
 	}
 
-	return "/";
+	return null;
 };
 
-export const createPrismicClient = (config: CreateClientConfig): Client => {
-	const client = createClient(repositoryName);
+export const createClient = (config: CreateClientConfig = {}) => {
+	const client = prismic.createClient(sm.apiEndpoint, {
+		routes: [
+			{
+				type: "page",
+				path: "/:uid",
+			},
+		],
+	});
 
 	enableAutoPreviews({
 		client,

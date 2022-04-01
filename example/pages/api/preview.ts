@@ -1,14 +1,15 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { setPreviewData, redirectToPreviewURL } from "@prismicio/next";
-import { linkResolver, createPrismicClient } from "../../prismicio";
+import { NextApiRequest, NextApiResponse } from "next";
+
+import { createClient, linkResolver } from "../../prismicio";
 
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
 ): Promise<void> {
-	const client = createPrismicClient({ req });
+	const client = createClient({ req });
 
-	await setPreviewData({ req, res });
+	setPreviewData({ req, res });
 
 	await redirectToPreviewURL({ req, res, client, linkResolver });
 }
