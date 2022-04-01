@@ -1,4 +1,5 @@
-import React, { useEffect } from "react";
+import * as React from "react";
+import * as prismic from "@prismicio/client";
 import { PrismicToolbar } from "@prismicio/react";
 import { useRouter } from "next/router";
 
@@ -62,14 +63,14 @@ export function PrismicPreview({
 }: PrismicPreviewProps): JSX.Element {
 	const router = useRouter();
 
-	useEffect(() => {
+	React.useEffect(() => {
 		const previewRefRepositoryName = extractPreviewRefRepositoryName(
-			getCookie("io.prismic.preview", globalThis.document.cookie) as string,
+			getCookie(prismic.cookie.preview, globalThis.document.cookie) as string,
 		);
 
 		const startPreviewIfLoadedFromSharedLink = async () => {
 			if (previewRefRepositoryName === repositoryName && !router.isPreview) {
-				await fetch(updatePreviewURL);
+				await globalThis.fetch(updatePreviewURL);
 				window.location.reload();
 			}
 		};
@@ -82,7 +83,7 @@ export function PrismicPreview({
 				event.preventDefault();
 
 				// Start Next.js Preview Mode via the given preview API endpoint.
-				await fetch(updatePreviewURL);
+				await globalThis.fetch(updatePreviewURL);
 
 				// Reload the page with an active Preview Mode.
 				window.location.reload();
@@ -94,7 +95,7 @@ export function PrismicPreview({
 			event.preventDefault();
 
 			// Exit Next.js Preview Mode via the given preview API endpoint.
-			await fetch(exitPreviewURL);
+			await globalThis.fetch(exitPreviewURL);
 
 			// Reload the page with an active Preview Mode.
 			window.location.reload();

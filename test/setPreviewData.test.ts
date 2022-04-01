@@ -1,78 +1,82 @@
-import test from "ava";
-import sinon from "sinon";
-import { SetPreviewDataConfig, setPreviewData } from "../src";
+import { test, expect, fn } from "vitest";
 import * as prismic from "@prismicio/client";
 
-test("setPreviewData sets PreviewData", (t) => {
+import { setPreviewData, SetPreviewDataConfig } from "../src";
+
+test("sets preview data if req contains a `token` URL param", () => {
 	const config: SetPreviewDataConfig = {
 		req: {
 			query: {
-				token: "qwerty",
+				token: "ref",
 			},
 			cookies: {},
 		},
 		res: {
-			setPreviewData: sinon.stub(),
+			setPreviewData: fn(),
 		},
 	};
 
 	setPreviewData(config);
 
-	t.true(
-		(config.res.setPreviewData as sinon.SinonStub).calledWith({
-			ref: config.req.query.token,
-		}),
-	);
+	expect(config.res.setPreviewData).toHaveBeenCalledWith({
+		ref: config.req.query.token,
+	});
 });
 
-test("setPreviewData sets PreviewData from cookie", (t) => {
+test("sets preview data if req contains a Prismic preview cookie", () => {
 	const config: SetPreviewDataConfig = {
 		req: {
 			query: {},
 			cookies: {
-				[prismic.cookie.preview]: "qwerty",
+				[prismic.cookie.preview]: "ref",
 			},
 		},
 		res: {
-			setPreviewData: sinon.stub(),
+			setPreviewData: fn(),
 		},
 	};
 
 	setPreviewData(config);
 
-	t.true(
-		(config.res.setPreviewData as sinon.SinonStub).calledWith({
-			ref: config.req.cookies[prismic.cookie.preview],
-		}),
-	);
+	expect(config.res.setPreviewData).toHaveBeenCalledWith({
+		ref: config.req.cookies[prismic.cookie.preview],
+	});
 });
 
-test("setPreviewData prioritizes preview data from query.token", (t) => {
+test("prioritizes `token` URL param over Prismic preview cookie", () => {
 	const config: SetPreviewDataConfig = {
 		req: {
 			query: {
-				token: "query",
+				token: "tokenRef",
 			},
 			cookies: {
-				[prismic.cookie.preview]: "cookie",
+				[prismic.cookie.preview]: "cookieRef",
 			},
 		},
 		res: {
-			setPreviewData: sinon.stub(),
+			setPreviewData: fn(),
 		},
 	};
 
 	setPreviewData(config);
 
-	t.false(
-		(config.res.setPreviewData as sinon.SinonStub).calledWith({
-			ref: config.req.cookies[prismic.cookie.preview],
-		}),
-	);
+	expect(config.res.setPreviewData).toHaveBeenCalledWith({
+		ref: config.req.query.token,
+	});
+});
 
-	t.true(
-		(config.res.setPreviewData as sinon.SinonStub).calledWith({
-			ref: config.req.query.token,
-		}),
-	);
+test("does not set preview data if req does not a `token` URL param or a Prismic preview cookie", () => {
+	const config: SetPreviewDataConfig = {
+		req: {
+			query: {},
+			cookies: {},
+		},
+		res: {
+			setPreviewData: fn(),
+		},
+	};
+
+	setPreviewData(config);
+
+	expect(config.res.setPreviewData).not.toHaveBeenCalled();
 });

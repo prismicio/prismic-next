@@ -26,6 +26,14 @@ export type ExitPreviewConfig = {
 		clearPreviewData: NextApiResponse["clearPreviewData"];
 		redirect: NextApiResponse["redirect"];
 	};
+
+	/**
+	 * The URL of your app's exit preview endpoint (default: `/api/exit-preview`).
+	 *
+	 * If the API route's referrer is the exit preview route (i.e. the route where
+	 * you call `exitPreview()`), it will redirect to `/` instead of the referrer.
+	 */
+	exitPreviewURL?: string;
 };
 
 /**
@@ -42,7 +50,7 @@ export function exitPreview(config: ExitPreviewConfig): void {
 	if (req.headers.referer) {
 		const url = new URL(req.headers.referer);
 
-		if (url.pathname !== "/api/exit-preview") {
+		if (url.pathname !== (config.exitPreviewURL || "/api/exit-preview")) {
 			// Redirect the user to the referrer page.
 			config.res.redirect(req.headers.referer);
 

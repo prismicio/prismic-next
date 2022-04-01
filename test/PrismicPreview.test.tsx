@@ -1,113 +1,204 @@
-import test from "ava";
-import React from "react";
+// @vitest-environment happy-dom
+
+import { test, expect, fn, beforeAll, vi, afterEach } from "vitest";
+import * as React from "react";
+import * as renderer from "react-test-renderer";
+
 import { PrismicPreview } from "../src";
-import sinon from "sinon";
-import { render, cleanup, waitFor } from "@testing-library/react";
 
-// TODO Figure out why there is a navigation error when it comes to window.reload
+/**
+ * Renders a JSON representation of a React.Element. This is a helper to reduce
+ * boilerplate in each test.
+ *
+ * @param element - The React.Element to render.
+ *
+ * @returns The JSON representation of `element`.
+ */
+export const render = (
+	element: React.ReactElement,
+	options?: renderer.TestRendererOptions,
+): renderer.ReactTestRenderer => {
+	let root: renderer.ReactTestRenderer;
 
-window.requestAnimationFrame = function (callback) {
-	return setTimeout(callback, 0);
-};
-
-test.before(() => {
-	window.requestAnimationFrame = function (callback) {
-		return setTimeout(callback, 0);
-	};
-});
-
-test.beforeEach(() => {
-	globalThis.fetch = sinon.stub();
-});
-
-test.afterEach(() => {
-	cleanup();
-});
-
-test.serial(
-	"<PrismicPreview /> adds the prismicEventUpdate event listener to the window",
-	async (t) => {
-		const updatePreviewURL = "/api/preview";
-		const detail = { ref: "ref" };
-
-		render(
-			<PrismicPreview repositoryName="test">
-				<div>test</div>
-			</PrismicPreview>,
-		);
-
-		window.dispatchEvent(
-			new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
-		);
-
-		t.true(
-			(globalThis.fetch as sinon.SinonStub).calledWith(
-				`${updatePreviewURL}?token=${detail.ref}`,
-			),
-		);
-	},
-);
-
-test.serial(
-	"<PrismicPreview /> adds the prismicPreviewEnd event listener to the window",
-	async (t) => {
-		render(
-			<PrismicPreview repositoryName="test">
-				<div>test</div>
-			</PrismicPreview>,
-		);
-
-		window.dispatchEvent(
-			new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
-		);
-
-		t.true((globalThis.fetch as sinon.SinonStub).called);
-	},
-);
-
-test.serial(
-	"<PrismicPreview /> removes the prismicPreviewUpdate event listener",
-	async (t) => {
-		const updatePreviewURL = "/api/preview";
-		const detail = { ref: "ref" };
-
-		const { unmount } = render(
-			<PrismicPreview repositoryName="test" children={<div>test</div>} />,
-		);
-
-		unmount();
-
-		window.dispatchEvent(
-			new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
-		);
-
-		t.false(
-			(globalThis.fetch as sinon.SinonStub).calledWith(
-				`${updatePreviewURL}?token=${detail.ref}`,
-			),
-		);
-	},
-);
-
-test.only("renders <PrismicPreview/> with the correct repositoryName in the script tag", async (t) => {
-	const repoName = "test";
-	render(
-		<PrismicPreview repositoryName={repoName}>
-			<div>test</div>
-		</PrismicPreview>,
-	);
-
-	const script = await waitFor(() => {
-		const result = document.body.querySelector(
-			`script[src="https://static.cdn.prismic.io/prismic.js?repo=${repoName}&new=true"]`,
-		);
-
-		if (result === null) {
-			throw new Error();
-		} else {
-			return result;
-		}
+	renderer.act(() => {
+		root = renderer.create(element, options);
 	});
 
-	t.not(script, null);
+	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+	return root!;
+};
+
+/**
+ * Waits an event loop tick. This will let us test for mocked async functions in
+ * components.
+ */
+const tick = async () => {
+	await new Promise((res) => setTimeout(res, 0));
+};
+
+const fetch = fn();
+const reload = fn();
+
+beforeAll(() => {
+	globalThis.fetch = fetch;
+	globalThis.location.reload = reload;
+});
+
+afterEach(() => {
+	fetch.mockClear();
+	reload.mockClear();
+});
+
+test("renders the Prismic toolbar for the given repository", () => {
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	const script = Array.from(document.querySelectorAll("script")).find(
+		(element) =>
+			element
+				.getAttribute("src")
+				?.startsWith("https://static.cdn.prismic.io/prismic.js"),
+	);
+
+	expect(script?.getAttribute("src")).toMatch(
+		"https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true",
+	);
+
+	renderer.act(() => unmount());
+});
+
+test("calls the default preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/api/preview");
+	expect(globalThis.location.reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("calls the given preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
+	const { unmount } = render(
+		<PrismicPreview repositoryName="qwerty" updatePreviewURL="/foo" />,
+	);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/foo");
+	expect(globalThis.location.reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/api/exit-preview");
+	expect(globalThis.location.reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
+	const { unmount } = render(
+		<PrismicPreview repositoryName="qwerty" exitPreviewURL="/bar" />,
+	);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/bar");
+	expect(globalThis.location.reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("unregisters prismicPreviewUpdate event listener on unmount", async () => {
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	renderer.act(() => {
+		unmount();
+	});
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).not.toHaveBeenCalledWith("/api/preview");
+	expect(globalThis.location.reload).not.toHaveBeenCalled();
+});
+
+test("unregisters prismicPreviewEnd event listener on unmount", async () => {
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	renderer.act(() => {
+		unmount();
+	});
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).not.toHaveBeenCalledWith("/api/exit-preview");
+	expect(globalThis.location.reload).not.toHaveBeenCalled();
+});
+
+test("supports shared links", async () => {
+	vi.mock("next/router", () => {
+		return {
+			useRouter: () => {
+				return {
+					isPreview: false,
+				};
+			},
+		};
+	});
+
+	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
+		"qwerty.prismic.io": {},
+	})}`;
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/api/preview");
+	expect(globalThis.location.reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("renders children untouched", () => {
+	const actual = render(
+		<PrismicPreview repositoryName="qwerty">
+			<span>children</span>
+		</PrismicPreview>,
+	).toJSON() as renderer.ReactTestRendererJSON;
+
+	const expected = render(
+		<span>children</span>,
+	).toJSON() as renderer.ReactTestRendererJSON;
+
+	expect(actual).toMatchObject(expected);
 });
