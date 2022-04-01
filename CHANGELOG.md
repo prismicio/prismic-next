@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/prismicio/prismic-next/compare/v0.1.0...v0.1.2) (2022-04-01)
+
+
+### Features
+
+* expose PrismicPreview props ([#10](https://github.com/prismicio/prismic-next/issues/10)) ([f15f064](https://github.com/prismicio/prismic-next/commit/f15f06478f0d375568f5c2f8e806dac33032793a)), closes [#9](https://github.com/prismicio/prismic-next/issues/9)
+
+
+### Bug Fixes
+
+* support React 18 ([#17](https://github.com/prismicio/prismic-next/issues/17)) ([b8c6157](https://github.com/prismicio/prismic-next/commit/b8c61578f987c04ed7f345aa5cd0350abb2361a5))
+
+
+### Documentation
+
+* remove experimental/beta message ([d7f1b55](https://github.com/prismicio/prismic-next/commit/d7f1b55c7fcbc68795dcf45a48be1dad12d073f8))
+
+
+### Chore
+
+* add missing `react-dom` dev dependency ([b5e570b](https://github.com/prismicio/prismic-next/commit/b5e570bbef1fc3466fdb89643ca8b64a562cd712))
+* **ci:** update ci to not use workspaces ([6891f46](https://github.com/prismicio/prismic-next/commit/6891f46a5e71637091965df457736d83d8a80647))
+* **ci:** use node 16 ([a0eb3ec](https://github.com/prismicio/prismic-next/commit/a0eb3ec264a9bc6fe9ff26e8a0a1692ef68f4736))
+* clean up .github directory ([f66b625](https://github.com/prismicio/prismic-next/commit/f66b625146eaf8fe74754e8b719da341da2e4938))
+* restructure + refresh project ([#18](https://github.com/prismicio/prismic-next/issues/18)) ([f0e1170](https://github.com/prismicio/prismic-next/commit/f0e1170ea92ed489bbfbc1d2ef386d84bde45cd1))
+* update package.json version to v0.1.1 ([0d498e8](https://github.com/prismicio/prismic-next/commit/0d498e84156b726ac031cf86d369a4fa90a8062a))
+* update warning label ([8d58178](https://github.com/prismicio/prismic-next/commit/8d58178e89afce2bd64660be5dcee4d6ecacf56c))
+
 ## [0.1.0](https://github.com/prismicio/prismic-next/compare/v0.0.5...v0.1.0) (2022-02-28)
 
 ### [0.0.5](https://github.com/prismicio/prismic-next/compare/v0.0.4...v0.0.5) (2022-02-21)
