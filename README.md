@@ -9,8 +9,8 @@
 
 Helpers to integrate Prismic into Next.js apps.
 
-- 𝨩👁 &nbsp;Easily set up Prismic Preview
-- _More coming!_
+- 𝨩👁️ &nbsp;Easily set up Prismic Preview
+- _More features coming!_
 
 ## Install
 
@@ -60,7 +60,7 @@ For more clarity on this project and its structure you can also check out the de
 
 <!-- TODO: Replace link with a more useful one if available -->
 
-[prismic-docs]: https://prismic.io/docs
+[prismic-docs]: https://prismic.io/docs/technologies/nextjs
 [changelog]: ./CHANGELOG.md
 [contributing]: ./CONTRIBUTING.md
 
