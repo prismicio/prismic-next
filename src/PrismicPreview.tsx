@@ -19,12 +19,18 @@ export type PrismicPreviewProps = {
 	/**
 	 * The URL of your app's Prismic preview endpoint (default: `/api/preview`).
 	 * This URL will be fetched on preview update events.
+	 *
+	 * **Note**: If your `next.config.js` file contains a `basePath`, it is
+	 * automatically included.
 	 */
 	updatePreviewURL?: string;
 
 	/**
 	 * The URL of your app's exit preview endpoint (default: `/api/exit-preview`).
 	 * This URL will be fetched on preview exit events.
+	 *
+	 * **Note**: If your `next.config.js` file contains a `basePath`, it is
+	 * automatically included.
 	 */
 	exitPreviewURL?: string;
 
