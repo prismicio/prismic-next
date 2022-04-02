@@ -3,8 +3,38 @@
 import { test, expect, fn, beforeAll, vi, afterEach } from "vitest";
 import * as React from "react";
 import * as renderer from "react-test-renderer";
+import { useRouter, NextRouter } from "next/router";
 
 import { PrismicPreview } from "../src";
+
+vi.mock("next/router", () => {
+	return {
+		useRouter: fn(() => {
+			return {
+				reload: fn(),
+				events: {
+					on: fn(),
+					off: fn(),
+					emit: fn(),
+				},
+				asPath: "asPath",
+				back: fn(),
+				basePath: "",
+				beforePopState: fn(),
+				isFallback: false,
+				isLocaleDomain: false,
+				isPreview: false,
+				isReady: true,
+				pathname: "pathname",
+				prefetch: fn(),
+				push: fn(),
+				query: {},
+				replace: fn(),
+				route: "route",
+			};
+		}),
+	};
+});
 
 /**
  * Renders a JSON representation of a React.Element. This is a helper to reduce
@@ -45,8 +75,9 @@ beforeAll(() => {
 });
 
 afterEach(() => {
-	fetch.mockClear();
-	reload.mockClear();
+	fetch.mockRestore();
+	reload.mockRestore();
+	vi.mocked(useRouter).mockRestore();
 });
 
 test("renders the Prismic toolbar for the given repository", () => {
@@ -98,6 +129,44 @@ test("calls the given preview API endpoint on prismicPreviewUpdate toolbar event
 	renderer.act(() => unmount());
 });
 
+test("supports basePath on prismicPreviewUpdate toolbar events with default preview API endpoint", async () => {
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "/foo",
+	} as NextRouter);
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/foo/api/preview");
+
+	renderer.act(() => unmount());
+});
+
+test("supports basePath on prismicPreviewUpdate toolbar events with given preview API endpoint", async () => {
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "/foo",
+	} as NextRouter);
+
+	const { unmount } = render(
+		<PrismicPreview repositoryName="qwerty" updatePreviewURL="/bar" />,
+	);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/foo/bar");
+
+	renderer.act(() => unmount());
+});
+
 test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
@@ -126,6 +195,44 @@ test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar eve
 
 	expect(globalThis.fetch).toHaveBeenCalledWith("/bar");
 	expect(globalThis.location.reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("supports basePath on prismicPreviewEnd toolbar events with default preview API endpoint", async () => {
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "/foo",
+	} as NextRouter);
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/foo/api/exit-preview");
+
+	renderer.act(() => unmount());
+});
+
+test("supports basePath on prismicPreviewEnd toolbar events with given preview API endpoint", async () => {
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "/foo",
+	} as NextRouter);
+
+	const { unmount } = render(
+		<PrismicPreview repositoryName="qwerty" exitPreviewURL="/bar" />,
+	);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/foo/bar");
 
 	renderer.act(() => unmount());
 });
@@ -165,15 +272,10 @@ test("unregisters prismicPreviewEnd event listener on unmount", async () => {
 });
 
 test("supports shared links", async () => {
-	vi.mock("next/router", () => {
-		return {
-			useRouter: () => {
-				return {
-					isPreview: false,
-				};
-			},
-		};
-	});
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "",
+		isPreview: false,
+	} as NextRouter);
 
 	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
 		"qwerty.prismic.io": {},
@@ -189,16 +291,11 @@ test("supports shared links", async () => {
 	renderer.act(() => unmount());
 });
 
-test("ignores invalid preview cookie", async () => {
-	vi.mock("next/router", () => {
-		return {
-			useRouter: () => {
-				return {
-					isPreview: false,
-				};
-			},
-		};
-	});
+test("ignores invalid url in preview cookie", async () => {
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "",
+		isPreview: false,
+	} as NextRouter);
 
 	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
 		"invalid.example.com": {},
@@ -214,16 +311,29 @@ test("ignores invalid preview cookie", async () => {
 	renderer.act(() => unmount());
 });
 
+test("ignores invalid preview cookie", async () => {
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "",
+		isPreview: false,
+	} as NextRouter);
+
+	globalThis.document.cookie = `io.prismic.preview={malformated`;
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	await tick();
+
+	expect(globalThis.fetch).not.toHaveBeenCalled();
+	expect(globalThis.location.reload).not.toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
 test("does nothing if not an active preview session", async () => {
-	vi.mock("next/router", () => {
-		return {
-			useRouter: () => {
-				return {
-					isPreview: false,
-				};
-			},
-		};
-	});
+	vi.mocked(useRouter).mockReturnValue({
+		basePath: "",
+		isPreview: false,
+	} as NextRouter);
 
 	globalThis.document.cookie = `io.prismic.preview=`;
 

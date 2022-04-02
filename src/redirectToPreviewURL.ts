@@ -64,6 +64,10 @@ export type RedirectToPreviewURLConfig<
 
 	/**
 	 * The default redirect URL if a URL cannot be determined for the previewed document.
+	 *
+	 * **Note**: If your `next.config.js` file contains a `basePath`, you must
+	 * include the `basePath` as part of this option. `redirectToPreviewURL()`
+	 * cannot read your global `basePath`.
 	 */
 	defaultURL?: string;
 };

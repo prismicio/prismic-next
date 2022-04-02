@@ -1,3 +1,6 @@
+/* eslint-disable react/react-in-jsx-scope */
+/* eslint-disable react/prop-types */
+
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import type * as prismicT from "@prismicio/types";
 import * as prismicH from "@prismicio/helpers";

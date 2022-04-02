@@ -32,6 +32,10 @@ export type ExitPreviewConfig = {
 	 *
 	 * If the API route's referrer is the exit preview route (i.e. the route where
 	 * you call `exitPreview()`), it will redirect to `/` instead of the referrer.
+	 *
+	 * **Note**: If your `next.config.js` file contains a `basePath`, you must
+	 * include the `basePath` as part of this option. `exitPreview()` cannot read
+	 * your global `basePath`.
 	 */
 	exitPreviewURL?: string;
 };

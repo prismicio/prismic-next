@@ -28,22 +28,38 @@ export type PrismicPreviewProps = {
 	 */
 	exitPreviewURL?: string;
 
+	/**
+	 * Children to render adjacent to the Prismic Toolbar. The Prismic Toolbar
+	 * will be rendered last.
+	 */
 	children?: React.ReactNode;
 };
 
 /**
- * Determines if an Event object came from the Prismic Toolbar.
+ * Updates (or starts) Next.js Preview Mode using a given API endpoint and
+ * reloads the page.
  *
- * @param event - Event to check.
- *
- * @returns `true` if `event` came from the Prismic Toolbar, `false` otherwise.
+ * @param updatePreviewURL - The API endpoint that sets Preview Mode data.
  */
-const isPrismicUpdateToolbarEvent = (
-	event: Event,
-): event is CustomEvent<{ ref: string }> => {
-	return (
-		"detail" in event && typeof (event as CustomEvent).detail.ref === "string"
-	);
+const updatePreviewMode = async (updatePreviewURL: string): Promise<void> => {
+	// Start Next.js Preview Mode via the given preview API endpoint.
+	await globalThis.fetch(updatePreviewURL);
+
+	// Reload the page with an active Preview Mode.
+	window.location.reload();
+};
+
+/**
+ * Exits Next.js Preview Mode using a given API endpoint and reloads the page.
+ *
+ * @param exitPreviewURL - The API endpoint that exits Preview Mode.
+ */
+const exitPreviewMode = async (exitPreviewURL: string): Promise<void> => {
+	// Exit Next.js Preview Mode via the given exit preview API endpoint.
+	await globalThis.fetch(exitPreviewURL);
+
+	// Reload the page with an inactive Preview Mode.
+	window.location.reload();
 };
 
 /**
@@ -57,78 +73,68 @@ const isPrismicUpdateToolbarEvent = (
  */
 export function PrismicPreview({
 	repositoryName,
-	children,
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
+	children,
 }: PrismicPreviewProps): JSX.Element {
 	const router = useRouter();
 
-	React.useEffect(() => {
-		const previewRefRepositoryName = extractPreviewRefRepositoryName(
-			getCookie(prismic.cookie.preview, globalThis.document.cookie) as string,
-		);
+	const resolvedUpdatePreviewURL = router.basePath + updatePreviewURL;
+	const resolvedExitPreviewURL = router.basePath + exitPreviewURL;
 
+	React.useEffect(() => {
 		const startPreviewIfLoadedFromSharedLink = async () => {
-			if (previewRefRepositoryName === repositoryName && !router.isPreview) {
-				await globalThis.fetch(updatePreviewURL);
-				window.location.reload();
+			const previewCookie = getCookie(
+				prismic.cookie.preview,
+				globalThis.document.cookie,
+			);
+
+			if (
+				!router.isPreview &&
+				previewCookie &&
+				extractPreviewRefRepositoryName(previewCookie) === repositoryName
+			) {
+				await updatePreviewMode(resolvedUpdatePreviewURL);
 			}
 		};
 
 		startPreviewIfLoadedFromSharedLink();
 
 		const handlePrismicPreviewUpdate = async (event: Event) => {
-			if (isPrismicUpdateToolbarEvent(event)) {
-				// Prevent the toolbar from reloading the page.
-				event.preventDefault();
-
-				// Start Next.js Preview Mode via the given preview API endpoint.
-				await globalThis.fetch(updatePreviewURL);
-
-				// Reload the page with an active Preview Mode.
-				window.location.reload();
-			}
+			// Prevent the toolbar from reloading the page.
+			event.preventDefault();
+			await updatePreviewMode(resolvedUpdatePreviewURL);
 		};
 
 		const handlePrismicPreviewEnd = async (event: Event) => {
 			// Prevent the toolbar from reloading the page.
 			event.preventDefault();
-
-			// Exit Next.js Preview Mode via the given preview API endpoint.
-			await globalThis.fetch(exitPreviewURL);
-
-			// Reload the page with an active Preview Mode.
-			window.location.reload();
+			await exitPreviewMode(resolvedExitPreviewURL);
 		};
 
 		// Register Prismic Toolbar event handlers.
-		if (window) {
-			window.addEventListener(
-				"prismicPreviewUpdate",
-				handlePrismicPreviewUpdate,
-			);
-			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
-		}
+		window.addEventListener("prismicPreviewUpdate", handlePrismicPreviewUpdate);
+		window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 
 		// On cleanup, unregister Prismic Toolbar event handlers.
 		return () => {
-			if (window) {
-				window.removeEventListener(
-					"prismicPreviewUpdate",
-					handlePrismicPreviewUpdate,
-				);
-				window.removeEventListener(
-					"prismicPreviewEnd",
-					handlePrismicPreviewEnd,
-				);
-			}
+			window.removeEventListener(
+				"prismicPreviewUpdate",
+				handlePrismicPreviewUpdate,
+			);
+			window.removeEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 		};
-	}, []);
+	}, [
+		repositoryName,
+		resolvedUpdatePreviewURL,
+		resolvedExitPreviewURL,
+		router.isPreview,
+	]);
 
 	return (
 		<>
-			<PrismicToolbar repositoryName={repositoryName} />
 			{children}
+			<PrismicToolbar repositoryName={repositoryName} />
 		</>
 	);
 }
