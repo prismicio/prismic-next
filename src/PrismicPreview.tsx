@@ -5,7 +5,6 @@ import { useRouter } from "next/router";
 
 import { getCookie } from "./lib/getCookie";
 import { extractPreviewRefRepositoryName } from "./lib/extractPreviewRefRepositoryName";
-import { UpdatePreviewModeError, ExitPreviewModeError } from "./errors";
 
 /**
  * Props for `<PrismicPreview>`.
@@ -56,7 +55,7 @@ const updatePreviewMode = async (updatePreviewURL: string): Promise<void> => {
 		// Reload the page with an active Preview Mode.
 		window.location.reload();
 	} else {
-		throw new UpdatePreviewModeError(
+		console.error(
 			`[<PrismicPreview>] Failed to start or update Preview Mode using the "${updatePreviewURL}" API endpoint. Does it exist?`,
 		);
 	}
@@ -75,7 +74,7 @@ const exitPreviewMode = async (exitPreviewURL: string): Promise<void> => {
 		// Reload the page with an inactive Preview Mode.
 		window.location.reload();
 	} else {
-		throw new ExitPreviewModeError(
+		console.error(
 			`[<PrismicPreview>] Failed to exit Preview Mode using the "${exitPreviewURL}" API endpoint. Does it exist?`,
 		);
 	}

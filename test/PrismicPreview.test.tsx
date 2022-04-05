@@ -66,17 +66,20 @@ const tick = async () => {
 	await new Promise((res) => setTimeout(res, 0));
 };
 
-const fetch = fn();
-const reload = fn();
-
 beforeAll(() => {
-	globalThis.fetch = fetch;
-	globalThis.location.reload = reload;
+	globalThis.fetch = fn(async () => {
+		return {
+			ok: true,
+		} as Response;
+	});
+	globalThis.location.reload = fn();
+	globalThis.console.error = fn();
 });
 
 afterEach(() => {
-	fetch.mockRestore();
-	reload.mockRestore();
+	vi.mocked(globalThis.fetch).mockRestore();
+	vi.mocked(globalThis.location.reload).mockRestore();
+	vi.mocked(globalThis.console.error).mockRestore();
 	vi.mocked(useRouter).mockRestore();
 });
 
@@ -359,4 +362,48 @@ test("renders children untouched", () => {
 	).toJSON() as renderer.ReactTestRendererJSON;
 
 	expect(actual).toMatchObject(expected);
+});
+
+test("logs error if updatePreviewURL is not accessible", async () => {
+	vi.mocked(globalThis.fetch).mockReturnValue(
+		Promise.resolve({ ok: false } as Response),
+	);
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/api/preview");
+	expect(globalThis.console.error).toHaveBeenCalledWith(
+		expect.stringMatching(/failed to start or update preview mode/i),
+	);
+	expect(globalThis.location.reload).not.toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("logs error if exitPreviewURL is not accessible", async () => {
+	vi.mocked(globalThis.fetch).mockReturnValue(
+		Promise.resolve({ ok: false } as Response),
+	);
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(globalThis.fetch).toHaveBeenCalledWith("/api/exit-preview");
+	expect(globalThis.console.error).toHaveBeenCalledWith(
+		expect.stringMatching(/failed to exit preview mode/i),
+	);
+	expect(globalThis.location.reload).not.toHaveBeenCalled();
+
+	renderer.act(() => unmount());
 });
