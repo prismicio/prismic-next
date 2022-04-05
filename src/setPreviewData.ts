@@ -11,10 +11,7 @@ export type SetPreviewDataConfig = {
 	 *
 	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
 	 */
-	req: {
-		query: NextApiRequest["query"];
-		cookies: NextApiRequest["cookies"];
-	};
+	req: Pick<NextApiRequest, "query" | "cookies">;
 
 	/**
 	 * The `res` object from a Next.js API route. This is given as a parameter to
@@ -22,9 +19,7 @@ export type SetPreviewDataConfig = {
 	 *
 	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
 	 */
-	res: {
-		setPreviewData: NextApiResponse["setPreviewData"];
-	};
+	res: Pick<NextApiResponse, "setPreviewData">;
 };
 
 /**

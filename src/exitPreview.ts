@@ -1,4 +1,4 @@
-import { NextApiResponse, NextApiRequest } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Configuration for `exitPreview`.
@@ -10,11 +10,17 @@ export type ExitPreviewConfig = {
 	 *
 	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
 	 */
-	req: {
-		headers: {
-			referer?: NextApiRequest["headers"]["referer"];
-		};
-	};
+	// `req` is no longer used in `exitPreview()`. It previously would
+	// redirect the user to the referring URL, but it no longer has that
+	// behavior.
+	//
+	// `req` is retained as a parameter to make setting up an
+	// exit preview API route easier (this eliminates the awkward need to
+	// handle an unused `req` param).
+	//
+	// It is also retained in case it is needed in the future, such as
+	// reading headers or metadata about the request.
+	req: Pick<NextApiRequest, "headers">;
 
 	/**
 	 * The `res` object from a Next.js API route. This is given as a parameter to
@@ -22,45 +28,15 @@ export type ExitPreviewConfig = {
 	 *
 	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
 	 */
-	res: {
-		clearPreviewData: NextApiResponse["clearPreviewData"];
-		redirect: NextApiResponse["redirect"];
-	};
-
-	/**
-	 * The URL of your app's exit preview endpoint (default: `/api/exit-preview`).
-	 *
-	 * If the API route's referrer is the exit preview route (i.e. the route where
-	 * you call `exitPreview()`), it will redirect to `/` instead of the referrer.
-	 *
-	 * **Note**: If your `next.config.js` file contains a `basePath`, you must
-	 * include the `basePath` as part of this option. `exitPreview()` cannot read
-	 * your global `basePath`.
-	 */
-	exitPreviewURL?: string;
+	res: Pick<NextApiResponse, "clearPreviewData" | "json">;
 };
 
 /**
  * Exits Next.js's Preview Mode from within a Next.js API route.
- *
- * If the user was sent to the endpoint from a page, the user will be redirected
- * back to that page after exiting Preview Mode.
  */
 export function exitPreview(config: ExitPreviewConfig): void {
-	const { req } = config;
-	// Exit the current user from "Preview Mode". This function accepts no args.
+	// Exit the current user from Preview Mode.
 	config.res.clearPreviewData();
 
-	if (req.headers.referer) {
-		const url = new URL(req.headers.referer);
-
-		if (url.pathname !== (config.exitPreviewURL || "/api/exit-preview")) {
-			// Redirect the user to the referrer page.
-			config.res.redirect(req.headers.referer);
-
-			return;
-		}
-	}
-
-	config.res.redirect("/");
+	config.res.json({ success: true });
 }

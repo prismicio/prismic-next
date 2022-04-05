@@ -11,5 +11,11 @@ export default async function handler(
 
 	setPreviewData({ req, res });
 
-	await redirectToPreviewURL({ req, res, client, linkResolver });
+	await redirectToPreviewURL({
+		req,
+		res,
+		client,
+		linkResolver,
+		basePath: "/foo/bar",
+	});
 }

@@ -36,9 +36,7 @@ export type RedirectToPreviewURLConfig<
 	 *
 	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
 	 */
-	req: {
-		query: NextApiRequest["query"];
-	};
+	req: Pick<NextApiRequest, "query">;
 
 	/**
 	 * The `res` object from a Next.js API route. This is given as a parameter to
@@ -46,9 +44,7 @@ export type RedirectToPreviewURLConfig<
 	 *
 	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
 	 */
-	res: {
-		redirect: NextApiResponse["redirect"];
-	};
+	res: Pick<NextApiResponse, "redirect">;
 
 	/**
 	 * The Prismic client configured for the preview session's repository.
@@ -70,6 +66,16 @@ export type RedirectToPreviewURLConfig<
 	 * cannot read your global `basePath`.
 	 */
 	defaultURL?: string;
+
+	/**
+	 * The `basePath` for the Next.js app as it is defined in `next.config.js`.
+	 * This option can be omitted if the app does not have a `basePath`.
+	 *
+	 * @remarks
+	 * The API route is unable to detect the app's `basePath` automatically. It
+	 * must be provided to `redirectToPreviewURL()` manually.
+	 */
+	basePath?: string;
 };
 
 /**
@@ -81,6 +87,7 @@ export async function redirectToPreviewURL<
 	TLinkResolverFunction extends LinkResolverFunction<any>,
 >(config: RedirectToPreviewURLConfig<TLinkResolverFunction>): Promise<void> {
 	const defaultURL = config.defaultURL || "/";
+	const basePath = config.basePath || "";
 
 	if (isPrismicNextQuery(config.req.query)) {
 		const previewUrl = await config.client.resolvePreviewURL({
@@ -90,10 +97,10 @@ export async function redirectToPreviewURL<
 			previewToken: config.req.query.token,
 		});
 
-		config.res.redirect(previewUrl);
+		config.res.redirect(basePath + previewUrl);
 
 		return;
 	}
 
-	config.res.redirect(defaultURL);
+	config.res.redirect(basePath + defaultURL);
 }

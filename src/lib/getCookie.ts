@@ -2,6 +2,8 @@
  * The following code is a modifed version of `es-cookie` taken from
  * https://github.com/theodorejb/es-cookie
  *
+ * It only contains a simplified version of `get()`.
+ *
  * Copyright 2017 Theodore Brown
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -27,31 +29,23 @@ const readValue = (value: string): string => {
 	return value.replace(/%3B/g, ";");
 };
 
-const parse = (cookieString: string): { [name: string]: string } => {
-	const result: { [name: string]: string } = {};
-	const cookies = cookieString.split("; ");
-
-	for (const cookie of cookies) {
-		const parts = cookie.split("=");
-		const value = parts.slice(1).join("=");
-		const name = readValue(parts[0]).replace(/%3D/g, "=");
-		result[name] = readValue(value);
-	}
-
-	return result;
-};
-
 /**
  * Returns the value of a cookie from a given cookie store.
  *
  * @param name - Of the cookie.
- * @param cookieStore - The stringified cookie store from which to read the cookie.
  *
  * @returns The value of the cookie, if it exists.
  */
-export const getCookie = (
-	name: string,
-	cookieStore: string,
-): string | undefined => {
-	return parse(cookieStore)[name];
+export const getCookie = (name: string): string | undefined => {
+	const cookies = document.cookie.split("; ");
+
+	for (const cookie of cookies) {
+		const parts = cookie.split("=");
+		const value = parts.slice(1).join("=");
+		const thisName = readValue(parts[0]).replace(/%3D/g, "=");
+
+		if (thisName === name) {
+			return readValue(value);
+		}
+	}
 };

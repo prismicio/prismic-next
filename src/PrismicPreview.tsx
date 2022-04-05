@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 
 import { getCookie } from "./lib/getCookie";
 import { extractPreviewRefRepositoryName } from "./lib/extractPreviewRefRepositoryName";
+import { UpdatePreviewModeError, ExitPreviewModeError } from "./errors";
 
 /**
  * Props for `<PrismicPreview>`.
@@ -49,10 +50,16 @@ export type PrismicPreviewProps = {
  */
 const updatePreviewMode = async (updatePreviewURL: string): Promise<void> => {
 	// Start Next.js Preview Mode via the given preview API endpoint.
-	await globalThis.fetch(updatePreviewURL);
+	const res = await globalThis.fetch(updatePreviewURL);
 
-	// Reload the page with an active Preview Mode.
-	window.location.reload();
+	if (res.ok) {
+		// Reload the page with an active Preview Mode.
+		window.location.reload();
+	} else {
+		throw new UpdatePreviewModeError(
+			`[<PrismicPreview>] Failed to start or update Preview Mode using the "${updatePreviewURL}" API endpoint. Does it exist?`,
+		);
+	}
 };
 
 /**
@@ -62,10 +69,16 @@ const updatePreviewMode = async (updatePreviewURL: string): Promise<void> => {
  */
 const exitPreviewMode = async (exitPreviewURL: string): Promise<void> => {
 	// Exit Next.js Preview Mode via the given exit preview API endpoint.
-	await globalThis.fetch(exitPreviewURL);
+	const res = await globalThis.fetch(exitPreviewURL);
 
-	// Reload the page with an inactive Preview Mode.
-	window.location.reload();
+	if (res.ok) {
+		// Reload the page with an inactive Preview Mode.
+		window.location.reload();
+	} else {
+		throw new ExitPreviewModeError(
+			`[<PrismicPreview>] Failed to exit Preview Mode using the "${exitPreviewURL}" API endpoint. Does it exist?`,
+		);
+	}
 };
 
 /**
@@ -89,22 +102,49 @@ export function PrismicPreview({
 	const resolvedExitPreviewURL = router.basePath + exitPreviewURL;
 
 	React.useEffect(() => {
-		const startPreviewIfLoadedFromSharedLink = async () => {
-			const previewCookie = getCookie(
-				prismic.cookie.preview,
-				globalThis.document.cookie,
-			);
+		/**
+		 * The Prismic preview cookie.
+		 */
+		const previewCookie = getCookie(prismic.cookie.preview);
 
-			if (
-				!router.isPreview &&
-				previewCookie &&
-				extractPreviewRefRepositoryName(previewCookie) === repositoryName
-			) {
-				await updatePreviewMode(resolvedUpdatePreviewURL);
-			}
-		};
+		/**
+		 * Determines if the current Prismic preview session is for the repository
+		 * configured for this instance of `<PrismicPreview>`.
+		 */
+		const prismicPreviewSessionIsForThisRepo = Boolean(
+			previewCookie &&
+				extractPreviewRefRepositoryName(previewCookie) === repositoryName,
+		);
 
-		startPreviewIfLoadedFromSharedLink();
+		/**
+		 * Determines if the current location is a descendant of the app's base path.
+		 *
+		 * This is used to prevent infinite refrehes; when `isDescendantOfBasePath`
+		 * is `false`, `router.isPreview` is also `false`.
+		 *
+		 * If the app does not have a base path, this should always be `true`.
+		 */
+		const locationIsDescendantOfBasePath = window.location.href.startsWith(
+			window.location.origin + router.basePath,
+		);
+
+		/**
+		 * Determines if the current user loaded the page from a share link.
+		 *
+		 * Currently, we can only deduce this by checking if router.isPreview is
+		 * false (i.e. Preview Mode is inactive) and a Prismic preview cookie is present.
+		 */
+		const loadedFromShareLink = !router.isPreview && previewCookie;
+
+		if (
+			prismicPreviewSessionIsForThisRepo &&
+			locationIsDescendantOfBasePath &&
+			loadedFromShareLink
+		) {
+			updatePreviewMode(resolvedUpdatePreviewURL);
+
+			return;
+		}
 
 		const handlePrismicPreviewUpdate = async (event: Event) => {
 			// Prevent the toolbar from reloading the page.
@@ -135,6 +175,7 @@ export function PrismicPreview({
 		resolvedUpdatePreviewURL,
 		resolvedExitPreviewURL,
 		router.isPreview,
+		router.basePath,
 	]);
 
 	return (

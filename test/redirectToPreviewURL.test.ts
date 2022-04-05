@@ -26,6 +26,30 @@ test("redirects to the previewed document's URL", async () => {
 	expect(config.res.redirect).toHaveBeenCalledWith("/baz");
 });
 
+test("supports basePath when redirecting to the previewed document's URL", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
+		req: {
+			query: {
+				documentId: "foo",
+				token: "bar",
+			},
+		},
+		res: {
+			redirect: fn().mockImplementation(() => void 0),
+		},
+		basePath: "/base/path",
+	};
+
+	spyOn(config.client, "resolvePreviewURL").mockImplementation(
+		async () => "/baz",
+	);
+
+	await redirectToPreviewURL(config);
+
+	expect(config.res.redirect).toHaveBeenCalledWith("/base/path/baz");
+});
+
 test("passes the given link resolver to client.resolvePreviewURL", async () => {
 	const config: RedirectToPreviewURLConfig = {
 		client: prismic.createClient("qwerty", { fetch: fn() }),
@@ -102,6 +126,23 @@ test("redirects to `/` by default if the URL params do not contain documentId or
 	expect(config.res.redirect).toHaveBeenCalledWith("/");
 });
 
+test("supports basePath when redirecting to `/` by default if the URL params do not contain documentId or token", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
+		req: {
+			query: {},
+		},
+		res: {
+			redirect: fn().mockImplementation(() => void 0),
+		},
+		basePath: "/base/path",
+	};
+
+	await redirectToPreviewURL(config);
+
+	expect(config.res.redirect).toHaveBeenCalledWith("/base/path/");
+});
+
 test("redirects to the given default URL if the URL params do not contain documentId or token", async () => {
 	const config: RedirectToPreviewURLConfig = {
 		client: prismic.createClient("qwerty", { fetch: fn() }),
@@ -117,4 +158,22 @@ test("redirects to the given default URL if the URL params do not contain docume
 	await redirectToPreviewURL(config);
 
 	expect(config.res.redirect).toHaveBeenCalledWith("/foo");
+});
+
+test("supports basePath when redirecting to the given default URL if the URL params do not contain documentId or token", async () => {
+	const config: RedirectToPreviewURLConfig = {
+		client: prismic.createClient("qwerty", { fetch: fn() }),
+		req: {
+			query: {},
+		},
+		res: {
+			redirect: fn().mockImplementation(() => void 0),
+		},
+		defaultURL: "/foo",
+		basePath: "/base/path",
+	};
+
+	await redirectToPreviewURL(config);
+
+	expect(config.res.redirect).toHaveBeenCalledWith("/base/path/foo");
 });
