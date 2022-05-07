@@ -13,4 +13,7 @@ export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
 export { redirectToPreviewURL } from "./redirectToPreviewURL";
 export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL";
 
+export { PrismicNextImage } from "./PrismicNextImage";
+export type { PrismicNextImageProps } from "./PrismicNextImage";
+
 export type { CreateClientConfig } from "./types";
