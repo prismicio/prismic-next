@@ -288,3 +288,23 @@ test("allows falling back to the default loader", () => {
 
 	expect(img?.props.src).toMatch(/^\/_next\/image\?url=/);
 });
+
+test("supports imgix parameters when using the default loader", () => {
+	const seed = expect.getState().currentTestName;
+	const field = prismicM.value.image({ seed });
+
+	const res = renderJSON(
+		<PrismicNextImage
+			field={field}
+			imgixParams={{ sat: -100 }}
+			loader={undefined}
+		/>,
+	);
+	const img = getImg(res);
+	const src = new URL(img?.props.src, "https://example.com");
+	const nextImageOptimizationAPIURL = new URL(
+		decodeURIComponent(src.searchParams.get("url") as string),
+	);
+
+	expect(nextImageOptimizationAPIURL.searchParams.get("sat")).toBe("-100");
+});

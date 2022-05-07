@@ -14,24 +14,21 @@ import { devMsg } from "./lib/devMsg";
  * @see To learn about `next/image` loaders: https://nextjs.org/docs/api-reference/next/image#loader
  * @see To learn about Imgix's URL API: https://docs.imgix.com/apis/rendering
  */
-const createImgixLoader =
-	(imgixParams: ImgixURLParams = {}) =>
-	(args: ImageLoaderProps): string => {
-		const url = new URL(args.src);
+const imgixLoader = (args: ImageLoaderProps): string => {
+	const url = new URL(args.src);
 
-		const params: ImgixURLParams = {
-			fit: (url.searchParams.get("fit") as ImgixURLParams["fit"]) || "max",
-			...imgixParams,
-			w: args.width,
-			h: undefined,
-		};
-
-		if (args.quality) {
-			params.q = args.quality;
-		}
-
-		return buildURL(args.src, params);
+	const params: ImgixURLParams = {
+		fit: (url.searchParams.get("fit") as ImgixURLParams["fit"]) || "max",
+		w: args.width,
+		h: undefined,
 	};
+
+	if (args.quality) {
+		params.q = args.quality;
+	}
+
+	return buildURL(args.src, params);
+};
 
 export type PrismicNextImageProps = Omit<
 	ImageProps,
@@ -84,7 +81,7 @@ export type PrismicNextImageProps = Omit<
  */
 export const PrismicNextImage = ({
 	field,
-	imgixParams,
+	imgixParams = {},
 	alt,
 	fallbackAlt,
 	layout,
@@ -109,13 +106,15 @@ export const PrismicNextImage = ({
 	}
 
 	if (prismicH.isFilled.imageThumbnail(field)) {
+		const src = buildURL(field.url, imgixParams);
+
 		return (
 			<Image
-				src={field.url}
+				src={src}
 				width={layout === "fill" ? undefined : field.dimensions.width}
 				height={layout === "fill" ? undefined : field.dimensions.height}
 				alt={alt ?? (field.alt || fallbackAlt)}
-				loader={createImgixLoader(imgixParams)}
+				loader={imgixLoader}
 				layout={layout}
 				{...restProps}
 			/>
