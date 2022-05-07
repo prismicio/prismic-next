@@ -204,18 +204,21 @@ test("supports imgix parameters", () => {
 	const img = getImg(actual);
 	const src = new URL(img?.props.src);
 
-	expect(src.searchParams.get("sat"), "-100");
+	expect(src.searchParams.get("sat")).toBe("-100");
 });
 
 test("applies fit=max by default", () => {
 	const seed = expect.getState().currentTestName;
 	const field = prismicM.value.image({ seed });
+	const fieldURL = new URL(field.url);
+	fieldURL.searchParams.delete("fit");
+	field.url = fieldURL.toString();
 
 	const actual = renderJSON(<PrismicNextImage field={field} />);
 	const img = getImg(actual);
 	const src = new URL(img?.props.src);
 
-	expect(src.searchParams.get("fit"), "max");
+	expect(src.searchParams.get("fit")).toBe("max");
 });
 
 test("retains fit parameter if already included in the image url", () => {
@@ -229,7 +232,7 @@ test("retains fit parameter if already included in the image url", () => {
 	const img = getImg(actual);
 	const src = new URL(img?.props.src);
 
-	expect(src.searchParams.get("fit"), "crop");
+	expect(src.searchParams.get("fit")).toBe("crop");
 });
 
 test("allows overriding fit via imgixParams prop", () => {
@@ -245,5 +248,6 @@ test("allows overriding fit via imgixParams prop", () => {
 	const img = getImg(actual);
 	const src = new URL(img?.props.src);
 
-	expect(src.searchParams.get("fit"), "facearea");
+	expect(src.searchParams.get("fit")).toBe("facearea");
+});
 });
