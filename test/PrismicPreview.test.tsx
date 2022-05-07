@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 
 import { test, expect, fn, beforeAll, vi, afterEach } from "vitest";
+import { NextRouter, useRouter } from "next/router";
 import * as React from "react";
 import * as renderer from "react-test-renderer";
 
@@ -39,6 +40,16 @@ const tick = async () => {
 const fetch = fn();
 const reload = fn();
 
+vi.mock("next/router", () => {
+	return {
+		useRouter: fn(() => {
+			return {
+				isPreview: true,
+			};
+		}),
+	};
+});
+
 beforeAll(() => {
 	globalThis.fetch = fetch;
 	globalThis.location.reload = reload;
@@ -47,6 +58,7 @@ beforeAll(() => {
 afterEach(() => {
 	fetch.mockClear();
 	reload.mockClear();
+	vi.mocked(useRouter).mockClear();
 });
 
 test("renders the Prismic toolbar for the given repository", () => {
@@ -165,14 +177,10 @@ test("unregisters prismicPreviewEnd event listener on unmount", async () => {
 });
 
 test("supports shared links", async () => {
-	vi.mock("next/router", () => {
+	vi.mocked(useRouter).mockImplementation(() => {
 		return {
-			useRouter: () => {
-				return {
-					isPreview: false,
-				};
-			},
-		};
+			isPreview: false,
+		} as NextRouter;
 	});
 
 	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
@@ -190,14 +198,10 @@ test("supports shared links", async () => {
 });
 
 test("ignores invalid preview cookie", async () => {
-	vi.mock("next/router", () => {
+	vi.mocked(useRouter).mockImplementation(() => {
 		return {
-			useRouter: () => {
-				return {
-					isPreview: false,
-				};
-			},
-		};
+			isPreview: false,
+		} as NextRouter;
 	});
 
 	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
@@ -215,14 +219,10 @@ test("ignores invalid preview cookie", async () => {
 });
 
 test("does nothing if not an active preview session", async () => {
-	vi.mock("next/router", () => {
+	vi.mocked(useRouter).mockImplementation(() => {
 		return {
-			useRouter: () => {
-				return {
-					isPreview: false,
-				};
-			},
-		};
+			isPreview: false,
+		} as NextRouter;
 	});
 
 	globalThis.document.cookie = `io.prismic.preview=`;
