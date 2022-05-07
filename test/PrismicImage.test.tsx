@@ -250,4 +250,15 @@ test("allows overriding fit via imgixParams prop", () => {
 
 	expect(src.searchParams.get("fit")).toBe("facearea");
 });
+
+test("allows falling back to the default loader", () => {
+	const seed = expect.getState().currentTestName;
+	const field = prismicM.value.image({ seed });
+
+	const actual = renderJSON(
+		<PrismicNextImage field={field} loader={undefined} />,
+	);
+	const img = getImg(actual);
+
+	expect(img?.props.src).toMatch(/^\/_next\/image\?url=/);
 });
