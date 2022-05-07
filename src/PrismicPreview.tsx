@@ -32,21 +32,6 @@ export type PrismicPreviewProps = {
 };
 
 /**
- * Determines if an Event object came from the Prismic Toolbar.
- *
- * @param event - Event to check.
- *
- * @returns `true` if `event` came from the Prismic Toolbar, `false` otherwise.
- */
-const isPrismicUpdateToolbarEvent = (
-	event: Event,
-): event is CustomEvent<{ ref: string }> => {
-	return (
-		"detail" in event && typeof (event as CustomEvent).detail.ref === "string"
-	);
-};
-
-/**
  * React component that sets up Prismic Previews using the Prismic Toolbar. When
  * the Prismic Toolbar send events to the browser, such as on preview updates
  * and exiting, this component will automatically update the Next.js preview
@@ -64,30 +49,15 @@ export function PrismicPreview({
 	const router = useRouter();
 
 	React.useEffect(() => {
-		const previewRefRepositoryName = extractPreviewRefRepositoryName(
-			getCookie(prismic.cookie.preview, globalThis.document.cookie) as string,
-		);
-
-		const startPreviewIfLoadedFromSharedLink = async () => {
-			if (previewRefRepositoryName === repositoryName && !router.isPreview) {
-				await globalThis.fetch(updatePreviewURL);
-				window.location.reload();
-			}
-		};
-
-		startPreviewIfLoadedFromSharedLink();
-
 		const handlePrismicPreviewUpdate = async (event: Event) => {
-			if (isPrismicUpdateToolbarEvent(event)) {
-				// Prevent the toolbar from reloading the page.
-				event.preventDefault();
+			// Prevent the toolbar from reloading the page.
+			event.preventDefault();
 
-				// Start Next.js Preview Mode via the given preview API endpoint.
-				await globalThis.fetch(updatePreviewURL);
+			// Start Next.js Preview Mode via the given preview API endpoint.
+			await globalThis.fetch(updatePreviewURL);
 
-				// Reload the page with an active Preview Mode.
-				window.location.reload();
-			}
+			// Reload the page with an active Preview Mode.
+			globalThis.location.reload();
 		};
 
 		const handlePrismicPreviewEnd = async (event: Event) => {
@@ -98,32 +68,53 @@ export function PrismicPreview({
 			await globalThis.fetch(exitPreviewURL);
 
 			// Reload the page with an active Preview Mode.
-			window.location.reload();
+			globalThis.location.reload();
 		};
 
-		// Register Prismic Toolbar event handlers.
-		if (window) {
+		const startPreviewModeManually = async () => {
+			await globalThis.fetch(updatePreviewURL);
+
+			globalThis.location.reload();
+		};
+
+		if (router.isPreview) {
+			// Register Prismic Toolbar event handlers.
 			window.addEventListener(
 				"prismicPreviewUpdate",
 				handlePrismicPreviewUpdate,
 			);
 			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
+		} else {
+			// If a Prismic preview cookie is present, but Next.js Preview
+			// Mode is not active, we must activate Preview Mode manually.
+			//
+			// This will happen when a visitor accesses the page using a
+			// Prismic preview share link.
+
+			const prismicPreviewCookie = getCookie(
+				prismic.cookie.preview,
+				globalThis.document.cookie,
+			);
+
+			if (prismicPreviewCookie) {
+				const prismicPreviewCookieRepositoryName =
+					extractPreviewRefRepositoryName(prismicPreviewCookie);
+
+				if (prismicPreviewCookieRepositoryName === repositoryName) {
+					startPreviewModeManually();
+				}
+			}
 		}
 
 		// On cleanup, unregister Prismic Toolbar event handlers.
 		return () => {
-			if (window) {
-				window.removeEventListener(
-					"prismicPreviewUpdate",
-					handlePrismicPreviewUpdate,
-				);
-				window.removeEventListener(
-					"prismicPreviewEnd",
-					handlePrismicPreviewEnd,
-				);
-			}
+			window.removeEventListener(
+				"prismicPreviewUpdate",
+				handlePrismicPreviewUpdate,
+			);
+			window.removeEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 		};
-	}, []);
+	}, [repositoryName, exitPreviewURL, updatePreviewURL, router.isPreview]);
 
 	return (
 		<>
