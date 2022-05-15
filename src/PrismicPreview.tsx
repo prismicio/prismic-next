@@ -89,15 +89,15 @@ export function PrismicPreview({
 			globalThis.document.cookie,
 		);
 
-		if (prismicPreviewCookie) {
-			if (router.isPreview) {
-				// Register Prismic Toolbar event handlers.
-				window.addEventListener(
-					"prismicPreviewUpdate",
-					handlePrismicPreviewUpdate,
-				);
-				window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
-			} else {
+		if (router.isPreview) {
+			// Register Prismic Toolbar event handlers.
+			window.addEventListener(
+				"prismicPreviewUpdate",
+				handlePrismicPreviewUpdate,
+			);
+			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
+		} else {
+			if (prismicPreviewCookie) {
 				// If a Prismic preview cookie is present, but Next.js Preview
 				// Mode is not active, we must activate Preview Mode manually.
 				//

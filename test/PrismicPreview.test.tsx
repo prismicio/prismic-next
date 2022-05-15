@@ -37,14 +37,18 @@ const tick = async () => {
 	await new Promise((res) => setTimeout(res, 0));
 };
 
+const mockPagePath = "/foo";
 const fetch = fn();
-const reload = fn();
 
 vi.mock("next/router", () => {
+	const replace = fn();
+
 	return {
 		useRouter: fn(() => {
 			return {
 				isPreview: true,
+				asPath: mockPagePath,
+				replace,
 			};
 		}),
 	};
@@ -52,13 +56,13 @@ vi.mock("next/router", () => {
 
 beforeAll(() => {
 	globalThis.fetch = fetch;
-	globalThis.location.reload = reload;
 });
 
 afterEach(() => {
 	fetch.mockClear();
-	reload.mockClear();
-	vi.mocked(useRouter).mockClear();
+
+	const router = useRouter();
+	vi.mocked(router.replace).mockClear();
 });
 
 test("renders the Prismic toolbar for the given repository", () => {
@@ -79,6 +83,7 @@ test("renders the Prismic toolbar for the given repository", () => {
 });
 
 test("calls the default preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
+	const router = useRouter();
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
 	window.dispatchEvent(
@@ -88,12 +93,13 @@ test("calls the default preview API endpoint on prismicPreviewUpdate toolbar eve
 	await tick();
 
 	expect(globalThis.fetch).toHaveBeenCalledWith("/api/preview");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
 
 	renderer.act(() => unmount());
 });
 
 test("calls the given preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
+	const router = useRouter();
 	const { unmount } = render(
 		<PrismicPreview repositoryName="qwerty" updatePreviewURL="/foo" />,
 	);
@@ -105,12 +111,13 @@ test("calls the given preview API endpoint on prismicPreviewUpdate toolbar event
 	await tick();
 
 	expect(globalThis.fetch).toHaveBeenCalledWith("/foo");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
 
 	renderer.act(() => unmount());
 });
 
 test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
+	const router = useRouter();
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
 	window.dispatchEvent(
@@ -120,12 +127,13 @@ test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar e
 	await tick();
 
 	expect(globalThis.fetch).toHaveBeenCalledWith("/api/exit-preview");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
 
 	renderer.act(() => unmount());
 });
 
 test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
+	const router = useRouter();
 	const { unmount } = render(
 		<PrismicPreview repositoryName="qwerty" exitPreviewURL="/bar" />,
 	);
@@ -137,17 +145,16 @@ test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar eve
 	await tick();
 
 	expect(globalThis.fetch).toHaveBeenCalledWith("/bar");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
 
 	renderer.act(() => unmount());
 });
 
 test("unregisters prismicPreviewUpdate event listener on unmount", async () => {
+	const router = useRouter();
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
-	renderer.act(() => {
-		unmount();
-	});
+	renderer.act(() => unmount());
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
@@ -156,15 +163,14 @@ test("unregisters prismicPreviewUpdate event listener on unmount", async () => {
 	await tick();
 
 	expect(globalThis.fetch).not.toHaveBeenCalledWith("/api/preview");
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(router.replace).not.toHaveBeenCalled();
 });
 
 test("unregisters prismicPreviewEnd event listener on unmount", async () => {
+	const router = useRouter();
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
-	renderer.act(() => {
-		unmount();
-	});
+	renderer.act(() => unmount());
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
@@ -173,13 +179,17 @@ test("unregisters prismicPreviewEnd event listener on unmount", async () => {
 	await tick();
 
 	expect(globalThis.fetch).not.toHaveBeenCalledWith("/api/exit-preview");
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(router.replace).not.toHaveBeenCalled();
 });
 
 test("supports shared links", async () => {
+	const replace = fn() as NextRouter["replace"];
+
 	vi.mocked(useRouter).mockImplementation(() => {
 		return {
 			isPreview: false,
+			asPath: mockPagePath,
+			replace,
 		} as NextRouter;
 	});
 
@@ -192,15 +202,19 @@ test("supports shared links", async () => {
 	await tick();
 
 	expect(globalThis.fetch).toHaveBeenCalledWith("/api/preview");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(replace).toHaveBeenCalledWith(mockPagePath);
 
 	renderer.act(() => unmount());
 });
 
 test("ignores invalid preview cookie", async () => {
+	const replace = fn() as NextRouter["replace"];
+
 	vi.mocked(useRouter).mockImplementation(() => {
 		return {
 			isPreview: false,
+			asPath: mockPagePath,
+			replace,
 		} as NextRouter;
 	});
 
@@ -213,15 +227,19 @@ test("ignores invalid preview cookie", async () => {
 	await tick();
 
 	expect(globalThis.fetch).not.toHaveBeenCalled();
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(replace).not.toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
 
 test("does nothing if not an active preview session", async () => {
+	const replace = fn() as NextRouter["replace"];
+
 	vi.mocked(useRouter).mockImplementation(() => {
 		return {
 			isPreview: false,
+			asPath: mockPagePath,
+			replace,
 		} as NextRouter;
 	});
 
@@ -232,7 +250,7 @@ test("does nothing if not an active preview session", async () => {
 	await tick();
 
 	expect(globalThis.fetch).not.toHaveBeenCalled();
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(replace).not.toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
