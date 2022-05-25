@@ -63,6 +63,14 @@ export function PrismicPreview({
 
 	React.useEffect(() => {
 		/**
+		 * Refreshes a page's props without reload the page. This function triggers
+		 * the same API as navigating to a new page via `next/link`.
+		 */
+		const refreshPageProps = () => {
+			router.replace(router.asPath);
+		};
+
+		/**
 		 * Starts Preview Mode and refreshes the page's props.
 		 */
 		const startPreviewMode = async () => {
@@ -70,7 +78,7 @@ export function PrismicPreview({
 			const res = await globalThis.fetch(resolvedUpdatePreviewURL);
 
 			if (res.ok) {
-				globalThis.location.reload();
+				refreshPageProps();
 			} else {
 				console.error(
 					`[<PrismicPreview>] Failed to start or update Preview Mode using the "${resolvedUpdatePreviewURL}" API endpoint. Does it exist?`,
@@ -93,7 +101,7 @@ export function PrismicPreview({
 			const res = await globalThis.fetch(resolvedExitPreviewURL);
 
 			if (res.ok) {
-				globalThis.location.reload();
+				refreshPageProps();
 			} else {
 				console.error(
 					`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
@@ -157,8 +165,7 @@ export function PrismicPreview({
 		repositoryName,
 		resolvedExitPreviewURL,
 		resolvedUpdatePreviewURL,
-		router.isPreview,
-		router.basePath,
+		router,
 	]);
 
 	return (
