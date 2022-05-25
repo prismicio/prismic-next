@@ -1,14 +1,14 @@
-import { test, spyOn, expect, fn } from "vitest";
+import { test, expect, vi } from "vitest";
 import * as prismic from "@prismicio/client";
 
 import { enableAutoPreviews, EnableAutoPreviewsConfig } from "../src";
 
 test("enables auto previews for the given client and server req", () => {
 	const config: EnableAutoPreviewsConfig = {
-		client: prismic.createClient("qwerty", { fetch: fn() }),
+		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 		req: {},
 	};
-	const spy = spyOn(config.client, "enableAutoPreviewsFromReq");
+	const spy = vi.spyOn(config.client, "enableAutoPreviewsFromReq");
 
 	enableAutoPreviews(config);
 
@@ -17,10 +17,10 @@ test("enables auto previews for the given client and server req", () => {
 
 test("enables auto previews for the given client and previewData", () => {
 	const config: EnableAutoPreviewsConfig = {
-		client: prismic.createClient("qwerty", { fetch: fn() }),
+		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 		previewData: { ref: "ref" },
 	};
-	const spy = spyOn(config.client, "queryContentFromRef");
+	const spy = vi.spyOn(config.client, "queryContentFromRef");
 
 	enableAutoPreviews(config);
 
@@ -28,12 +28,12 @@ test("enables auto previews for the given client and previewData", () => {
 });
 
 test("does not enable auto previews for the given client if a server req or previewData is not given", () => {
-	const client = prismic.createClient("qwerty", { fetch: fn() });
-	const enableAutoPreviewsFromReqSpy = spyOn(
+	const client = prismic.createClient("qwerty", { fetch: vi.fn() });
+	const enableAutoPreviewsFromReqSpy = vi.spyOn(
 		client,
 		"enableAutoPreviewsFromReq",
 	);
-	const queryContentFromRefSpy = spyOn(client, "queryContentFromRef");
+	const queryContentFromRefSpy = vi.spyOn(client, "queryContentFromRef");
 
 	enableAutoPreviews({ client });
 

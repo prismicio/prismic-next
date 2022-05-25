@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 
-import { test, expect, fn, beforeAll, vi, afterEach } from "vitest";
+import { test, expect, beforeAll, vi, afterEach } from "vitest";
 import { NextRouter, useRouter } from "next/router";
 import * as React from "react";
 import * as renderer from "react-test-renderer";
@@ -37,28 +37,36 @@ const tick = async () => {
 	await new Promise((res) => setTimeout(res, 0));
 };
 
-const fetch = fn();
-const reload = fn();
-
 vi.mock("next/router", () => {
 	return {
-		useRouter: fn(() => {
+		useRouter: vi.fn(() => {
 			return {
 				isPreview: true,
+				basePath: "",
 			};
 		}),
 	};
 });
 
+const fetch = vi.fn(async () => {
+	return {
+		ok: true,
+	} as Response;
+});
+const reload = vi.fn();
+
 beforeAll(() => {
 	globalThis.fetch = fetch;
 	globalThis.location.reload = reload;
+	globalThis.console.error = vi.fn();
 });
 
 afterEach(() => {
-	fetch.mockClear();
-	reload.mockClear();
-	vi.mocked(useRouter).mockClear();
+	fetch.mockRestore();
+	reload.mockRestore();
+	vi.mocked(globalThis.console.error).mockRestore();
+
+	vi.mocked(useRouter).mockRestore();
 });
 
 test("renders the Prismic toolbar for the given repository", () => {
@@ -71,11 +79,11 @@ test("renders the Prismic toolbar for the given repository", () => {
 				?.startsWith("https://static.cdn.prismic.io/prismic.js"),
 	);
 
-	expect(script?.getAttribute("src")).toMatch(
+	renderer.act(() => unmount());
+
+	expect(script?.getAttribute("src") || "").toMatch(
 		"https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true",
 	);
-
-	renderer.act(() => unmount());
 });
 
 test("calls the default preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
@@ -87,8 +95,8 @@ test("calls the default preview API endpoint on prismicPreviewUpdate toolbar eve
 
 	await tick();
 
-	expect(globalThis.fetch).toHaveBeenCalledWith("/api/preview");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(fetch).toHaveBeenCalledWith("/api/preview");
+	expect(reload).toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
@@ -104,8 +112,52 @@ test("calls the given preview API endpoint on prismicPreviewUpdate toolbar event
 
 	await tick();
 
-	expect(globalThis.fetch).toHaveBeenCalledWith("/foo");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(fetch).toHaveBeenCalledWith("/foo");
+	expect(reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("supports basePath on prismicPreviewUpdate toolbar events with default preview API endpoint", async () => {
+	vi.mocked(useRouter).mockImplementation(() => {
+		return {
+			isPreview: true,
+			basePath: "/foo",
+		} as NextRouter;
+	});
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/foo/api/preview");
+
+	renderer.act(() => unmount());
+});
+
+test("supports basePath on prismicPreviewUpdate toolbar events with given preview API endpoint", async () => {
+	vi.mocked(useRouter).mockImplementation(() => {
+		return {
+			isPreview: true,
+			basePath: "/foo",
+		} as NextRouter;
+	});
+
+	const { unmount } = render(
+		<PrismicPreview repositoryName="qwerty" updatePreviewURL="/bar" />,
+	);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/foo/bar");
 
 	renderer.act(() => unmount());
 });
@@ -119,8 +171,8 @@ test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar e
 
 	await tick();
 
-	expect(globalThis.fetch).toHaveBeenCalledWith("/api/exit-preview");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(fetch).toHaveBeenCalledWith("/api/exit-preview");
+	expect(reload).toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
@@ -136,8 +188,52 @@ test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar eve
 
 	await tick();
 
-	expect(globalThis.fetch).toHaveBeenCalledWith("/bar");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(fetch).toHaveBeenCalledWith("/bar");
+	expect(reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("supports basePath on prismicPreviewEnd toolbar events with default preview API endpoint", async () => {
+	vi.mocked(useRouter).mockImplementation(() => {
+		return {
+			isPreview: true,
+			basePath: "/foo",
+		} as NextRouter;
+	});
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/foo/api/exit-preview");
+
+	renderer.act(() => unmount());
+});
+
+test("supports basePath on prismicPreviewEnd toolbar events with given preview API endpoint", async () => {
+	vi.mocked(useRouter).mockImplementation(() => {
+		return {
+			isPreview: true,
+			basePath: "/foo",
+		} as NextRouter;
+	});
+
+	const { unmount } = render(
+		<PrismicPreview repositoryName="qwerty" exitPreviewURL="/bar" />,
+	);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/foo/bar");
 
 	renderer.act(() => unmount());
 });
@@ -155,8 +251,8 @@ test("unregisters prismicPreviewUpdate event listener on unmount", async () => {
 
 	await tick();
 
-	expect(globalThis.fetch).not.toHaveBeenCalledWith("/api/preview");
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(fetch).not.toHaveBeenCalledWith("/api/preview");
+	expect(reload).not.toHaveBeenCalled();
 });
 
 test("unregisters prismicPreviewEnd event listener on unmount", async () => {
@@ -172,14 +268,15 @@ test("unregisters prismicPreviewEnd event listener on unmount", async () => {
 
 	await tick();
 
-	expect(globalThis.fetch).not.toHaveBeenCalledWith("/api/exit-preview");
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(fetch).not.toHaveBeenCalledWith("/api/exit-preview");
+	expect(reload).not.toHaveBeenCalled();
 });
 
 test("supports shared links", async () => {
 	vi.mocked(useRouter).mockImplementation(() => {
 		return {
 			isPreview: false,
+			basePath: "",
 		} as NextRouter;
 	});
 
@@ -191,8 +288,8 @@ test("supports shared links", async () => {
 
 	await tick();
 
-	expect(globalThis.fetch).toHaveBeenCalledWith("/api/preview");
-	expect(globalThis.location.reload).toHaveBeenCalled();
+	expect(fetch).toHaveBeenCalledWith("/api/preview");
+	expect(reload).toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
@@ -201,6 +298,7 @@ test("ignores invalid preview cookie", async () => {
 	vi.mocked(useRouter).mockImplementation(() => {
 		return {
 			isPreview: false,
+			basePath: "",
 		} as NextRouter;
 	});
 
@@ -212,8 +310,8 @@ test("ignores invalid preview cookie", async () => {
 
 	await tick();
 
-	expect(globalThis.fetch).not.toHaveBeenCalled();
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(fetch).not.toHaveBeenCalled();
+	expect(reload).not.toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
@@ -222,6 +320,7 @@ test("does nothing if not an active preview session", async () => {
 	vi.mocked(useRouter).mockImplementation(() => {
 		return {
 			isPreview: false,
+			basePath: "",
 		} as NextRouter;
 	});
 
@@ -231,8 +330,8 @@ test("does nothing if not an active preview session", async () => {
 
 	await tick();
 
-	expect(globalThis.fetch).not.toHaveBeenCalled();
-	expect(globalThis.location.reload).not.toHaveBeenCalled();
+	expect(fetch).not.toHaveBeenCalled();
+	expect(reload).not.toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
@@ -249,4 +348,44 @@ test("renders children untouched", () => {
 	).toJSON() as renderer.ReactTestRendererJSON;
 
 	expect(actual).toMatchObject(expected);
+});
+
+test("logs error if updatePreviewURL is not accessible", async () => {
+	vi.mocked(fetch).mockReturnValue(Promise.resolve({ ok: false } as Response));
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/api/preview");
+	expect(globalThis.console.error).toHaveBeenCalledWith(
+		expect.stringMatching(/failed to start or update preview mode/i),
+	);
+	expect(reload).not.toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
+test("logs error if exitPreviewURL is not accessible", async () => {
+	vi.mocked(fetch).mockReturnValue(Promise.resolve({ ok: false } as Response));
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/api/exit-preview");
+	expect(globalThis.console.error).toHaveBeenCalledWith(
+		expect.stringMatching(/failed to exit preview mode/i),
+	);
+	expect(reload).not.toHaveBeenCalled();
+
+	renderer.act(() => unmount());
 });
