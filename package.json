@@ -46,10 +46,12 @@
 	},
 	"dependencies": {
 		"@prismicio/client": "^6.0.0",
+		"@prismicio/helpers": "^2.3.0",
 		"@prismicio/react": "^2.2.0",
 		"@prismicio/types": "^0.1.27"
 	},
 	"devDependencies": {
+		"@prismicio/mock": "^0.0.10",
 		"@size-limit/preset-small-lib": "^7.0.8",
 		"@types/react-test-renderer": "^17.0.1",
 		"@typescript-eslint/eslint-plugin": "^5.17.0",
