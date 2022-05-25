@@ -1,4 +1,4 @@
-import { test, expect, fn } from "vitest";
+import { test, expect, vi } from "vitest";
 import * as prismic from "@prismicio/client";
 
 import { setPreviewData, SetPreviewDataConfig } from "../src";
@@ -12,7 +12,7 @@ test("sets preview data if req contains a `token` URL param", () => {
 			cookies: {},
 		},
 		res: {
-			setPreviewData: fn(),
+			setPreviewData: vi.fn(),
 		},
 	};
 
@@ -32,7 +32,7 @@ test("sets preview data if req contains a Prismic preview cookie", () => {
 			},
 		},
 		res: {
-			setPreviewData: fn(),
+			setPreviewData: vi.fn(),
 		},
 	};
 
@@ -54,7 +54,7 @@ test("prioritizes `token` URL param over Prismic preview cookie", () => {
 			},
 		},
 		res: {
-			setPreviewData: fn(),
+			setPreviewData: vi.fn(),
 		},
 	};
 
@@ -72,7 +72,7 @@ test("does not set preview data if req does not a `token` URL param or a Prismic
 			cookies: {},
 		},
 		res: {
-			setPreviewData: fn(),
+			setPreviewData: vi.fn(),
 		},
 	};
 
