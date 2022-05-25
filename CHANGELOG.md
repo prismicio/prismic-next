@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.3](https://github.com/prismicio/prismic-next/compare/v0.1.2...v0.1.3) (2022-05-25)
+
+
+### Features
+
+* add `<PrismicNextImage>` ([#24](https://github.com/prismicio/prismic-next/issues/24)) ([697da1a](https://github.com/prismicio/prismic-next/commit/697da1a04614951bbb9cb3181e6e8382ee61a49a))
+* add support for `basePath` ([#28](https://github.com/prismicio/prismic-next/issues/28)) ([9527e85](https://github.com/prismicio/prismic-next/commit/9527e85fb138ea36c7784f70aa6dff896c219c4e))
+
+
+### Refactor
+
+* simplify `<PrismicPreview>` logic ([#23](https://github.com/prismicio/prismic-next/issues/23)) ([5232b14](https://github.com/prismicio/prismic-next/commit/5232b14c4fb0b6d31f8757bcdd0b8925718b99f9))
+
 ### [0.1.2](https://github.com/prismicio/prismic-next/compare/v0.1.0...v0.1.2) (2022-04-01)
 
 
