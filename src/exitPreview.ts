@@ -32,6 +32,7 @@ export type ExitPreviewConfig = {
 	 */
 	res: {
 		clearPreviewData: NextApiResponse["clearPreviewData"];
+		status: NextApiResponse["status"];
 		json: NextApiResponse["json"];
 	};
 
@@ -48,5 +49,7 @@ export function exitPreview(config: ExitPreviewConfig): void {
 	// Exit the current user from Preview Mode.
 	config.res.clearPreviewData();
 
-	config.res.json({ success: true });
+	// 205 status is used to prevent CDN-level caching. The default 200
+	// status code is typically treated as non-changing and cacheable.
+	config.res.status(205).json({ success: true });
 }
