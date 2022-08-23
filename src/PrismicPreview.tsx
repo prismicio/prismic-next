@@ -1,9 +1,8 @@
 import * as React from "react";
-import * as prismic from "@prismicio/client";
 import { PrismicToolbar } from "@prismicio/react";
 import { useRouter } from "next/router";
 
-import { getCookie } from "./lib/getCookie";
+import { getPrismicPreviewCookie } from "./lib/getPrismicPreviewCookie";
 import { getPreviewCookieRepositoryName } from "./lib/getPreviewCookieRepositoryName";
 
 /**
@@ -109,8 +108,7 @@ export function PrismicPreview({
 			);
 			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 		} else {
-			const prismicPreviewCookie = getCookie(
-				prismic.cookie.preview,
+			const prismicPreviewCookie = getPrismicPreviewCookie(
 				globalThis.document.cookie,
 			);
 
