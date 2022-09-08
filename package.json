@@ -15,23 +15,19 @@
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"sideEffects": false,
+	"type": "module",
 	"exports": {
-		".": {
-			"require": "./dist/index.cjs",
-			"import": "./dist/index.js"
-		},
-		"./package.json": "./package.json"
+		".": "./dist/index.mjs"
 	},
-	"main": "./dist/index.cjs",
-	"module": "dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
 		"dist",
 		"src"
 	],
 	"scripts": {
-		"build": "siroc build",
-		"dev": "siroc build --watch",
+		"build": "unbuild",
+		"dev": "chokidar src --initial --command unbuild",
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepare": "npm run build",
@@ -50,7 +46,8 @@
 		"@prismicio/react": "^2.5.0",
 		"@prismicio/types": "^0.2.3",
 		"eslint-plugin-react": "^7.30.1",
-		"eslint-plugin-react-hooks": "^4.6.0"
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"imgix-url-builder": "^0.0.3"
 	},
 	"devDependencies": {
 		"@prismicio/mock": "^0.1.1",
@@ -59,6 +56,7 @@
 		"@typescript-eslint/eslint-plugin": "^5.34.0",
 		"@typescript-eslint/parser": "^5.34.0",
 		"@vitest/coverage-c8": "^0.22.1",
+		"chokidar-cli": "^3.0.0",
 		"eslint": "^8.22.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",
@@ -70,10 +68,10 @@
 		"prettier-plugin-jsdoc": "^0.3.38",
 		"react": "^18.1.0",
 		"react-test-renderer": "^18.2.0",
-		"siroc": "^0.16.0",
 		"size-limit": "^8.0.1",
 		"standard-version": "^9.5.0",
 		"typescript": "^4.7.4",
+		"unbuild": "^0.8.9",
 		"vitest": "^0.22.1"
 	},
 	"peerDependencies": {
