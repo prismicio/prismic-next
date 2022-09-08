@@ -63,7 +63,8 @@ export type RedirectToPreviewURLConfig<
 	linkResolver?: TLinkResolverFunction;
 
 	/**
-	 * The default redirect URL if a URL cannot be determined for the previewed document.
+	 * The default redirect URL if a URL cannot be determined for the previewed
+	 * document.
 	 *
 	 * **Note**: If you `next.config.js` file contains a `basePath`, the
 	 * `defaultURL` option must _not_ include it. Instead, provide the `basePath`

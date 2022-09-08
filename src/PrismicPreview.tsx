@@ -120,10 +120,12 @@ export function PrismicPreview({
 				// Prismic preview share link.
 
 				/**
-				 * Determines if the current location is a descendant of the app's base path.
+				 * Determines if the current location is a descendant of the app's base
+				 * path.
 				 *
 				 * This is used to prevent infinite refrehes; when
-				 * `isDescendantOfBasePath` is `false`, `router.isPreview` is also `false`.
+				 * `isDescendantOfBasePath` is `false`, `router.isPreview` is also
+				 * `false`.
 				 *
 				 * If the app does not have a base path, this should always be `true`.
 				 */
