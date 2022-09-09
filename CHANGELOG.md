@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.4](https://github.com/prismicio/prismic-next/compare/v0.1.3...v0.1.4) (2022-09-09)
+
+
+### Features
+
+* add `@prismicio/client`'s `ClientConfig` to `CreateClientConfig` ([#37](https://github.com/prismicio/prismic-next/issues/37)) ([38d1b24](https://github.com/prismicio/prismic-next/commit/38d1b24ed7d6a3800e220482ea65b3ee856b8f76))
+
+
+### Bug Fixes
+
+* prevent CDN-level caching of exit preview route implemented with `exitPreview()` ([#32](https://github.com/prismicio/prismic-next/issues/32)) ([445a3ae](https://github.com/prismicio/prismic-next/commit/445a3ae3b670b9b9773e9e00a61c20290a0dec53))
+* support tree-shaking ([#36](https://github.com/prismicio/prismic-next/issues/36)) ([c234524](https://github.com/prismicio/prismic-next/commit/c234524ce9e52618bab575cb7e40c71c3d892c88))
+
+
+### Documentation
+
+* update feature list ([330bab2](https://github.com/prismicio/prismic-next/commit/330bab28c70832d4da4bc03c4ccf7dd484801ec5))
+
+
+### Refactor
+
+* simplify Prismic preview cookie reading ([#34](https://github.com/prismicio/prismic-next/issues/34)) ([80e876f](https://github.com/prismicio/prismic-next/commit/80e876f9e0a850761d725bc587e34a16f51db320))
+
+
+### Chore
+
+* **deps:** update dependencies ([#38](https://github.com/prismicio/prismic-next/issues/38)) ([c6cef33](https://github.com/prismicio/prismic-next/commit/c6cef33cfc708e5933057c4fa662107992b059c5))
+* **deps:** upgrade dependencies ([#33](https://github.com/prismicio/prismic-next/issues/33)) ([1a654af](https://github.com/prismicio/prismic-next/commit/1a654afeba791f1c94f7f079d50b986875a60439))
+
 ### [0.1.3](https://github.com/prismicio/prismic-next/compare/v0.1.2...v0.1.3) (2022-05-25)
 
 
