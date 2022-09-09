@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.5](https://github.com/prismicio/prismic-next/compare/v0.1.4...v0.1.5) (2022-09-09)
+
+
+### Chore
+
+* add `main` and `module` entries ([6efc264](https://github.com/prismicio/prismic-next/commit/6efc2641eb8993527f0cca101fa966a0d8e84462))
+* include source maps ([845d0ab](https://github.com/prismicio/prismic-next/commit/845d0ab180fff11c136b4b01b865a0dc7564a1b0))
+
 ### [0.1.4](https://github.com/prismicio/prismic-next/compare/v0.1.3...v0.1.4) (2022-09-09)
 
 
