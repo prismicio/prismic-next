@@ -75,7 +75,8 @@ export type PrismicNextImageProps = Omit<
  *
  * @param props - Props for the component.
  *
- * @returns A responsive image component using `next/image` for the given Image field.
+ * @returns A responsive image component using `next/image` for the given Image
+ *   field.
  *
  * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
  */

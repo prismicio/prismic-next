@@ -1,5 +1,17 @@
 const pkg = require("./package.json");
 
-module.exports = [pkg.module, pkg.main]
+module.exports = [
+	...new Set(
+		Object.values(pkg.exports).flatMap((exportTypes) => {
+			if (typeof exportTypes === "string") {
+				return exportTypes;
+			} else {
+				return Object.values(exportTypes);
+			}
+		}),
+	),
+]
 	.filter(Boolean)
-	.map((path) => ({ path }));
+	.map((path) => {
+		return { path };
+	});
