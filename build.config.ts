@@ -1,6 +1,7 @@
 import { defineBuildConfig } from "unbuild";
 
 export default defineBuildConfig({
+	failOnWarn: false,
 	hooks: {
 		"rollup:options": (_ctx, options) => {
 			const outputOptions = Array.isArray(options.output)
@@ -12,6 +13,7 @@ export default defineBuildConfig({
 					...options,
 					preserveModules: true,
 					preserveModulesRoot: "src",
+					sourcemap: true,
 				};
 			});
 		},
