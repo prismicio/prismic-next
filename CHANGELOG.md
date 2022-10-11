@@ -2,6 +2,29 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6-alpha.1](https://github.com/prismicio/prismic-next/compare/v0.1.6-alpha.0...v0.1.6-alpha.1) (2022-10-06)
+
+### [0.1.6-alpha.0](https://github.com/prismicio/prismic-next/compare/v0.1.5...v0.1.6-alpha.0) (2022-10-06)
+
+
+### Refactor
+
+* use sdk plugin ([bf49fb3](https://github.com/prismicio/prismic-next/commit/bf49fb3858651184965f5a3ee0b4bc3d98699730))
+
+
+### Chore
+
+* **ci:** restore coverage and size steps ([12dd3e4](https://github.com/prismicio/prismic-next/commit/12dd3e4a293b3d1fb2ef45df7acb5f6b67d4ac18))
+* **ci:** swap to node 16 ([23a526e](https://github.com/prismicio/prismic-next/commit/23a526eb9e8cdc2fad063b0672e49dbf4ec0900e))
+* **deps:** maintain lock file ([5d94505](https://github.com/prismicio/prismic-next/commit/5d94505c372a0d8364329ab7edb51e10b8a23682))
+* replace unbuild with Vite ([724d41d](https://github.com/prismicio/prismic-next/commit/724d41d26a8bb5ce42c1172a448935333e60570c))
+* restore package.json version ([3bbd73a](https://github.com/prismicio/prismic-next/commit/3bbd73aea59fb0d8c319bb14d8ba6fb71fef693b))
+
+
+### Documentation
+
+* update CONTRIBUTING.md ([fa5b036](https://github.com/prismicio/prismic-next/commit/fa5b036c0987ece6b116eb1f7110c4c8bac8c65d))
+
 ### [0.1.5](https://github.com/prismicio/prismic-next/compare/v0.1.4...v0.1.5) (2022-09-09)
 
 

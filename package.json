@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/next",
-	"version": "0.1.5",
+	"version": "0.1.6-alpha.1",
 	"description": "Helpers to integrate Prismic into Next.js apps",
 	"keywords": [
 		"typescript",
@@ -16,27 +16,29 @@
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
 	"sideEffects": false,
-	"type": "module",
 	"exports": {
-		".": "./dist/index.mjs",
+		".": {
+			"require": "./dist/index.cjs",
+			"import": "./dist/index.js"
+		},
 		"./package.json": "./package.json"
 	},
-	"main": "./dist/index.mjs",
-	"module": "./dist/index.mjs",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
 		"dist",
 		"src"
 	],
 	"scripts": {
-		"build": "unbuild",
-		"dev": "chokidar src --initial --command unbuild",
+		"build": "vite build",
+		"dev": "vite build --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepare": "npm run build",
 		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
-		"release:alpha": "npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
-		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
+		"release:alpha": "npm run test && standard-version --release-as patch --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
+		"release:alpha:dry": "standard-version --release-as patch --prerelease alpha --dry-run",
 		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
 		"test": "npm run lint && npm run unit && npm run build && npm run size",
@@ -44,12 +46,10 @@
 		"unit:watch": "vitest watch"
 	},
 	"dependencies": {
-		"@prismicio/client": "^6.7.1",
+		"@prismicio/client": "^6.0.0",
 		"@prismicio/helpers": "^2.3.3",
 		"@prismicio/react": "^2.5.0",
 		"@prismicio/types": "^0.2.3",
-		"eslint-plugin-react": "^7.31.7",
-		"eslint-plugin-react-hooks": "^4.6.0",
 		"imgix-url-builder": "^0.0.3"
 	},
 	"devDependencies": {
@@ -60,10 +60,11 @@
 		"@typescript-eslint/parser": "^5.36.2",
 		"@vitejs/plugin-react": "^2.1.0",
 		"@vitest/coverage-c8": "^0.23.1",
-		"chokidar-cli": "^3.0.0",
 		"eslint": "^8.23.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-react": "^7.31.7",
+		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-tsdoc": "^0.2.16",
 		"happy-dom": "^6.0.4",
 		"next": "^12.1.4",
@@ -75,7 +76,8 @@
 		"size-limit": "^8.1.0",
 		"standard-version": "^9.5.0",
 		"typescript": "^4.8.3",
-		"unbuild": "^0.8.10",
+		"vite": "^3.1.1",
+		"vite-plugin-sdk": "^0.0.2",
 		"vitest": "^0.23.1"
 	},
 	"peerDependencies": {
@@ -84,7 +86,7 @@
 		"react": "^17 || ^18"
 	},
 	"engines": {
-		"node": ">=12.7.0"
+		"node": ">=14.15.0"
 	},
 	"publishConfig": {
 		"access": "public"
