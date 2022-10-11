@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/prismicio/prismic-next/compare/v0.1.5...v0.1.6) (2022-10-11)
+
+
+### Features
+
+* support `width` and `height` props in `<PrismicNextImage>` when layout is `intrinsic` or `fixed` ([#42](https://github.com/prismicio/prismic-next/issues/42)) ([a170999](https://github.com/prismicio/prismic-next/commit/a1709999acbf091b832a3c4be4143f85a1871c0b))
+
+
+### Chore
+
+* **deps:** update dependencies ([d0df170](https://github.com/prismicio/prismic-next/commit/d0df170692fc98c673724eba494a06864f754a1f))
+* replace unbuild with Vite ([#43](https://github.com/prismicio/prismic-next/issues/43)) ([08f3c01](https://github.com/prismicio/prismic-next/commit/08f3c01bba1ad8a86aa9105af6b8c4b2a7a0a8f0))
+
 ### [0.1.6-alpha.1](https://github.com/prismicio/prismic-next/compare/v0.1.6-alpha.0...v0.1.6-alpha.1) (2022-10-06)
 
 ### [0.1.6-alpha.0](https://github.com/prismicio/prismic-next/compare/v0.1.5...v0.1.6-alpha.0) (2022-10-06)
