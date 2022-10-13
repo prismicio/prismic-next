@@ -2,6 +2,7 @@
 
 import { test, expect, beforeAll, vi, afterEach } from "vitest";
 import { NextRouter, useRouter } from "next/router";
+import Script from "next/script";
 import * as React from "react";
 import * as renderer from "react-test-renderer";
 
@@ -48,6 +49,14 @@ vi.mock("next/router", () => {
 	};
 });
 
+vi.mock("next/script", () => {
+	return {
+		default: vi.fn(() => {
+			return null;
+		}),
+	};
+});
+
 const fetch = vi.fn(async () => {
 	return {
 		ok: true,
@@ -69,20 +78,16 @@ afterEach(() => {
 	vi.mocked(useRouter).mockRestore();
 });
 
-test("renders the Prismic toolbar for the given repository", () => {
+test("renders the Prismic toolbar for the given repository using next/script", () => {
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
-
-	const script = Array.from(document.querySelectorAll("script")).find(
-		(element) =>
-			element
-				.getAttribute("src")
-				?.startsWith("https://static.cdn.prismic.io/prismic.js"),
-	);
 
 	renderer.act(() => unmount());
 
-	expect(script?.getAttribute("src") || "").toMatch(
-		"https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true",
+	expect(Script).toHaveBeenCalledWith(
+		{
+			src: "https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true",
+		},
+		{},
 	);
 });
 
