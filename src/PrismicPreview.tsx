@@ -62,14 +62,6 @@ export function PrismicPreview({
 
 	React.useEffect(() => {
 		/**
-		 * Refreshes a page's props without reload the page. This function triggers
-		 * the same API as navigating to a new page via `next/link`.
-		 */
-		const refreshPageProps = () => {
-			router.replace(router.asPath);
-		};
-
-		/**
 		 * Starts Preview Mode and refreshes the page's props.
 		 */
 		const startPreviewMode = async () => {
@@ -77,7 +69,10 @@ export function PrismicPreview({
 			const res = await globalThis.fetch(resolvedUpdatePreviewURL);
 
 			if (res.ok) {
-				refreshPageProps();
+				// Refreshes a page's props without reload the
+				// page. This function triggers the same API as
+				// navigating to a new page via `next/link`.
+				router.replace(router.asPath, undefined, { scroll: false });
 			} else {
 				console.error(
 					`[<PrismicPreview>] Failed to start or update Preview Mode using the "${resolvedUpdatePreviewURL}" API endpoint. Does it exist?`,
@@ -100,7 +95,11 @@ export function PrismicPreview({
 			const res = await globalThis.fetch(resolvedExitPreviewURL);
 
 			if (res.ok) {
-				refreshPageProps();
+				// We need to reload the page to reset the
+				// toolbar's state. This is the only way to
+				// hide the toolbar after a document is
+				// published during a preview session.
+				globalThis.location.reload();
 			} else {
 				console.error(
 					`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
