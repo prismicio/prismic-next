@@ -166,6 +166,7 @@ export function PrismicPreview({
 			{children}
 			<Script
 				src={`https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}&new=true`}
+				strategy="lazyOnload"
 			/>
 		</>
 	);

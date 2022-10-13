@@ -51,8 +51,10 @@ vi.mock("next/router", () => {
 
 vi.mock("next/script", () => {
 	return {
-		default: vi.fn(({ src }: { src: string }) => {
-			return <div data-next-script={true} data-src={src} />;
+		default: vi.fn(({ src, strategy }: { src: string; strategy: string }) => {
+			return (
+				<div data-next-script={true} data-src={src} data-strategy={strategy} />
+			);
 		}),
 	};
 });
@@ -88,7 +90,10 @@ test("renders the Prismic toolbar for the given repository using next/script", (
 	renderer.act(() => unmount());
 
 	const expected = render(
-		<Script src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true" />,
+		<Script
+			src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true"
+			strategy="lazyOnload"
+		/>,
 	).toJSON();
 
 	expect(actual).toStrictEqual(expected);
@@ -354,7 +359,10 @@ test("renders children untouched", () => {
 	const expected = render(
 		<>
 			<span>children</span>
-			<Script src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true" />
+			<Script
+				src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true"
+				strategy="lazyOnload"
+			/>
 		</>,
 	).toJSON() as renderer.ReactTestRendererJSON;
 
