@@ -1,6 +1,6 @@
 import * as React from "react";
-import { PrismicToolbar } from "@prismicio/react";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
 import { getPrismicPreviewCookie } from "./lib/getPrismicPreviewCookie";
 import { getPreviewCookieRepositoryName } from "./lib/getPreviewCookieRepositoryName";
@@ -164,7 +164,10 @@ export function PrismicPreview({
 	return (
 		<>
 			{children}
-			<PrismicToolbar repositoryName={repositoryName} />
+			<Script
+				src={`https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}&new=true`}
+				strategy="lazyOnload"
+			/>
 		</>
 	);
 }
