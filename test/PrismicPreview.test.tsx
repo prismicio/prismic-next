@@ -70,14 +70,17 @@ const fetch = vi.fn(async () => {
 		ok: true,
 	} as Response;
 });
+const reload = vi.fn();
 
 beforeAll(() => {
 	globalThis.fetch = fetch;
+	globalThis.location.reload = reload;
 	globalThis.console.error = vi.fn();
 });
 
 afterEach(() => {
 	fetch.mockRestore();
+	reload.mockRestore();
 	vi.mocked(globalThis.console.error).mockRestore();
 
 	vi.mocked(useRouter).mockRestore();
@@ -116,7 +119,9 @@ test("calls the default preview API endpoint on prismicPreviewUpdate toolbar eve
 	await tick();
 
 	expect(fetch).toHaveBeenCalledWith("/api/preview");
-	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
+	expect(router.replace).toHaveBeenCalledWith(mockPagePath, undefined, {
+		scroll: false,
+	});
 
 	renderer.act(() => unmount());
 });
@@ -134,7 +139,9 @@ test("calls the given preview API endpoint on prismicPreviewUpdate toolbar event
 	await tick();
 
 	expect(fetch).toHaveBeenCalledWith("/foo");
-	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
+	expect(router.replace).toHaveBeenCalledWith(mockPagePath, undefined, {
+		scroll: false,
+	});
 
 	renderer.act(() => unmount());
 });
@@ -192,7 +199,6 @@ test("supports basePath on prismicPreviewUpdate toolbar events with given previe
 });
 
 test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
-	const router = useRouter();
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
 	window.dispatchEvent(
@@ -202,13 +208,12 @@ test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar e
 	await tick();
 
 	expect(fetch).toHaveBeenCalledWith("/api/exit-preview");
-	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
+	expect(reload).toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
 
 test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
-	const router = useRouter();
 	const { unmount } = render(
 		<PrismicPreview repositoryName="qwerty" exitPreviewURL="/bar" />,
 	);
@@ -220,7 +225,7 @@ test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar eve
 	await tick();
 
 	expect(fetch).toHaveBeenCalledWith("/bar");
-	expect(router.replace).toHaveBeenCalledWith(mockPagePath);
+	expect(reload).toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
@@ -296,7 +301,6 @@ test("unregisters prismicPreviewUpdate event listener on unmount", async () => {
 });
 
 test("unregisters prismicPreviewEnd event listener on unmount", async () => {
-	const router = useRouter();
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
 	renderer.act(() => {
@@ -310,7 +314,7 @@ test("unregisters prismicPreviewEnd event listener on unmount", async () => {
 	await tick();
 
 	expect(fetch).not.toHaveBeenCalledWith("/api/exit-preview");
-	expect(router.replace).not.toHaveBeenCalled();
+	expect(reload).not.toHaveBeenCalled();
 });
 
 test("supports shared links", async () => {
@@ -334,7 +338,9 @@ test("supports shared links", async () => {
 	await tick();
 
 	expect(fetch).toHaveBeenCalledWith("/api/preview");
-	expect(replace).toHaveBeenCalledWith(mockPagePath);
+	expect(replace).toHaveBeenCalledWith(mockPagePath, undefined, {
+		scroll: false,
+	});
 
 	renderer.act(() => unmount());
 });
@@ -431,7 +437,6 @@ test("logs error if updatePreviewURL is not accessible", async () => {
 });
 
 test("logs error if exitPreviewURL is not accessible", async () => {
-	const router = useRouter();
 	vi.mocked(fetch).mockReturnValue(Promise.resolve({ ok: false } as Response));
 
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
@@ -446,7 +451,7 @@ test("logs error if exitPreviewURL is not accessible", async () => {
 	expect(globalThis.console.error).toHaveBeenCalledWith(
 		expect.stringMatching(/failed to exit preview mode/i),
 	);
-	expect(router.replace).not.toHaveBeenCalled();
+	expect(reload).not.toHaveBeenCalled();
 
 	renderer.act(() => unmount());
 });
