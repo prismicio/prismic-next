@@ -51,8 +51,8 @@ vi.mock("next/router", () => {
 
 vi.mock("next/script", () => {
 	return {
-		default: vi.fn(() => {
-			return null;
+		default: vi.fn(({ src }: { src: string }) => {
+			return <div data-next-script={true} data-src={src} />;
 		}),
 	};
 });
@@ -79,16 +79,19 @@ afterEach(() => {
 });
 
 test("renders the Prismic toolbar for the given repository using next/script", () => {
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount, toJSON } = render(
+		<PrismicPreview repositoryName="qwerty" />,
+	);
+
+	const actual = toJSON();
 
 	renderer.act(() => unmount());
 
-	expect(Script).toHaveBeenCalledWith(
-		{
-			src: "https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true",
-		},
-		{},
-	);
+	const expected = render(
+		<Script src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true" />,
+	).toJSON();
+
+	expect(actual).toStrictEqual(expected);
 });
 
 test("calls the default preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
@@ -349,7 +352,10 @@ test("renders children untouched", () => {
 	).toJSON() as renderer.ReactTestRendererJSON;
 
 	const expected = render(
-		<span>children</span>,
+		<>
+			<span>children</span>
+			<Script src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true" />
+		</>,
 	).toJSON() as renderer.ReactTestRendererJSON;
 
 	expect(actual).toMatchObject(expected);
