@@ -7,6 +7,7 @@ test("clears preview data", () => {
 		res: {
 			clearPreviewData: vi.fn(),
 			json: vi.fn(),
+			status: vi.fn().mockImplementation(() => config.res),
 		},
 		req: {
 			headers: {},
@@ -18,11 +19,12 @@ test("clears preview data", () => {
 	expect(config.res.clearPreviewData).toHaveBeenCalled();
 });
 
-test("responds with JSON success message", () => {
+test("responds with 205 status code and JSON success message", () => {
 	const config: ExitPreviewConfig = {
 		res: {
 			clearPreviewData: vi.fn(),
 			json: vi.fn(),
+			status: vi.fn().mockImplementation(() => config.res),
 		},
 		req: {
 			headers: {},
@@ -31,5 +33,6 @@ test("responds with JSON success message", () => {
 
 	exitPreview(config);
 
+	expect(config.res.status).toHaveBeenCalledWith(205);
 	expect(config.res.json).toHaveBeenCalledWith({ success: true });
 });

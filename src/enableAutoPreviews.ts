@@ -10,7 +10,8 @@ interface PrismicNextPreviewData {
  *
  * @param previewData - The Next.js preview data object to check.
  *
- * @returns `true` if `previewData` contains Prismic preview data, `false` otherwise.
+ * @returns `true` if `previewData` contains Prismic preview data, `false`
+ *   otherwise.
  */
 const isPrismicNextPreviewData = (
 	previewData: PreviewData,
@@ -45,7 +46,8 @@ export type EnableAutoPreviewsConfig<
 			/**
 			 * A Next.js API endpoint request object.
 			 *
-			 * Pass a `req` object when using `enableAutoPreviews` in a Next.js API endpoint.
+			 * Pass a `req` object when using `enableAutoPreviews` in a Next.js API
+			 * endpoint.
 			 */
 			req?: HttpRequestLike;
 	  }

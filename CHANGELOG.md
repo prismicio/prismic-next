@@ -2,6 +2,92 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.6](https://github.com/prismicio/prismic-next/compare/v0.1.5...v0.1.6) (2022-10-11)
+
+
+### Features
+
+* support `width` and `height` props in `<PrismicNextImage>` when layout is `intrinsic` or `fixed` ([#42](https://github.com/prismicio/prismic-next/issues/42)) ([a170999](https://github.com/prismicio/prismic-next/commit/a1709999acbf091b832a3c4be4143f85a1871c0b))
+
+
+### Chore
+
+* **deps:** update dependencies ([d0df170](https://github.com/prismicio/prismic-next/commit/d0df170692fc98c673724eba494a06864f754a1f))
+* replace unbuild with Vite ([#43](https://github.com/prismicio/prismic-next/issues/43)) ([08f3c01](https://github.com/prismicio/prismic-next/commit/08f3c01bba1ad8a86aa9105af6b8c4b2a7a0a8f0))
+
+### [0.1.6-alpha.1](https://github.com/prismicio/prismic-next/compare/v0.1.6-alpha.0...v0.1.6-alpha.1) (2022-10-06)
+
+### [0.1.6-alpha.0](https://github.com/prismicio/prismic-next/compare/v0.1.5...v0.1.6-alpha.0) (2022-10-06)
+
+
+### Refactor
+
+* use sdk plugin ([bf49fb3](https://github.com/prismicio/prismic-next/commit/bf49fb3858651184965f5a3ee0b4bc3d98699730))
+
+
+### Chore
+
+* **ci:** restore coverage and size steps ([12dd3e4](https://github.com/prismicio/prismic-next/commit/12dd3e4a293b3d1fb2ef45df7acb5f6b67d4ac18))
+* **ci:** swap to node 16 ([23a526e](https://github.com/prismicio/prismic-next/commit/23a526eb9e8cdc2fad063b0672e49dbf4ec0900e))
+* **deps:** maintain lock file ([5d94505](https://github.com/prismicio/prismic-next/commit/5d94505c372a0d8364329ab7edb51e10b8a23682))
+* replace unbuild with Vite ([724d41d](https://github.com/prismicio/prismic-next/commit/724d41d26a8bb5ce42c1172a448935333e60570c))
+* restore package.json version ([3bbd73a](https://github.com/prismicio/prismic-next/commit/3bbd73aea59fb0d8c319bb14d8ba6fb71fef693b))
+
+
+### Documentation
+
+* update CONTRIBUTING.md ([fa5b036](https://github.com/prismicio/prismic-next/commit/fa5b036c0987ece6b116eb1f7110c4c8bac8c65d))
+
+### [0.1.5](https://github.com/prismicio/prismic-next/compare/v0.1.4...v0.1.5) (2022-09-09)
+
+
+### Chore
+
+* add `main` and `module` entries ([6efc264](https://github.com/prismicio/prismic-next/commit/6efc2641eb8993527f0cca101fa966a0d8e84462))
+* include source maps ([845d0ab](https://github.com/prismicio/prismic-next/commit/845d0ab180fff11c136b4b01b865a0dc7564a1b0))
+
+### [0.1.4](https://github.com/prismicio/prismic-next/compare/v0.1.3...v0.1.4) (2022-09-09)
+
+
+### Features
+
+* add `@prismicio/client`'s `ClientConfig` to `CreateClientConfig` ([#37](https://github.com/prismicio/prismic-next/issues/37)) ([38d1b24](https://github.com/prismicio/prismic-next/commit/38d1b24ed7d6a3800e220482ea65b3ee856b8f76))
+
+
+### Bug Fixes
+
+* prevent CDN-level caching of exit preview route implemented with `exitPreview()` ([#32](https://github.com/prismicio/prismic-next/issues/32)) ([445a3ae](https://github.com/prismicio/prismic-next/commit/445a3ae3b670b9b9773e9e00a61c20290a0dec53))
+* support tree-shaking ([#36](https://github.com/prismicio/prismic-next/issues/36)) ([c234524](https://github.com/prismicio/prismic-next/commit/c234524ce9e52618bab575cb7e40c71c3d892c88))
+
+
+### Documentation
+
+* update feature list ([330bab2](https://github.com/prismicio/prismic-next/commit/330bab28c70832d4da4bc03c4ccf7dd484801ec5))
+
+
+### Refactor
+
+* simplify Prismic preview cookie reading ([#34](https://github.com/prismicio/prismic-next/issues/34)) ([80e876f](https://github.com/prismicio/prismic-next/commit/80e876f9e0a850761d725bc587e34a16f51db320))
+
+
+### Chore
+
+* **deps:** update dependencies ([#38](https://github.com/prismicio/prismic-next/issues/38)) ([c6cef33](https://github.com/prismicio/prismic-next/commit/c6cef33cfc708e5933057c4fa662107992b059c5))
+* **deps:** upgrade dependencies ([#33](https://github.com/prismicio/prismic-next/issues/33)) ([1a654af](https://github.com/prismicio/prismic-next/commit/1a654afeba791f1c94f7f079d50b986875a60439))
+
+### [0.1.3](https://github.com/prismicio/prismic-next/compare/v0.1.2...v0.1.3) (2022-05-25)
+
+
+### Features
+
+* add `<PrismicNextImage>` ([#24](https://github.com/prismicio/prismic-next/issues/24)) ([697da1a](https://github.com/prismicio/prismic-next/commit/697da1a04614951bbb9cb3181e6e8382ee61a49a))
+* add support for `basePath` ([#28](https://github.com/prismicio/prismic-next/issues/28)) ([9527e85](https://github.com/prismicio/prismic-next/commit/9527e85fb138ea36c7784f70aa6dff896c219c4e))
+
+
+### Refactor
+
+* simplify `<PrismicPreview>` logic ([#23](https://github.com/prismicio/prismic-next/issues/23)) ([5232b14](https://github.com/prismicio/prismic-next/commit/5232b14c4fb0b6d31f8757bcdd0b8925718b99f9))
+
 ### [0.1.2](https://github.com/prismicio/prismic-next/compare/v0.1.0...v0.1.2) (2022-04-01)
 
 

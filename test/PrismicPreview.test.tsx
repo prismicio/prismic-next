@@ -2,6 +2,7 @@
 
 import { test, expect, beforeAll, vi, afterEach } from "vitest";
 import { NextRouter, useRouter } from "next/router";
+import Script from "next/script";
 import * as React from "react";
 import * as renderer from "react-test-renderer";
 
@@ -54,6 +55,16 @@ vi.mock("next/router", () => {
 	};
 });
 
+vi.mock("next/script", () => {
+	return {
+		default: vi.fn(({ src, strategy }: { src: string; strategy: string }) => {
+			return (
+				<div data-next-script={true} data-src={src} data-strategy={strategy} />
+			);
+		}),
+	};
+});
+
 const fetch = vi.fn(async () => {
 	return {
 		ok: true,
@@ -75,21 +86,23 @@ afterEach(() => {
 	vi.mocked(router.replace).mockRestore();
 });
 
-test("renders the Prismic toolbar for the given repository", () => {
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
-
-	const script = Array.from(document.querySelectorAll("script")).find(
-		(element) =>
-			element
-				.getAttribute("src")
-				?.startsWith("https://static.cdn.prismic.io/prismic.js"),
+test("renders the Prismic toolbar for the given repository using next/script", () => {
+	const { unmount, toJSON } = render(
+		<PrismicPreview repositoryName="qwerty" />,
 	);
+
+	const actual = toJSON();
 
 	renderer.act(() => unmount());
 
-	expect(script?.getAttribute("src") || "").toMatch(
-		"https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true",
-	);
+	const expected = render(
+		<Script
+			src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true"
+			strategy="lazyOnload"
+		/>,
+	).toJSON();
+
+	expect(actual).toStrictEqual(expected);
 });
 
 test("calls the default preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
@@ -384,7 +397,13 @@ test("renders children untouched", () => {
 	).toJSON() as renderer.ReactTestRendererJSON;
 
 	const expected = render(
-		<span>children</span>,
+		<>
+			<span>children</span>
+			<Script
+				src="https://static.cdn.prismic.io/prismic.js?repo=qwerty&new=true"
+				strategy="lazyOnload"
+			/>
+		</>,
 	).toJSON() as renderer.ReactTestRendererJSON;
 
 	expect(actual).toMatchObject(expected);

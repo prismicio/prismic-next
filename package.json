@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/next",
-	"version": "0.1.2",
+	"version": "0.1.6",
 	"description": "Helpers to integrate Prismic into Next.js apps",
 	"keywords": [
 		"typescript",
@@ -15,6 +15,7 @@
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
+	"sideEffects": false,
 	"exports": {
 		".": {
 			"require": "./dist/index.cjs",
@@ -23,21 +24,21 @@
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
-	"module": "dist/index.js",
+	"module": "./dist/index.js",
 	"types": "dist/index.d.ts",
 	"files": [
 		"dist",
 		"src"
 	],
 	"scripts": {
-		"build": "siroc build",
-		"dev": "siroc build --watch",
+		"build": "vite build",
+		"dev": "vite build --watch",
 		"format": "prettier --write .",
 		"lint": "eslint --ext .js,.ts .",
 		"prepare": "npm run build",
 		"release": "npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
-		"release:alpha": "npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
-		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
+		"release:alpha": "npm run test && standard-version --release-as patch --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
+		"release:alpha:dry": "standard-version --release-as patch --prerelease alpha --dry-run",
 		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
 		"test": "npm run lint && npm run unit && npm run build && npm run size",
@@ -45,36 +46,38 @@
 		"unit:watch": "vitest watch"
 	},
 	"dependencies": {
-		"@prismicio/client": "^6.4.3",
-		"@prismicio/helpers": "^2.3.0",
-		"@prismicio/react": "^2.4.0",
-		"@prismicio/types": "^0.1.27",
-		"eslint-plugin-react": "^7.30.0",
-		"eslint-plugin-react-hooks": "^4.5.0"
+		"@prismicio/client": "^6.0.0",
+		"@prismicio/helpers": "^2.3.5",
+		"@prismicio/types": "^0.2.3",
+		"imgix-url-builder": "^0.0.3"
 	},
 	"devDependencies": {
-		"@prismicio/mock": "^0.0.10",
-		"@size-limit/preset-small-lib": "^7.0.8",
+		"@prismicio/mock": "^0.1.1",
+		"@size-limit/preset-small-lib": "^8.1.0",
 		"@types/react-test-renderer": "^18.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.26.0",
-		"@typescript-eslint/parser": "^5.26.0",
-		"c8": "^7.11.3",
-		"eslint": "^8.16.0",
+		"@typescript-eslint/eslint-plugin": "^5.40.0",
+		"@typescript-eslint/parser": "^5.40.0",
+		"@vitejs/plugin-react": "^2.1.0",
+		"@vitest/coverage-c8": "^0.24.1",
+		"eslint": "^8.25.0",
 		"eslint-config-prettier": "^8.5.0",
-		"eslint-plugin-prettier": "^4.0.0",
-		"eslint-plugin-tsdoc": "^0.2.16",
-		"happy-dom": "^4.0.1",
+		"eslint-plugin-prettier": "^4.2.1",
+		"eslint-plugin-react": "^7.31.10",
+		"eslint-plugin-react-hooks": "^4.6.0",
+		"eslint-plugin-tsdoc": "^0.2.17",
+		"happy-dom": "^7.5.6",
 		"next": "^12.1.4",
 		"nyc": "^15.1.0",
-		"prettier": "^2.6.2",
-		"prettier-plugin-jsdoc": "^0.3.38",
+		"prettier": "^2.7.1",
+		"prettier-plugin-jsdoc": "^0.4.2",
 		"react": "^18.1.0",
-		"react-test-renderer": "^18.1.0",
-		"siroc": "^0.16.0",
-		"size-limit": "^7.0.8",
+		"react-test-renderer": "^18.2.0",
+		"size-limit": "^8.1.0",
 		"standard-version": "^9.5.0",
-		"typescript": "^4.7.2",
-		"vitest": "^0.12.9"
+		"typescript": "^4.8.4",
+		"vite": "^3.1.7",
+		"vite-plugin-sdk": "^0.0.3",
+		"vitest": "^0.24.1"
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^6.0.0",
@@ -82,7 +85,7 @@
 		"react": "^17 || ^18"
 	},
 	"engines": {
-		"node": ">=12.7.0"
+		"node": ">=14.15.0"
 	},
 	"publishConfig": {
 		"access": "public"

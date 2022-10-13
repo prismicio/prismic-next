@@ -1,4 +1,5 @@
-import { PreviewData, NextApiRequest } from "next";
+import type { PreviewData, NextApiRequest } from "next";
+import type { ClientConfig } from "@prismicio/client";
 
 /**
  * Configuration for creating a Prismic client with automatic preview support in
@@ -19,4 +20,4 @@ export type CreateClientConfig = {
 	 * Pass a `req` object when using in a Next.js API endpoint.
 	 */
 	req?: NextApiRequest;
-};
+} & ClientConfig;

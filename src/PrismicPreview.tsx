@@ -1,9 +1,8 @@
 import * as React from "react";
-import * as prismic from "@prismicio/client";
-import { PrismicToolbar } from "@prismicio/react";
 import { useRouter } from "next/router";
+import Script from "next/script";
 
-import { getCookie } from "./lib/getCookie";
+import { getPrismicPreviewCookie } from "./lib/getPrismicPreviewCookie";
 import { getPreviewCookieRepositoryName } from "./lib/getPreviewCookieRepositoryName";
 
 /**
@@ -117,8 +116,7 @@ export function PrismicPreview({
 			);
 			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 		} else {
-			const prismicPreviewCookie = getCookie(
-				prismic.cookie.preview,
+			const prismicPreviewCookie = getPrismicPreviewCookie(
 				globalThis.document.cookie,
 			);
 
@@ -130,10 +128,12 @@ export function PrismicPreview({
 				// Prismic preview share link.
 
 				/**
-				 * Determines if the current location is a descendant of the app's base path.
+				 * Determines if the current location is a descendant of the app's base
+				 * path.
 				 *
 				 * This is used to prevent infinite refrehes; when
-				 * `isDescendantOfBasePath` is `false`, `router.isPreview` is also `false`.
+				 * `isDescendantOfBasePath` is `false`, `router.isPreview` is also
+				 * `false`.
 				 *
 				 * If the app does not have a base path, this should always be `true`.
 				 */
@@ -171,7 +171,10 @@ export function PrismicPreview({
 	return (
 		<>
 			{children}
-			<PrismicToolbar repositoryName={repositoryName} />
+			<Script
+				src={`https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}&new=true`}
+				strategy="lazyOnload"
+			/>
 		</>
 	);
 }

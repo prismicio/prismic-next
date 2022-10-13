@@ -1,4 +1,3 @@
-import * as React from "react";
 import Image, { ImageProps, ImageLoaderProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import * as prismicH from "@prismicio/helpers";
@@ -6,6 +5,20 @@ import * as prismicT from "@prismicio/types";
 
 import { __PRODUCTION__ } from "./lib/__PRODUCTION__";
 import { devMsg } from "./lib/devMsg";
+
+const castInt = (input: string | number | undefined): number | undefined => {
+	if (typeof input === "number" || typeof input === "undefined") {
+		return input;
+	} else {
+		const parsed = Number.parseInt(input);
+
+		if (Number.isNaN(parsed)) {
+			return undefined;
+		} else {
+			return parsed;
+		}
+	}
+};
 
 /**
  * Creates a `next/image` loader for Imgix, which Prismic uses, with an optional
@@ -32,7 +45,7 @@ const imgixLoader = (args: ImageLoaderProps): string => {
 
 export type PrismicNextImageProps = Omit<
 	ImageProps,
-	"src" | "alt" | "width" | "height"
+	"src" | "alt" | "width" | "height" | "layout"
 > & {
 	/**
 	 * The Prismic Image field or thumbnail to render.
@@ -62,7 +75,14 @@ export type PrismicNextImageProps = Omit<
 	 * https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/alt#decorative_images
 	 */
 	fallbackAlt?: "";
-};
+} & (
+		| ({
+				layout?: "intrinsic" | "fixed";
+		  } & Pick<ImageProps, "width" | "height">)
+		| {
+				layout: "responsive" | "fill";
+		  }
+	);
 
 /**
  * React component that renders an image from a Prismic Image field or one of
@@ -75,8 +95,8 @@ export type PrismicNextImageProps = Omit<
  *
  * @param props - Props for the component.
  *
- * @returns A responsive image component using `next/image` for the given Image field.
- *
+ * @returns A responsive image component using `next/image` for the given Image
+ *   field.
  * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
  */
 export const PrismicNextImage = ({
@@ -84,7 +104,7 @@ export const PrismicNextImage = ({
 	imgixParams = {},
 	alt,
 	fallbackAlt,
-	layout,
+	layout = "intrinsic",
 	...restProps
 }: PrismicNextImageProps) => {
 	if (!__PRODUCTION__) {
@@ -107,12 +127,34 @@ export const PrismicNextImage = ({
 
 	if (prismicH.isFilled.imageThumbnail(field)) {
 		const src = buildURL(field.url, imgixParams);
+		const ar = field.dimensions.width / field.dimensions.height;
+
+		let resolvedWidth = field.dimensions.width;
+		let resolvedHeight = field.dimensions.height;
+
+		if (
+			(layout === "intrinsic" || layout === "fixed") &&
+			("width" in restProps || "height" in restProps)
+		) {
+			const castedWidth = castInt(restProps.width);
+			const castedHeight = castInt(restProps.height);
+
+			if (castedWidth) {
+				resolvedWidth = castedWidth;
+			} else {
+				if (castedHeight) {
+					resolvedWidth = ar * castedHeight;
+				}
+			}
+
+			resolvedHeight = resolvedWidth / ar;
+		}
 
 		return (
 			<Image
 				src={src}
-				width={layout === "fill" ? undefined : field.dimensions.width}
-				height={layout === "fill" ? undefined : field.dimensions.height}
+				width={layout === "fill" ? undefined : resolvedWidth}
+				height={layout === "fill" ? undefined : resolvedHeight}
 				alt={alt ?? (field.alt || fallbackAlt)}
 				loader={imgixLoader}
 				layout={layout}
