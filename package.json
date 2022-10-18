@@ -46,7 +46,7 @@
 		"unit:watch": "vitest watch"
 	},
 	"dependencies": {
-		"@prismicio/client": "^6.0.0",
+		"@prismicio/client": "^6.7.1",
 		"@prismicio/helpers": "^2.3.5",
 		"@prismicio/types": "^0.2.3",
 		"imgix-url-builder": "^0.0.3"
@@ -55,17 +55,17 @@
 		"@prismicio/mock": "^0.1.1",
 		"@size-limit/preset-small-lib": "^8.1.0",
 		"@types/react-test-renderer": "^18.0.0",
-		"@typescript-eslint/eslint-plugin": "^5.40.0",
-		"@typescript-eslint/parser": "^5.40.0",
+		"@typescript-eslint/eslint-plugin": "^5.40.1",
+		"@typescript-eslint/parser": "^5.40.1",
 		"@vitejs/plugin-react": "^2.1.0",
-		"@vitest/coverage-c8": "^0.24.1",
+		"@vitest/coverage-c8": "^0.24.3",
 		"eslint": "^8.25.0",
 		"eslint-config-prettier": "^8.5.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-react": "^7.31.10",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-tsdoc": "^0.2.17",
-		"happy-dom": "^7.5.6",
+		"happy-dom": "^7.5.13",
 		"next": "^12.1.4",
 		"nyc": "^15.1.0",
 		"prettier": "^2.7.1",
@@ -75,9 +75,9 @@
 		"size-limit": "^8.1.0",
 		"standard-version": "^9.5.0",
 		"typescript": "^4.8.4",
-		"vite": "^3.1.7",
+		"vite": "^3.1.8",
 		"vite-plugin-sdk": "^0.0.3",
-		"vitest": "^0.24.1"
+		"vitest": "^0.24.3"
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^6.0.0",
