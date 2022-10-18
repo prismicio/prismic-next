@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.7](https://github.com/prismicio/prismic-next/compare/v0.1.6...v0.1.7) (2022-10-18)
+
+
+### Refactor
+
+* use `next/script` to load the Prismic Toolbar ([#46](https://github.com/prismicio/prismic-next/issues/46)) ([1ad5750](https://github.com/prismicio/prismic-next/commit/1ad5750127305c3ba7aa244476d3341aa3cad7e0))
+
+
+### Chore
+
+* **deps:** update dependencies ([355dcad](https://github.com/prismicio/prismic-next/commit/355dcad54cd1d6e1bcccfa97b79b005cb4530ae2))
+
 ### [0.1.6](https://github.com/prismicio/prismic-next/compare/v0.1.5...v0.1.6) (2022-10-11)
 
 
