@@ -6,6 +6,13 @@ import * as prismicT from "@prismicio/types";
 import { __PRODUCTION__ } from "./lib/__PRODUCTION__";
 import { devMsg } from "./lib/devMsg";
 
+/**
+ * Value for `next/image`'s `layout` prop which existed in Next 12 and lower.
+ * `<PrismicNextImage>` is comatible with the current and legacy image
+ * components, requiring us to handle both APIs.
+ */
+type LegacyImageLayout = "intrinsic" | "fixed" | "responsive" | "fill";
+
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
 		return input;
@@ -43,10 +50,7 @@ const imgixLoader = (args: ImageLoaderProps): string => {
 	return buildURL(args.src, params);
 };
 
-export type PrismicNextImageProps = Omit<
-	ImageProps,
-	"src" | "alt" | "width" | "height" | "layout"
-> & {
+export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
 	/**
 	 * The Prismic Image field or thumbnail to render.
 	 */
@@ -75,14 +79,7 @@ export type PrismicNextImageProps = Omit<
 	 * https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/alt#decorative_images
 	 */
 	fallbackAlt?: "";
-} & (
-		| ({
-				layout?: "intrinsic" | "fixed";
-		  } & Pick<ImageProps, "width" | "height">)
-		| {
-				layout: "responsive" | "fill";
-		  }
-	);
+};
 
 /**
  * React component that renders an image from a Prismic Image field or one of
@@ -104,7 +101,6 @@ export const PrismicNextImage = ({
 	imgixParams = {},
 	alt,
 	fallbackAlt,
-	layout = "intrinsic",
 	...restProps
 }: PrismicNextImageProps) => {
 	if (!__PRODUCTION__) {
@@ -132,6 +128,13 @@ export const PrismicNextImage = ({
 		let resolvedWidth = field.dimensions.width;
 		let resolvedHeight = field.dimensions.height;
 
+		// If a layout prop is provied, we can assume this image is
+		// using Next 12. We must handle the `width` and `height` props
+		// in a unique way when using the legacy `next/image` component.
+		const layout: LegacyImageLayout =
+			// @ts-expect-error - Layout does not exist in `next/image` as of Next 13.0.0.
+			restProps.layout;
+
 		if (
 			(layout === "intrinsic" || layout === "fixed") &&
 			("width" in restProps || "height" in restProps)
@@ -155,9 +158,12 @@ export const PrismicNextImage = ({
 				src={src}
 				width={layout === "fill" ? undefined : resolvedWidth}
 				height={layout === "fill" ? undefined : resolvedHeight}
-				alt={alt ?? (field.alt || fallbackAlt)}
+				// A non-null assertion is required since we
+				// can't statically know if an alt attribute is
+				// available.
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				alt={(alt ?? (field.alt || fallbackAlt))!}
 				loader={imgixLoader}
-				layout={layout}
 				{...restProps}
 			/>
 		);
