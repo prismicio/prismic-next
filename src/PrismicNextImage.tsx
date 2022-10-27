@@ -101,6 +101,7 @@ export const PrismicNextImage = ({
 	imgixParams = {},
 	alt,
 	fallbackAlt,
+	fill,
 	...restProps
 }: PrismicNextImageProps) => {
 	if (!__PRODUCTION__) {
@@ -156,8 +157,8 @@ export const PrismicNextImage = ({
 		return (
 			<Image
 				src={src}
-				width={layout === "fill" ? undefined : resolvedWidth}
-				height={layout === "fill" ? undefined : resolvedHeight}
+				width={fill || layout === "fill" ? undefined : resolvedWidth}
+				height={fill || layout === "fill" ? undefined : resolvedHeight}
 				// A non-null assertion is required since we
 				// can't statically know if an alt attribute is
 				// available.
