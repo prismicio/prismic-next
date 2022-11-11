@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/prismicio/prismic-next/compare/v0.1.7...v0.1.8) (2022-11-11)
+
+
+### Chore
+
+* remove `@prismicio/client` as a dependency ([#49](https://github.com/prismicio/prismic-next/issues/49)) ([cf3fd6d](https://github.com/prismicio/prismic-next/commit/cf3fd6d404c91efcdac6308ba176732405fc9eca))
+
 ### [0.1.7](https://github.com/prismicio/prismic-next/compare/v0.1.6...v0.1.7) (2022-10-18)
 
 
