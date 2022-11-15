@@ -105,7 +105,7 @@ export const PrismicNextImage = ({
 	height,
 	fallback = null,
 	...restProps
-}: PrismicNextImageProps): React.ReactNode => {
+}: PrismicNextImageProps): JSX.Element => {
 	if (!__PRODUCTION__) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
@@ -157,6 +157,6 @@ export const PrismicNextImage = ({
 			/>
 		);
 	} else {
-		return fallback;
+		return <>{fallback}</>;
 	}
 };
