@@ -6,13 +6,6 @@ import * as prismicT from "@prismicio/types";
 import { __PRODUCTION__ } from "./lib/__PRODUCTION__";
 import { devMsg } from "./lib/devMsg";
 
-/**
- * Value for `next/image`'s `layout` prop which existed in Next 12 and lower.
- * `<PrismicNextImage>` is comatible with the current and legacy image
- * components, requiring us to handle both APIs.
- */
-type LegacyImageLayout = "intrinsic" | "fixed" | "responsive" | "fill";
-
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
 		return input;
@@ -79,6 +72,12 @@ export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
 	 * https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/alt#decorative_images
 	 */
 	fallbackAlt?: "";
+
+	/**
+	 * Rendered when the field is empty. If a fallback is not given, `null` will
+	 * be rendered.
+	 */
+	fallback?: React.ReactNode;
 };
 
 /**
@@ -102,8 +101,11 @@ export const PrismicNextImage = ({
 	alt,
 	fallbackAlt,
 	fill,
+	width,
+	height,
+	fallback = null,
 	...restProps
-}: PrismicNextImageProps) => {
+}: PrismicNextImageProps): React.ReactNode => {
 	if (!__PRODUCTION__) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
@@ -124,51 +126,37 @@ export const PrismicNextImage = ({
 
 	if (prismicH.isFilled.imageThumbnail(field)) {
 		const src = buildURL(field.url, imgixParams);
+
 		const ar = field.dimensions.width / field.dimensions.height;
 
-		let resolvedWidth = field.dimensions.width;
-		let resolvedHeight = field.dimensions.height;
+		const castedWidth = castInt(width);
+		const castedHeight = castInt(height);
 
-		// If a layout prop is provied, we can assume this image is
-		// using Next 12. We must handle the `width` and `height` props
-		// in a unique way when using the legacy `next/image` component.
-		const layout: LegacyImageLayout =
-			// @ts-expect-error - Layout does not exist in `next/image` as of Next 13.0.0.
-			restProps.layout;
+		let resolvedWidth = castedWidth ?? field.dimensions.width;
+		let resolvedHeight = castedHeight ?? field.dimensions.width;
 
-		if (
-			(layout === "intrinsic" || layout === "fixed") &&
-			("width" in restProps || "height" in restProps)
-		) {
-			const castedWidth = castInt(restProps.width);
-			const castedHeight = castInt(restProps.height);
-
-			if (castedWidth) {
-				resolvedWidth = castedWidth;
-			} else {
-				if (castedHeight) {
-					resolvedWidth = ar * castedHeight;
-				}
-			}
-
-			resolvedHeight = resolvedWidth / ar;
+		if (castedWidth != null && castedHeight == null) {
+			resolvedHeight = castedWidth / ar;
+		} else if (castedWidth == null && castedHeight != null) {
+			resolvedWidth = castedHeight * ar;
 		}
 
 		return (
 			<Image
 				src={src}
-				width={fill || layout === "fill" ? undefined : resolvedWidth}
-				height={fill || layout === "fill" ? undefined : resolvedHeight}
+				width={fill ? undefined : resolvedWidth}
+				height={fill ? undefined : resolvedHeight}
 				// A non-null assertion is required since we
 				// can't statically know if an alt attribute is
 				// available.
 				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				alt={(alt ?? (field.alt || fallbackAlt))!}
+				fill={fill}
 				loader={imgixLoader}
 				{...restProps}
 			/>
 		);
 	} else {
-		return null;
+		return fallback;
 	}
 };

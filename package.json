@@ -67,7 +67,6 @@
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"happy-dom": "^7.5.13",
 		"next": "^13.0.0",
-		"nyc": "^15.1.0",
 		"prettier": "^2.7.1",
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"react": "^18.1.0",
@@ -81,8 +80,8 @@
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^6",
-		"next": "^11 || ^12 || ^13",
-		"react": "^17 || ^18"
+		"next": "^13",
+		"react": "^18"
 	},
 	"engines": {
 		"node": ">=14.15.0"
