@@ -4,14 +4,6 @@ import { renderJSON } from "./__testutils__/renderJSON";
 
 import { PrismicNextImage } from "../src";
 
-test("renders null when passed an empty field", (ctx) => {
-	const field = ctx.mock.value.image({ state: "empty" });
-
-	const img = renderJSON(<PrismicNextImage field={field} />);
-
-	expect(img).toBe(null);
-});
-
 test("renders a NextImage for a given field", (ctx) => {
 	const field = ctx.mock.value.image();
 
@@ -23,6 +15,26 @@ test("renders a NextImage for a given field", (ctx) => {
 	expect(img?.props.srcSet).toMatchInlineSnapshot(
 		'"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=3840&fit=crop 1x"',
 	);
+});
+
+test("renders null when passed an empty field", (ctx) => {
+	const field = ctx.mock.value.image({ state: "empty" });
+
+	const img = renderJSON(<PrismicNextImage field={field} />);
+
+	expect(img).toBe(null);
+});
+
+test("renders fallback when passed an empty field", (ctx) => {
+	const field = ctx.mock.value.image({ state: "empty" });
+	const fallback = <div>custom fallback</div>;
+
+	const img = renderJSON(
+		<PrismicNextImage field={field} fallback={fallback} />,
+	);
+	const expected = renderJSON(fallback);
+
+	expect(img).toStrictEqual(expected);
 });
 
 test("supports an explicit width", (ctx) => {
@@ -66,7 +78,7 @@ test("supports an explicit width and height", (ctx) => {
 	);
 });
 
-test.only("handles a non-SafeNumber width and height", (ctx) => {
+test("handles a non-SafeNumber width and height", (ctx) => {
 	const field = ctx.mock.value.image();
 
 	const widthImg = renderJSON(
