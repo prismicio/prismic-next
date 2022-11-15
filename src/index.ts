@@ -14,10 +14,8 @@ export {
 	redirectToPreviewURL,
 } from "./redirectToPreviewURL";
 
-export {
-	PrismicNextImage,
-	PrismicNextImageProps,
-	imgixLoader,
-} from "./PrismicNextImage";
+export { PrismicNextImage, PrismicNextImageProps } from "./PrismicNextImage";
+
+export { imgixLoader } from "./imgixLoader";
 
 export { CreateClientConfig } from "./types";

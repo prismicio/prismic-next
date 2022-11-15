@@ -1,10 +1,12 @@
-import Image, { ImageProps, ImageLoaderProps } from "next/image";
+import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import * as prismicH from "@prismicio/helpers";
 import * as prismicT from "@prismicio/types";
 
 import { __PRODUCTION__ } from "./lib/__PRODUCTION__";
 import { devMsg } from "./lib/devMsg";
+
+import { imgixLoader } from "./imgixLoader";
 
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
@@ -18,29 +20,6 @@ const castInt = (input: string | number | undefined): number | undefined => {
 			return parsed;
 		}
 	}
-};
-
-/**
- * A `next/image` loader for Imgix, which Prismic uses, with an optional
- * collection of default Imgix parameters.
- *
- * @see To learn about `next/image` loaders: https://nextjs.org/docs/api-reference/next/image#loader
- * @see To learn about Imgix's URL API: https://docs.imgix.com/apis/rendering
- */
-export const imgixLoader = (args: ImageLoaderProps): string => {
-	const url = new URL(args.src);
-
-	const params: ImgixURLParams = {
-		fit: (url.searchParams.get("fit") as ImgixURLParams["fit"]) || "max",
-		w: args.width,
-		h: undefined,
-	};
-
-	if (args.quality) {
-		params.q = args.quality;
-	}
-
-	return buildURL(args.src, params);
 };
 
 export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
