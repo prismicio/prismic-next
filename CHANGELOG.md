@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/prismicio/prismic-next/compare/v0.1.8...v0.2.0) (2022-11-16)
+
+
+### ⚠ BREAKING CHANGES
+
+* support Next 13, drop support for Next 12 (#48)
+
+### Features
+
+* support Next 13, drop support for Next 12 ([#48](https://github.com/prismicio/prismic-next/issues/48)) ([c633a49](https://github.com/prismicio/prismic-next/commit/c633a4906801c428d6fb9b7ded4975f08c113d23))
+
+
+### Bug Fixes
+
+* remove deprecated `exitPreviewURL` argument for `exitPreview()` ([fedd246](https://github.com/prismicio/prismic-next/commit/fedd246751e203b0bf0858ef25a02e144801141b))
+
 ### [0.1.8](https://github.com/prismicio/prismic-next/compare/v0.1.7...v0.1.8) (2022-11-11)
 
 
