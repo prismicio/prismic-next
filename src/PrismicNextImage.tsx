@@ -1,10 +1,12 @@
-import Image, { ImageProps, ImageLoaderProps } from "next/image";
+import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import * as prismicH from "@prismicio/helpers";
 import * as prismicT from "@prismicio/types";
 
 import { __PRODUCTION__ } from "./lib/__PRODUCTION__";
 import { devMsg } from "./lib/devMsg";
+
+import { imgixLoader } from "./imgixLoader";
 
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
@@ -20,33 +22,7 @@ const castInt = (input: string | number | undefined): number | undefined => {
 	}
 };
 
-/**
- * Creates a `next/image` loader for Imgix, which Prismic uses, with an optional
- * collection of default Imgix parameters.
- *
- * @see To learn about `next/image` loaders: https://nextjs.org/docs/api-reference/next/image#loader
- * @see To learn about Imgix's URL API: https://docs.imgix.com/apis/rendering
- */
-const imgixLoader = (args: ImageLoaderProps): string => {
-	const url = new URL(args.src);
-
-	const params: ImgixURLParams = {
-		fit: (url.searchParams.get("fit") as ImgixURLParams["fit"]) || "max",
-		w: args.width,
-		h: undefined,
-	};
-
-	if (args.quality) {
-		params.q = args.quality;
-	}
-
-	return buildURL(args.src, params);
-};
-
-export type PrismicNextImageProps = Omit<
-	ImageProps,
-	"src" | "alt" | "width" | "height" | "layout"
-> & {
+export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
 	/**
 	 * The Prismic Image field or thumbnail to render.
 	 */
@@ -75,14 +51,13 @@ export type PrismicNextImageProps = Omit<
 	 * https://developer.mozilla.org/en-US/docs/Web/API/HTMLImageElement/alt#decorative_images
 	 */
 	fallbackAlt?: "";
-} & (
-		| ({
-				layout?: "intrinsic" | "fixed";
-		  } & Pick<ImageProps, "width" | "height">)
-		| {
-				layout: "responsive" | "fill";
-		  }
-	);
+
+	/**
+	 * Rendered when the field is empty. If a fallback is not given, `null` will
+	 * be rendered.
+	 */
+	fallback?: React.ReactNode;
+};
 
 /**
  * React component that renders an image from a Prismic Image field or one of
@@ -104,9 +79,12 @@ export const PrismicNextImage = ({
 	imgixParams = {},
 	alt,
 	fallbackAlt,
-	layout = "intrinsic",
+	fill,
+	width,
+	height,
+	fallback = null,
 	...restProps
-}: PrismicNextImageProps) => {
+}: PrismicNextImageProps): JSX.Element => {
 	if (!__PRODUCTION__) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
@@ -127,41 +105,37 @@ export const PrismicNextImage = ({
 
 	if (prismicH.isFilled.imageThumbnail(field)) {
 		const src = buildURL(field.url, imgixParams);
+
 		const ar = field.dimensions.width / field.dimensions.height;
 
-		let resolvedWidth = field.dimensions.width;
-		let resolvedHeight = field.dimensions.height;
+		const castedWidth = castInt(width);
+		const castedHeight = castInt(height);
 
-		if (
-			(layout === "intrinsic" || layout === "fixed") &&
-			("width" in restProps || "height" in restProps)
-		) {
-			const castedWidth = castInt(restProps.width);
-			const castedHeight = castInt(restProps.height);
+		let resolvedWidth = castedWidth ?? field.dimensions.width;
+		let resolvedHeight = castedHeight ?? field.dimensions.width;
 
-			if (castedWidth) {
-				resolvedWidth = castedWidth;
-			} else {
-				if (castedHeight) {
-					resolvedWidth = ar * castedHeight;
-				}
-			}
-
-			resolvedHeight = resolvedWidth / ar;
+		if (castedWidth != null && castedHeight == null) {
+			resolvedHeight = castedWidth / ar;
+		} else if (castedWidth == null && castedHeight != null) {
+			resolvedWidth = castedHeight * ar;
 		}
 
 		return (
 			<Image
 				src={src}
-				width={layout === "fill" ? undefined : resolvedWidth}
-				height={layout === "fill" ? undefined : resolvedHeight}
-				alt={alt ?? (field.alt || fallbackAlt)}
+				width={fill ? undefined : resolvedWidth}
+				height={fill ? undefined : resolvedHeight}
+				// A non-null assertion is required since we
+				// can't statically know if an alt attribute is
+				// available.
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				alt={(alt ?? (field.alt || fallbackAlt))!}
+				fill={fill}
 				loader={imgixLoader}
-				layout={layout}
 				{...restProps}
 			/>
 		);
 	} else {
-		return null;
+		return <>{fallback}</>;
 	}
 };
