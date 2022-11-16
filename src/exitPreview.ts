@@ -35,11 +35,6 @@ export type ExitPreviewConfig = {
 		status: NextApiResponse["status"];
 		json: NextApiResponse["json"];
 	};
-
-	/**
-	 * @deprecated - This property is no longer used. It can be deleted safely.
-	 */
-	exitPreviewURL?: string;
 };
 
 /**
