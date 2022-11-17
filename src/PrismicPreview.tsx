@@ -54,7 +54,7 @@ export function PrismicPreview({
 	children,
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
-}: PrismicPreviewProps): React.ReactNode {
+}: PrismicPreviewProps): JSX.Element {
 	const router = useRouter();
 
 	const resolvedUpdatePreviewURL = router.basePath + updatePreviewURL;
