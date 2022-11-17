@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.1](https://github.com/prismicio/prismic-next/compare/v1.0.0...v1.0.1) (2022-11-17)
+
+
+### Bug Fixes
+
+* resolve "'`PrismicPreview`' cannot be used as a JSX component" TypeScript error ([a96f844](https://github.com/prismicio/prismic-next/commit/a96f844c7f7bf53ede5202222a5a53aa88c94a16))
+
 ## [1.0.0](https://github.com/prismicio/prismic-next/compare/v0.2.0...v1.0.0) (2022-11-16)
 
 ## [0.2.0](https://github.com/prismicio/prismic-next/compare/v0.1.8...v0.2.0) (2022-11-16)
