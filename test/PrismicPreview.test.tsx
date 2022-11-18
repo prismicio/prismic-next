@@ -61,7 +61,9 @@ vi.mock("next/script", () => {
 
 const fetch = vi.fn(async () => {
 	return {
+		status: 200,
 		ok: true,
+		redirected: true,
 	} as Response;
 });
 const reload = vi.fn();
@@ -369,8 +371,37 @@ test("renders children untouched", () => {
 	expect(actual).toMatchObject(expected);
 });
 
+test("handles a case where updatePreviewURL redirects correctly, but to a non-existent page", async () => {
+	vi.mocked(fetch).mockReturnValue(
+		Promise.resolve({
+			status: 404,
+			ok: false,
+			redirected: true,
+		} as Response),
+	);
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	window.dispatchEvent(
+		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
+	);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/api/preview");
+	expect(reload).toHaveBeenCalled();
+
+	renderer.act(() => unmount());
+});
+
 test("logs error if updatePreviewURL is not accessible", async () => {
-	vi.mocked(fetch).mockReturnValue(Promise.resolve({ ok: false } as Response));
+	vi.mocked(fetch).mockReturnValue(
+		Promise.resolve({
+			status: 500,
+			ok: false,
+			redirected: false,
+		} as Response),
+	);
 
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
@@ -390,7 +421,13 @@ test("logs error if updatePreviewURL is not accessible", async () => {
 });
 
 test("logs error if exitPreviewURL is not accessible", async () => {
-	vi.mocked(fetch).mockReturnValue(Promise.resolve({ ok: false } as Response));
+	vi.mocked(fetch).mockReturnValue(
+		Promise.resolve({
+			status: 500,
+			ok: false,
+			redirected: false,
+		} as Response),
+	);
 
 	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
 
