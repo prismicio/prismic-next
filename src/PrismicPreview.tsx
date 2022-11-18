@@ -54,7 +54,7 @@ export function PrismicPreview({
 	children,
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
-}: PrismicPreviewProps): React.ReactNode {
+}: PrismicPreviewProps): JSX.Element {
 	const router = useRouter();
 
 	const resolvedUpdatePreviewURL = router.basePath + updatePreviewURL;
@@ -68,7 +68,12 @@ export function PrismicPreview({
 			// Start Next.js Preview Mode via the given preview API endpoint.
 			const res = await globalThis.fetch(resolvedUpdatePreviewURL);
 
-			if (res.ok) {
+			// We check for `res.redirected` rather than `res.ok`
+			// since the update preview endpoint may redirect to a
+			// 404 page. As long as it redirects, we know the
+			// endpoint exists and at least attempted to set
+			// preview data.
+			if (res.redirected) {
 				globalThis.location.reload();
 			} else {
 				console.error(
