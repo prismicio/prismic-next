@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/prismicio/prismic-next/compare/v1.0.1...v1.0.2) (2022-11-18)
+
+
+### Bug Fixes
+
+* resolve an issue where previews would not show if the default URL led to a 404 page ([#51](https://github.com/prismicio/prismic-next/issues/51)) ([b6cf270](https://github.com/prismicio/prismic-next/commit/b6cf270b08b3bbe725892c67929eebe5fbe27b2a))
+
 ### [1.0.1](https://github.com/prismicio/prismic-next/compare/v1.0.0...v1.0.1) (2022-11-17)
 
 
