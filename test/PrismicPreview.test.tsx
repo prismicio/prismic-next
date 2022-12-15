@@ -72,6 +72,7 @@ beforeAll(() => {
 	globalThis.fetch = fetch;
 	globalThis.location.reload = reload;
 	globalThis.console.error = vi.fn();
+	globalThis.location.href = "https://example.com";
 });
 
 afterEach(() => {
