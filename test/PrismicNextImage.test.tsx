@@ -15,6 +15,8 @@ test("renders a NextImage for a given field", (ctx) => {
 	expect(img?.props.srcSet).toMatchInlineSnapshot(
 		'"https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=3840&fit=crop 1x"',
 	);
+	expect(img?.props.width).toBe(field.dimensions.width);
+	expect(img?.props.height).toBe(field.dimensions.height);
 });
 
 test("renders null when passed an empty field", (ctx) => {
@@ -48,19 +50,23 @@ test("supports an explicit width", (ctx) => {
 	expect(img?.props.srcSet).toMatchInlineSnapshot(
 		'"https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=640&fit=crop 1x, https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=828&fit=crop 2x"',
 	);
+	expect(img?.props.width).toBe(400);
+	expect(img?.props.height).toBe(300);
 });
 
 test("supports an explicit height", (ctx) => {
 	const field = ctx.mock.value.image();
 
-	const img = renderJSON(<PrismicNextImage field={field} height="400" />);
+	const img = renderJSON(<PrismicNextImage field={field} height="600" />);
 
 	expect(img?.props.src).toMatchInlineSnapshot(
-		'"https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=1080&fit=crop"',
+		'"https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=1920&fit=crop"',
 	);
 	expect(img?.props.srcSet).toMatchInlineSnapshot(
-		'"https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=640&fit=crop 1x, https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=1080&fit=crop 2x"',
+		'"https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=828&fit=crop 1x, https://images.unsplash.com/photo-1504567961542-e24d9439a724?w=1920&fit=crop 2x"',
 	);
+	expect(img?.props.width).toBe(800);
+	expect(img?.props.height).toBe(600);
 });
 
 test("supports an explicit width and height", (ctx) => {
