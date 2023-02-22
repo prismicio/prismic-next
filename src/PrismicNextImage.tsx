@@ -112,7 +112,7 @@ export const PrismicNextImage = ({
 		const castedHeight = castInt(height);
 
 		let resolvedWidth = castedWidth ?? field.dimensions.width;
-		let resolvedHeight = castedHeight ?? field.dimensions.width;
+		let resolvedHeight = castedHeight ?? field.dimensions.height;
 
 		if (castedWidth != null && castedHeight == null) {
 			resolvedHeight = castedWidth / ar;
