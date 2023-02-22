@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/prismicio/prismic-next/compare/v1.0.2...v1.0.3) (2023-02-22)
+
+
+### Bug Fixes
+
+* **PrismicNextImage:** use correct height dimension ([#61](https://github.com/prismicio/prismic-next/issues/61)) ([e9534c1](https://github.com/prismicio/prismic-next/commit/e9534c11de5878de15c543a745d2075134397a40))
+
+
+### Chore
+
+* **deps:** update dependencies ([#54](https://github.com/prismicio/prismic-next/issues/54)) ([9d26909](https://github.com/prismicio/prismic-next/commit/9d2690959d7d1255800861ca22d43c97554b6d3a))
+* use consistent file path prefix in `types` `package.json` property ([92a02dc](https://github.com/prismicio/prismic-next/commit/92a02dc4415f53470033edc2c870a9c63c471ec6))
+
 ### [1.0.2](https://github.com/prismicio/prismic-next/compare/v1.0.1...v1.0.2) (2022-11-18)
 
 
