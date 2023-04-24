@@ -1,4 +1,3 @@
-import type { Client } from "@prismicio/client";
 import type { NextApiRequest, NextApiResponse } from "next";
 import type * as prismic from "@prismicio/client";
 
@@ -53,7 +52,10 @@ export type RedirectToPreviewURLConfig<
 	/**
 	 * The Prismic client configured for the preview session's repository.
 	 */
-	client: Client;
+	// `Pick` is used to use the smallest possible subset of
+	// `prismic.Client`. Doing this reduces the surface area for breaking
+	// type changes.
+	client: Pick<prismic.Client, "resolvePreviewURL">;
 
 	/**
 	 * A Link Resolver used to resolve the previewed document's URL.

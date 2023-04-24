@@ -30,7 +30,13 @@ export type EnableAutoPreviewsConfig<
 	/**
 	 * Prismic client with which automatic previews will be enabled.
 	 */
-	client: prismic.Client;
+	// `Pick` is used to use the smallest possible subset of
+	// `prismic.Client`. Doing this reduces the surface area for breaking
+	// type changes.
+	client: Pick<
+		prismic.Client,
+		"queryContentFromRef" | "enableAutoPreviewsFromReq"
+	>;
 } & (
 	| {
 			/**
