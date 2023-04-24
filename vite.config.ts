@@ -1,4 +1,4 @@
-import { defineConfig } from "vite";
+import { defineConfig, Plugin } from "vite";
 import sdk from "vite-plugin-sdk";
 import react from "@vitejs/plugin-react";
 import preserveDirectives from "rollup-plugin-preserve-directives";
@@ -13,7 +13,7 @@ export default defineConfig({
 			},
 		},
 		rollupOptions: {
-			plugins: [preserveDirectives()],
+			plugins: [preserveDirectives() as Plugin],
 		},
 	},
 	test: {
