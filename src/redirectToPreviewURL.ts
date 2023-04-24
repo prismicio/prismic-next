@@ -1,6 +1,6 @@
 import type { Client } from "@prismicio/client";
 import type { NextApiRequest, NextApiResponse } from "next";
-import type { LinkResolverFunction } from "@prismicio/helpers";
+import type * as prismic from "@prismicio/client";
 
 type PrismicNextQuery = {
 	documentId: string;
@@ -28,7 +28,7 @@ const isPrismicNextQuery = (
  */
 export type RedirectToPreviewURLConfig<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TLinkResolverFunction extends LinkResolverFunction<any> = LinkResolverFunction,
+	TLinkResolverFunction extends prismic.LinkResolverFunction<any> = prismic.LinkResolverFunction,
 > = {
 	/**
 	 * The `req` object from a Next.js API route. This is given as a parameter to
@@ -89,7 +89,7 @@ export type RedirectToPreviewURLConfig<
  */
 export async function redirectToPreviewURL<
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TLinkResolverFunction extends LinkResolverFunction<any>,
+	TLinkResolverFunction extends prismic.LinkResolverFunction<any>,
 >(config: RedirectToPreviewURLConfig<TLinkResolverFunction>): Promise<void> {
 	const defaultURL = config.defaultURL || "/";
 	const basePath = config.basePath || "";

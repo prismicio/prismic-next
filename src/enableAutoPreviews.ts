@@ -1,5 +1,5 @@
 import { PreviewData } from "next";
-import { Client, HttpRequestLike } from "@prismicio/client";
+import type * as prismic from "@prismicio/client";
 
 interface PrismicNextPreviewData {
 	ref: string;
@@ -30,7 +30,7 @@ export type EnableAutoPreviewsConfig<
 	/**
 	 * Prismic client with which automatic previews will be enabled.
 	 */
-	client: Client;
+	client: prismic.Client;
 } & (
 	| {
 			/**
@@ -49,7 +49,7 @@ export type EnableAutoPreviewsConfig<
 			 * Pass a `req` object when using `enableAutoPreviews` in a Next.js API
 			 * endpoint.
 			 */
-			req?: HttpRequestLike;
+			req?: prismic.HttpRequestLike;
 	  }
 );
 /**

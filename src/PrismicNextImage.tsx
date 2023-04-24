@@ -1,7 +1,8 @@
+"use client";
+
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
-import * as prismicH from "@prismicio/helpers";
-import * as prismicT from "@prismicio/types";
+import * as prismic from "@prismicio/client";
 
 import { __PRODUCTION__ } from "./lib/__PRODUCTION__";
 import { devMsg } from "./lib/devMsg";
@@ -26,7 +27,7 @@ export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
 	/**
 	 * The Prismic Image field or thumbnail to render.
 	 */
-	field: prismicT.ImageFieldImage | null | undefined;
+	field: prismic.ImageFieldImage | null | undefined;
 
 	/**
 	 * An object of Imgix URL API parameters to transform the image.
@@ -103,7 +104,7 @@ export const PrismicNextImage = ({
 		}
 	}
 
-	if (prismicH.isFilled.imageThumbnail(field)) {
+	if (prismic.isFilled.imageThumbnail(field)) {
 		const src = buildURL(field.url, imgixParams);
 
 		const ar = field.dimensions.width / field.dimensions.height;

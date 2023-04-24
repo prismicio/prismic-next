@@ -3,32 +3,11 @@
 import { test, expect, beforeAll, vi, afterEach } from "vitest";
 import { NextRouter, useRouter } from "next/router";
 import Script from "next/script";
-import * as React from "react";
 import * as renderer from "react-test-renderer";
 
+import { render } from "./__testutils__/render";
+
 import { PrismicPreview } from "../src";
-
-/**
- * Renders a JSON representation of a React.Element. This is a helper to reduce
- * boilerplate in each test.
- *
- * @param element - The React.Element to render.
- *
- * @returns The JSON representation of `element`.
- */
-export const render = (
-	element: React.ReactElement,
-	options?: renderer.TestRendererOptions,
-): renderer.ReactTestRenderer => {
-	let root: renderer.ReactTestRenderer;
-
-	renderer.act(() => {
-		root = renderer.create(element, options);
-	});
-
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-	return root!;
-};
 
 /**
  * Waits an event loop tick. This will let us test for mocked async functions in

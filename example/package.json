@@ -9,7 +9,8 @@
 		"slicemachine": "start-slicemachine"
 	},
 	"dependencies": {
-		"@prismicio/next": "latest",
+		"@prismicio/client": "^7.0.0-alpha.2",
+		"@prismicio/next": "..",
 		"@prismicio/react": "^2.5.0"
 	},
 	"devDependencies": {
