@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.0.3...v1.1.0-alpha.0) (2023-04-25)
+
+
+### Features
+
+* support React Server Components and App Router ([be9e1a1](https://github.com/prismicio/prismic-next/commit/be9e1a1a3f400ce0d7e8d4e6709081127b6c0398))
+
+
+### Bug Fixes
+
+* support projects using `@prismicio/client` v6 ([0c48157](https://github.com/prismicio/prismic-next/commit/0c481577691331608b05ab8c049b8572442f6f04))
+
+
+### Chore
+
+* **deps:** update all dependencies ([9b2cd75](https://github.com/prismicio/prismic-next/commit/9b2cd752eacfae5e5c3ded7f22027c51c0c47204))
+* fix type issue in `vite.config.ts` ([4fb85ee](https://github.com/prismicio/prismic-next/commit/4fb85eea5c35b5107501701135a9956d389b5e16))
+
 ### [1.0.3](https://github.com/prismicio/prismic-next/compare/v1.0.2...v1.0.3) (2023-02-22)
 
 
