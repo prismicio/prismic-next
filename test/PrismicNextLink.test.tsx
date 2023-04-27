@@ -206,21 +206,6 @@ it("allows defining rel with a function", (ctx) => {
 	});
 });
 
-it("passes through href", () => {
-	const actual = renderJSON(<PrismicNextLink href="/foo">Foo</PrismicNextLink>);
-
-	expect(actual?.props.href).toBe("/foo");
-});
-
-it("falsey href falls back to empty string", () => {
-	const actual = renderJSON(
-		// @ts-expect-error - We are purposely providing an invalid `href` value.
-		<PrismicNextLink href={undefined}>Foo</PrismicNextLink>,
-	);
-
-	expect(actual?.props.href).toBe("");
-});
-
 it("forwards ref", (ctx) => {
 	const field = ctx.mock.value.link({ type: "Web" });
 

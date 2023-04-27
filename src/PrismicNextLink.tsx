@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import * as prismic from "@prismicio/client";
-import Link, { LinkProps } from "next/link";
+import Link from "next/link";
 
 export type PrismicNextLinkProps = Omit<
 	React.ComponentProps<typeof Link>,
@@ -13,16 +13,13 @@ export type PrismicNextLinkProps = Omit<
 } & (
 		| {
 				document: prismic.PrismicDocument | null | undefined;
-				href?: never;
 				field?: never;
 		  }
 		| {
 				field: prismic.LinkField | null | undefined;
-				href?: never;
 				document?: never;
 		  }
 		| {
-				href: LinkProps["href"];
 				field?: prismic.LinkField | null | undefined;
 				document?: never;
 		  }
@@ -36,7 +33,7 @@ export const PrismicNextLink = React.forwardRef<
 	ref,
 ): JSX.Element | null {
 	const {
-		href: computedHref,
+		href = "",
 		rel: computedRel,
 		...attrs
 	} = prismic.asLinkAttrs(field ?? document, {
@@ -44,12 +41,10 @@ export const PrismicNextLink = React.forwardRef<
 		rel: typeof restProps.rel === "function" ? restProps.rel : undefined,
 	});
 
-	let rel: string | undefined = computedRel;
+	let rel = computedRel;
 	if ("rel" in restProps && typeof restProps.rel !== "function") {
 		rel = restProps.rel;
 	}
 
-	const href = ("href" in restProps ? restProps.href : computedHref) || "";
-
-	return <Link ref={ref} {...attrs} {...restProps} href={href} rel={rel} />;
+	return <Link ref={ref} href={href} {...attrs} {...restProps} rel={rel} />;
 });
