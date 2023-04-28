@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-alpha.1](https://github.com/prismicio/prismic-next/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2023-04-28)
+
+
+### Features
+
+* **PrismicNextLink:** restore `href` prop ([ceaf8c6](https://github.com/prismicio/prismic-next/commit/ceaf8c6d46dd3e62a0437bc9a1cad7d73447ffad))
+
+
+### Bug Fixes
+
+* bundle `@prismicio/client` v7 to prevent `npm install` issues ([eaa5a30](https://github.com/prismicio/prismic-next/commit/eaa5a3048553682efa9ddceae572967cc7767f54))
+* **PrismicNextLink:** remove `href` prop ([057ec51](https://github.com/prismicio/prismic-next/commit/057ec51fb55909e9da9d175ee2d757501b19245e))
+
+
+### Refactor
+
+* use more accurate name for unsupported error builder ([faf568c](https://github.com/prismicio/prismic-next/commit/faf568c3525c2a77ec1ae7b4054a7a8585fca6d5))
+
 ## [1.1.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.0.3...v1.1.0-alpha.0) (2023-04-25)
 
 
