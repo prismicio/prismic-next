@@ -1,50 +1,71 @@
-import type { NextApiResponse, NextApiRequest } from "next";
+// TODO: Replace the "next/headers" import with the following line once Next.js
+// 13.4 is available.
+// import { draftMode } from "next/headers";
+import * as nextHeaders from "next/headers";
+import { NextResponse } from "next/server";
+
+import { checkIsNextRequest } from "./lib/checkIsNextRequest";
+
+import {
+	FlexibleNextApiRequestLike,
+	FlexibleNextRequestLike,
+	NextApiResponseLike,
+} from "./types";
 
 /**
  * Configuration for `exitPreview`.
  */
-export type ExitPreviewConfig = {
-	/**
-	 * The `req` object from a Next.js API route. This is given as a parameter to
-	 * the API route.
-	 *
-	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
-	 */
-	// `req` is no longer used in `exitPreview()`. It previously would
-	// redirect the user to the referring URL, but it no longer has that
-	// behavior.
-	//
-	// `req` is retained as a parameter to make setting up an exit preview
-	// API route easier (this eliminates the awkward need to handle an
-	// unused `req` param).
-	//
-	// It is also retained in case it is needed in the future, such as
-	// reading headers or metadata about the request.
-	req: {
-		headers: NextApiRequest["headers"];
-	};
-
-	/**
-	 * The `res` object from a Next.js API route. This is given as a parameter to
-	 * the API route.
-	 *
-	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
-	 */
-	res: {
-		clearPreviewData: NextApiResponse["clearPreviewData"];
-		status: NextApiResponse["status"];
-		json: NextApiResponse["json"];
-	};
-};
+export type ExitPreviewConfig =
+	| FlexibleNextRequestLike
+	| (FlexibleNextApiRequestLike & {
+			/**
+			 * The `res` object from a Next.js API route.
+			 *
+			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
+			 */
+			res: NextApiResponseLike;
+	  });
 
 /**
- * Exits Next.js's Preview Mode from within a Next.js API route.
+ * Exits a Prismic Preview by disabling Draft Mode or Preview Mode, whichever
+ * one is active.
  */
-export function exitPreview(config: ExitPreviewConfig): void {
-	// Exit the current user from Preview Mode.
-	config.res.clearPreviewData();
+export async function exitPreview(
+	config: ExitPreviewConfig,
+): Promise<NextResponse | void> {
+	const request = "request" in config ? config.request : config.req;
+	const isNextRequest = checkIsNextRequest(request);
 
-	// 205 status is used to prevent CDN-level caching. The default 200
-	// status code is typically treated as non-changing and cacheable.
-	config.res.status(205).json({ success: true });
+	if (isNextRequest) {
+		// In a Route Handler.
+
+		// Disable Draft Mode
+		// TODO: Replace the `nextHeaders.draftMode()` call with the
+		// following line once Next.js 13.4 is available.
+		// draftMode().disable();
+		// @ts-expect-error - `draftMode()` won't be available until Next.js 13.4
+		nextHeaders.draftMode().disable();
+
+		// 205 status is used to prevent CDN-level caching. The default 200
+		// status code is typically treated as non-changing and cacheable.
+		return NextResponse.json({ success: true }, { status: 205 });
+	} else {
+		// In an API route.
+
+		if (!("res" in config)) {
+			throw new Error(
+				"[exitPreview] The `res` object from the API route must be provided to `exitPreview()`.",
+			);
+		}
+
+		// Disable Draft Mode
+		config.res.setDraftMode?.({ enable: false });
+
+		// Disable Preview Mode
+		config.res.clearPreviewData();
+
+		// 205 status is used to prevent CDN-level caching. The default 200
+		// status code is typically treated as non-changing and cacheable.
+		config.res.status(205).json({ success: true });
+	}
 }

@@ -1,30 +1,24 @@
-import { NextApiResponse, NextApiRequest } from "next";
 import * as prismic from "@prismicio/client";
+
+import { NextApiRequestLike, NextApiResponseLike } from "./types";
 
 /**
  * Configuration for `setPreviewData`.
  */
 export type SetPreviewDataConfig = {
 	/**
-	 * The `req` object from a Next.js API route. This is given as a parameter to
-	 * the API route.
+	 * The `req` object from a Next.js API route.
 	 *
-	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 	 */
-	req: {
-		query: NextApiRequest["query"];
-		cookies: NextApiRequest["cookies"];
-	};
+	req: NextApiRequestLike;
 
 	/**
-	 * The `res` object from a Next.js API route. This is given as a parameter to
-	 * the API route.
+	 * The `res` object from a Next.js API route.
 	 *
-	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 	 */
-	res: {
-		setPreviewData: NextApiResponse["setPreviewData"];
-	};
+	res: NextApiResponseLike;
 };
 
 /**
