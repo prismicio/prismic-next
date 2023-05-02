@@ -1,6 +1,3 @@
-// TODO: Replace the "next/headers" import with the following line once Next.js
-// 13.4 is available.
-// import { draftMode } from "next/headers";
 import * as nextHeaders from "next/headers";
 import { NextResponse } from "next/server";
 
@@ -39,11 +36,18 @@ export async function exitPreview(
 	if (isNextRequest) {
 		// In a Route Handler.
 
+		// `draftMode` was added in Next.js v13.4. This library
+		// supports v13.0, so we must check if `draftMode` exists.
+		//
+		// Note that Draft Mode _must_ be used when using Route
+		// Handlers; Preview Mode is not supported in App Router.
+		if (!nextHeaders.draftMode) {
+			throw new Error(
+				"[exitPreview] Next.js Draft Mode is used when using `exitPreview()` in a Route Handler. It appears the installed version of Next.js does not support Draft Mode. Please update to at least next@13.4.0.",
+			);
+		}
+
 		// Disable Draft Mode
-		// TODO: Replace the `nextHeaders.draftMode()` call with the
-		// following line once Next.js 13.4 is available.
-		// draftMode().disable();
-		// @ts-expect-error - `draftMode()` won't be available until Next.js 13.4
 		nextHeaders.draftMode().disable();
 
 		// 205 status is used to prevent CDN-level caching. The default 200

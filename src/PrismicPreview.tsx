@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import * as prismic from "@prismicio/client";
 import { useRouter } from "next/router";
 import Script from "next/script";
 
@@ -57,124 +58,123 @@ export function PrismicPreview({
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
 }: PrismicPreviewProps): JSX.Element {
-	const router = useRouter();
+	const toolbarSrc = prismic.getToolbarSrc(repositoryName);
 
-	const resolvedUpdatePreviewURL = router.basePath + updatePreviewURL;
-	const resolvedExitPreviewURL = router.basePath + exitPreviewURL;
-
-	React.useEffect(() => {
-		/**
-		 * Starts Preview Mode and refreshes the page's props.
-		 */
-		const startPreviewMode = async () => {
-			// Start Next.js Preview Mode via the given preview API endpoint.
-			const res = await globalThis.fetch(resolvedUpdatePreviewURL);
-
-			// We check for `res.redirected` rather than `res.ok`
-			// since the update preview endpoint may redirect to a
-			// 404 page. As long as it redirects, we know the
-			// endpoint exists and at least attempted to set
-			// preview data.
-			if (res.redirected) {
-				globalThis.location.reload();
-			} else {
-				console.error(
-					`[<PrismicPreview>] Failed to start or update Preview Mode using the "${resolvedUpdatePreviewURL}" API endpoint. Does it exist?`,
-				);
-			}
-		};
-
-		const handlePrismicPreviewUpdate = async (event: Event) => {
-			// Prevent the toolbar from reloading the page.
-			event.preventDefault();
-
-			await startPreviewMode();
-		};
-
-		const handlePrismicPreviewEnd = async (event: Event) => {
-			// Prevent the toolbar from reloading the page.
-			event.preventDefault();
-
-			// Exit Next.js Preview Mode via the given preview API endpoint.
-			const res = await globalThis.fetch(resolvedExitPreviewURL);
-
-			if (res.ok) {
-				globalThis.location.reload();
-			} else {
-				console.error(
-					`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
-				);
-			}
-		};
-
-		if (router.isPreview) {
-			// Register Prismic Toolbar event handlers.
-			window.addEventListener(
-				"prismicPreviewUpdate",
-				handlePrismicPreviewUpdate,
-			);
-			window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
-		} else {
-			const prismicPreviewCookie = getPrismicPreviewCookie(
-				globalThis.document.cookie,
-			);
-
-			if (prismicPreviewCookie) {
-				// If a Prismic preview cookie is present, but Next.js Preview
-				// Mode is not active, we must activate Preview Mode manually.
-				//
-				// This will happen when a visitor accesses the page using a
-				// Prismic preview share link.
-
-				/**
-				 * Determines if the current location is a descendant of the app's base
-				 * path.
-				 *
-				 * This is used to prevent infinite refrehes; when
-				 * `isDescendantOfBasePath` is `false`, `router.isPreview` is also
-				 * `false`.
-				 *
-				 * If the app does not have a base path, this should always be `true`.
-				 */
-				const locationIsDescendantOfBasePath = window.location.href.startsWith(
-					window.location.origin + router.basePath,
-				);
-
-				const prismicPreviewCookieRepositoryName =
-					getPreviewCookieRepositoryName(prismicPreviewCookie);
-
-				if (
-					locationIsDescendantOfBasePath &&
-					prismicPreviewCookieRepositoryName === repositoryName
-				) {
-					startPreviewMode();
-				}
-			}
-		}
-
-		// On cleanup, unregister Prismic Toolbar event handlers.
-		return () => {
-			window.removeEventListener(
-				"prismicPreviewUpdate",
-				handlePrismicPreviewUpdate,
-			);
-			window.removeEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
-		};
-	}, [
-		repositoryName,
-		resolvedExitPreviewURL,
-		resolvedUpdatePreviewURL,
-		router.isPreview,
-		router.basePath,
-	]);
+	// const router = useRouter();
+	//
+	// const resolvedUpdatePreviewURL = router.basePath + updatePreviewURL;
+	// const resolvedExitPreviewURL = router.basePath + exitPreviewURL;
+	//
+	// React.useEffect(() => {
+	// 	/**
+	// 	 * Starts Preview Mode and refreshes the page's props.
+	// 	 */
+	// 	const startPreviewMode = async () => {
+	// 		// Start Next.js Preview Mode via the given preview API endpoint.
+	// 		const res = await globalThis.fetch(resolvedUpdatePreviewURL);
+	//
+	// 		// We check for `res.redirected` rather than `res.ok`
+	// 		// since the update preview endpoint may redirect to a
+	// 		// 404 page. As long as it redirects, we know the
+	// 		// endpoint exists and at least attempted to set
+	// 		// preview data.
+	// 		if (res.redirected) {
+	// 			globalThis.location.reload();
+	// 		} else {
+	// 			console.error(
+	// 				`[<PrismicPreview>] Failed to start or update Preview Mode using the "${resolvedUpdatePreviewURL}" API endpoint. Does it exist?`,
+	// 			);
+	// 		}
+	// 	};
+	//
+	// 	const handlePrismicPreviewUpdate = async (event: Event) => {
+	// 		// Prevent the toolbar from reloading the page.
+	// 		event.preventDefault();
+	//
+	// 		await startPreviewMode();
+	// 	};
+	//
+	// 	const handlePrismicPreviewEnd = async (event: Event) => {
+	// 		// Prevent the toolbar from reloading the page.
+	// 		event.preventDefault();
+	//
+	// 		// Exit Next.js Preview Mode via the given preview API endpoint.
+	// 		const res = await globalThis.fetch(resolvedExitPreviewURL);
+	//
+	// 		if (res.ok) {
+	// 			globalThis.location.reload();
+	// 		} else {
+	// 			console.error(
+	// 				`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
+	// 			);
+	// 		}
+	// 	};
+	//
+	// 	if (router.isPreview) {
+	// 		// Register Prismic Toolbar event handlers.
+	// 		window.addEventListener(
+	// 			"prismicPreviewUpdate",
+	// 			handlePrismicPreviewUpdate,
+	// 		);
+	// 		window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
+	// 	} else {
+	// 		const prismicPreviewCookie = getPrismicPreviewCookie(
+	// 			globalThis.document.cookie,
+	// 		);
+	//
+	// 		if (prismicPreviewCookie) {
+	// 			// If a Prismic preview cookie is present, but Next.js Preview
+	// 			// Mode is not active, we must activate Preview Mode manually.
+	// 			//
+	// 			// This will happen when a visitor accesses the page using a
+	// 			// Prismic preview share link.
+	//
+	// 			/**
+	// 			 * Determines if the current location is a descendant of the app's base
+	// 			 * path.
+	// 			 *
+	// 			 * This is used to prevent infinite refrehes; when
+	// 			 * `isDescendantOfBasePath` is `false`, `router.isPreview` is also
+	// 			 * `false`.
+	// 			 *
+	// 			 * If the app does not have a base path, this should always be `true`.
+	// 			 */
+	// 			const locationIsDescendantOfBasePath = window.location.href.startsWith(
+	// 				window.location.origin + router.basePath,
+	// 			);
+	//
+	// 			const prismicPreviewCookieRepositoryName =
+	// 				getPreviewCookieRepositoryName(prismicPreviewCookie);
+	//
+	// 			if (
+	// 				locationIsDescendantOfBasePath &&
+	// 				prismicPreviewCookieRepositoryName === repositoryName
+	// 			) {
+	// 				startPreviewMode();
+	// 			}
+	// 		}
+	// 	}
+	//
+	// 	// On cleanup, unregister Prismic Toolbar event handlers.
+	// 	return () => {
+	// 		window.removeEventListener(
+	// 			"prismicPreviewUpdate",
+	// 			handlePrismicPreviewUpdate,
+	// 		);
+	// 		window.removeEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
+	// 	};
+	// }, [
+	// 	repositoryName,
+	// 	resolvedExitPreviewURL,
+	// 	resolvedUpdatePreviewURL,
+	// 	router.isPreview,
+	// 	router.basePath,
+	// ]);
 
 	return (
 		<>
 			{children}
-			<Script
-				src={`https://static.cdn.prismic.io/prismic.js?repo=${repositoryName}&new=true`}
-				strategy="lazyOnload"
-			/>
+			<Script src={toolbarSrc} strategy="lazyOnload" />
 		</>
 	);
 }

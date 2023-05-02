@@ -1,5 +1,7 @@
 import { PreviewData } from "next";
+import * as nextHeaders from "next/headers";
 import type * as prismic from "@prismicio/client";
+import { FlexibleNextApiRequestLike } from "./types";
 
 interface PrismicNextPreviewData {
 	ref: string;
@@ -48,15 +50,7 @@ export type EnableAutoPreviewsConfig<
 			 */
 			previewData?: TPreviewData;
 	  }
-	| {
-			/**
-			 * A Next.js API endpoint request object.
-			 *
-			 * Pass a `req` object when using `enableAutoPreviews` in a Next.js API
-			 * endpoint.
-			 */
-			req?: prismic.HttpRequestLike;
-	  }
+	| FlexibleNextApiRequestLike
 );
 /**
  * Configures a Prismic client to automatically query draft content during a
@@ -76,9 +70,21 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 		if (isPrismicNextPreviewData(previewData) && previewData.ref) {
 			config.client.queryContentFromRef(previewData.ref);
 		}
-	} else if ("req" in config && config.req) {
-		// If the req object is passed then use enableAutoPreviewsFromReq
+	} else {
+		if (nextHeaders.draftMode && nextHeaders.draftMode().enabled) {
+			// TODO: Get the cookie and query from that ref.
+			// TODO: Update `@prismicio/client` to fetch the preview token/ref from the cookie
+		} else {
+			if (
+				("request" in config && config.request) ||
+				("req" in config && config.req)
+			) {
+				const request = "request" in config ? config.request : config.req;
 
-		config.client.enableAutoPreviewsFromReq(config.req);
+				// If the req object is passed then use enableAutoPreviewsFromReq
+
+				config.client.enableAutoPreviewsFromReq(request);
+			}
+		}
 	}
 };
