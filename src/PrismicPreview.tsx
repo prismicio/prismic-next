@@ -39,8 +39,8 @@ export type PrismicPreviewProps = {
 /**
  * React component that sets up Prismic Previews using the Prismic Toolbar. When
  * the Prismic Toolbar send events to the browser, such as on preview updates
- * and exiting, this component will automatically update the Next.js preview
- * cookie and refresh the page.
+ * and exiting, this component will automatically refresh the page with the
+ * changes.
  *
  * This component can be wrapped around your app or added anywhere in your app's
  * tree. It must be rendered on every page.

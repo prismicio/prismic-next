@@ -2,24 +2,38 @@ import { redirect } from "next/navigation";
 import type * as prismic from "@prismicio/client";
 
 import {
-	FlexibleNextApiRequestLike,
-	FlexibleNextRequestLike,
+	NextApiRequestLike,
 	NextApiResponseLike,
+	NextRequestLike,
 } from "./types";
 
 /**
  * Preview config for enabling previews with redirectToPreviewURL
  */
 export type RedirectToPreviewURLConfig = (
-	| FlexibleNextRequestLike
-	| (FlexibleNextApiRequestLike & {
+	| {
+			/**
+			 * The `request` object from a Next.js Route Handler.
+			 *
+			 * @see Next.js Route Handler docs: \<https://beta.nextjs.org/docs/routing/route-handlers\>
+			 */
+			request: NextRequestLike;
+	  }
+	| {
+			/**
+			 * The `req` object from a Next.js API route.
+			 *
+			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
+			 */
+			req: NextApiRequestLike;
+
 			/**
 			 * The `res` object from a Next.js API route.
 			 *
 			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 			 */
 			res: NextApiResponseLike;
-	  })
+	  }
 ) & {
 	/**
 	 * The Prismic client configured for the preview session's repository.

@@ -12,16 +12,24 @@ declare module "@prismicio/client" {
  * Configuration for creating a Prismic client with automatic preview support in
  * Next.js apps.
  */
-export type CreateClientConfig = {
+export type CreateClientConfig = ClientConfig & {
 	/**
-	 * Preview data coming from Next.js context object. This context object comes
-	 * from `getStaticProps` or `getServerSideProps`.
+	 * **Only used in the Pages Directory (/pages).**
 	 *
-	 * Pass `previewData` when using outside a Next.js API endpoint.
+	 * The `previewData` object provided in the `getStaticProps()` or
+	 * `getServerSideProps()` context object.
 	 */
 	previewData?: PreviewData;
-} & Partial<FlexibleNextRequestLikeOrNextApiRequestLike> &
-	ClientConfig;
+
+	/**
+	 * **Only used in the Pages Directory (/pages).**
+	 *
+	 * The `req` object from a Next.js API route.
+	 *
+	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
+	 */
+	req?: NextApiRequestLike;
+};
 
 /**
  * The minimal set of properties needed from `next`'s `NextRequest` type.
@@ -34,11 +42,7 @@ export type NextRequestLike = {
 		get(name: string): string | null;
 	};
 	url: string;
-	nextUrl: {
-		searchParams: {
-			get(name: string): string | null;
-		};
-	};
+	nextUrl: unknown;
 };
 
 /**
@@ -59,8 +63,6 @@ export type NextApiRequestLike = {
  * directory.
  */
 export type NextApiResponseLike = {
-	// This method only exists in Next.js >= 13.4, thus it may not exist.
-	setDraftMode?(options: { enable: boolean }): NextApiResponseLike;
 	redirect(url: string): NextApiResponseLike;
 	clearPreviewData(): NextApiResponseLike;
 	status(statusCode: number): NextApiResponseLike;
@@ -68,80 +70,3 @@ export type NextApiResponseLike = {
 	json(body: any): void;
 	setPreviewData(data: object | string): NextApiResponseLike;
 };
-
-/**
- * @internal
- */
-export type FlexibleNextRequestLikeOrNextApiRequestLike =
-	| {
-			/**
-			 * The request object from a Next.js Route Handler or API Route.
-			 *
-			 * **Alias**: `req`
-			 *
-			 * @see Next.js Route Handler docs: \<https://beta.nextjs.org/docs/routing/route-handlers\>
-			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
-			 */
-			request: NextRequestLike | NextApiRequestLike;
-	  }
-	| {
-			/**
-			 * The request object from a Next.js Route Handler or API Route.
-			 *
-			 * **Alias**: `request`
-			 *
-			 * @see Next.js Route Handler docs: \<https://beta.nextjs.org/docs/routing/route-handlers\>
-			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
-			 */
-			req: NextRequestLike | NextApiRequestLike;
-	  };
-
-/**
- * @internal
- */
-export type FlexibleNextRequestLike =
-	| {
-			/**
-			 * The request object from a Next.js Route Handler.
-			 *
-			 * **Alias**: `req`
-			 *
-			 * @see Next.js Route Handler docs: \<https://beta.nextjs.org/docs/routing/route-handlers\>
-			 */
-			request: NextRequestLike;
-	  }
-	| {
-			/**
-			 * The request object from a Next.js Route Handler.
-			 *
-			 * **Alias**: `request`
-			 *
-			 * @see Next.js Route Handler docs: \<https://beta.nextjs.org/docs/routing/route-handlers\>
-			 */
-			req: NextRequestLike;
-	  };
-
-/**
- * @internal
- */
-export type FlexibleNextApiRequestLike =
-	| {
-			/**
-			 * The request object from a Next.js API route.
-			 *
-			 * **Alias**: `req`
-			 *
-			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
-			 */
-			request: NextApiRequestLike;
-	  }
-	| {
-			/**
-			 * The request object from a Next.js API route.
-			 *
-			 * **Alias**: `request`
-			 *
-			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
-			 */
-			req: NextApiRequestLike;
-	  };
