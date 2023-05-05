@@ -52,7 +52,7 @@ export async function exitPreview(
 
 		// 205 status is used to prevent CDN-level caching. The default 200
 		// status code is typically treated as non-changing and cacheable.
-		return NextResponse.json({ success: true }, { status: 205 });
+		return NextResponse.json({ success: true });
 	} else {
 		// In an API route.
 

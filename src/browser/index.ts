@@ -1,13 +1,15 @@
-export { setPreviewData } from "./unsupported";
+export {
+	enableAutoPreviews,
+	redirectToPreviewURL,
+	exitPreview,
+	setPreviewData,
+} from "./unsupported";
 
 // These exports do not have RSC-specific implementations.
 // They are aliases for the root-level exports.
 export {
-	PrismicNextImage,
-	PrismicNextLink,
 	PrismicPreview,
+	PrismicNextImage,
 	imgixLoader,
-	enableAutoPreviews,
-	exitPreview,
-	redirectToPreviewURL,
+	PrismicNextLink,
 } from "..";

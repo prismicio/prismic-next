@@ -1,25 +1,8 @@
 import { PreviewData } from "next";
-import * as nextHeaders from "next/headers";
-import type * as prismic from "@prismicio/client";
-import { FlexibleNextApiRequestLike } from "./types";
+import { cookies } from "next/headers";
+import * as prismic from "@prismicio/client";
 
-interface PrismicNextPreviewData {
-	ref: string;
-}
-
-/**
- * Determines if a Next.js preview data object contains Prismic preview data.
- *
- * @param previewData - The Next.js preview data object to check.
- *
- * @returns `true` if `previewData` contains Prismic preview data, `false`
- *   otherwise.
- */
-const isPrismicNextPreviewData = (
-	previewData: PreviewData,
-): previewData is PrismicNextPreviewData => {
-	return typeof previewData === "object" && "ref" in previewData;
-};
+import { NextApiRequestLike } from "./types";
 
 /**
  * Configuration for `enableAutoPreviews`.
@@ -39,19 +22,26 @@ export type EnableAutoPreviewsConfig<
 		prismic.Client,
 		"queryContentFromRef" | "enableAutoPreviewsFromReq"
 	>;
-} & (
-	| {
-			/**
-			 * A Next.js context object (such as the context object from
-			 * `getStaticProps` or `getServerSideProps`).
-			 *
-			 * Pass a `context` object when using `enableAutoPreviews` outside a
-			 * Next.js API endpoint.
-			 */
-			previewData?: TPreviewData;
-	  }
-	| FlexibleNextApiRequestLike
-);
+
+	/**
+	 * A Next.js context object (such as the context object from `getStaticProps`
+	 * or `getServerSideProps`).
+	 *
+	 * Pass a `context` object when using `enableAutoPreviews` outside a Next.js
+	 * API endpoint.
+	 */
+	previewData?: TPreviewData;
+
+	/**
+	 * The request object from a Next.js API route.
+	 *
+	 * **Alias**: `request`
+	 *
+	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
+	 */
+	req?: NextApiRequestLike;
+};
+
 /**
  * Configures a Prismic client to automatically query draft content during a
  * preview session. It either takes in a Next.js `getStaticProps` context object
@@ -63,28 +53,44 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 	config: EnableAutoPreviewsConfig<TPreviewData>,
 ): void => {
 	if ("previewData" in config && config.previewData) {
-		// If preview data is being passed from Next Context then use queryContentFromRef
+		// Assume we are in `getStaticProps()` or `getServerSideProps()` (`pages` directory).
 
-		const { previewData } = config;
-
-		if (isPrismicNextPreviewData(previewData) && previewData.ref) {
-			config.client.queryContentFromRef(previewData.ref);
+		if (
+			typeof config.previewData === "object" &&
+			"ref" in config.previewData &&
+			typeof config.previewData.ref === "string"
+		) {
+			config.client.queryContentFromRef(config.previewData.ref);
 		}
+	} else if ("req" in config && config.req) {
+		// Assume we are in an API Route (`pages` directory).
+
+		config.client.enableAutoPreviewsFromReq(config.req);
 	} else {
-		if (nextHeaders.draftMode && nextHeaders.draftMode().enabled) {
-			// TODO: Get the cookie and query from that ref.
-			// TODO: Update `@prismicio/client` to fetch the preview token/ref from the cookie
-		} else {
-			if (
-				("request" in config && config.request) ||
-				("req" in config && config.req)
-			) {
-				const request = "request" in config ? config.request : config.req;
+		// Assume we are in App Router (`pages` directory).
 
-				// If the req object is passed then use enableAutoPreviewsFromReq
+		// We use a function value so the cookie is checked on every
+		// request. We don't have a static value to read from.
+		config.client.queryContentFromRef(() => {
+			const cookie = cookies().get(prismic.cookie.preview)?.value;
 
-				config.client.enableAutoPreviewsFromReq(request);
+			// We only return the cookie if a Prismic Preview session is active.
+			//
+			// An inactive cookie looks like this (URL encoded):
+			// 	{
+			// 		"_tracker": "abc123"
+			// 	}
+			//
+			// An active cookie looks like this (URL encoded):
+			// 	{
+			// 		"_tracker": "abc123",
+			// 		"example-prismic-repo.prismic.io": {
+			// 			preview: "https://example-prismic-repo.prismic.io/previews/abc:123?websitePreviewId=xyz"
+			// 		}
+			// 	}
+			if (cookie && /\.prismic\.io/.test(cookie)) {
+				return cookie;
 			}
-		}
+		});
 	}
 };

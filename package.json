@@ -23,6 +23,7 @@
 				"require": "./dist/react-server.cjs"
 			},
 			"default": {
+				"browser": "./dist/browser.js",
 				"import": "./dist/index.js",
 				"require": "./dist/index.cjs"
 			}

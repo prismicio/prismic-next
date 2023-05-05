@@ -15,6 +15,7 @@ export default defineConfig({
 			entry: {
 				index: "./src/index.ts",
 				"react-server": "./src/react-server/index.ts",
+				browser: "./src/browser/index.ts",
 			},
 		},
 		rollupOptions: {

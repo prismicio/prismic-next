@@ -5,6 +5,18 @@ function buildIncompatiblePreviewModeError(fnName: string) {
 	return `${fnName} is currently incompatible with App Router. Preview Mode is not supported in App Router at this time. Please remove all uses of ${fnName}.`;
 }
 
+export function enableAutoPreviews() {
+	throw new Error(buildIncompatiblePreviewModeError("enableAutoPreviews()"));
+}
+
+export function exitPreview() {
+	throw new Error(buildIncompatiblePreviewModeError("exitPreview()"));
+}
+
+export function redirectToPreviewURL() {
+	throw new Error(buildIncompatiblePreviewModeError("redirectToPreviewURL()"));
+}
+
 export function setPreviewData() {
 	throw new Error(buildIncompatiblePreviewModeError("setPreviewData()"));
 }

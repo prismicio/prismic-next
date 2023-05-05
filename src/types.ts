@@ -1,6 +1,13 @@
 import type { PreviewData } from "next";
 import type { ClientConfig } from "@prismicio/client";
 
+// Add Next.js-specific fetchOptions to `@prismicio/client`.
+declare module "@prismicio/client" {
+	interface RequestInitLike {
+		next?: RequestInit["next"];
+	}
+}
+
 /**
  * Configuration for creating a Prismic client with automatic preview support in
  * Next.js apps.
@@ -13,7 +20,7 @@ export type CreateClientConfig = {
 	 * Pass `previewData` when using outside a Next.js API endpoint.
 	 */
 	previewData?: PreviewData;
-} & FlexibleNextRequestLikeOrNextApiRequestLike &
+} & Partial<FlexibleNextRequestLikeOrNextApiRequestLike> &
 	ClientConfig;
 
 /**

@@ -12,10 +12,7 @@ import {
 /**
  * Preview config for enabling previews with redirectToPreviewURL
  */
-export type RedirectToPreviewURLConfig<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TLinkResolverFunction extends prismic.LinkResolverFunction<any> = prismic.LinkResolverFunction,
-> = (
+export type RedirectToPreviewURLConfig = (
 	| FlexibleNextRequestLike
 	| (FlexibleNextApiRequestLike & {
 			/**
@@ -42,7 +39,7 @@ export type RedirectToPreviewURLConfig<
 	 *
 	 * @see To learn more about Link Resolver: {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver}
 	 */
-	linkResolver?: TLinkResolverFunction;
+	linkResolver?: prismic.LinkResolverFunction;
 
 	/**
 	 * The default redirect URL if a URL cannot be determined for the previewed
@@ -69,10 +66,9 @@ export type RedirectToPreviewURLConfig<
  * Redirects a user to the URL of a previewed Prismic document from within a
  * Next.js API route.
  */
-export async function redirectToPreviewURL<
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	TLinkResolverFunction extends prismic.LinkResolverFunction<any>,
->(config: RedirectToPreviewURLConfig<TLinkResolverFunction>): Promise<void> {
+export async function redirectToPreviewURL(
+	config: RedirectToPreviewURLConfig,
+): Promise<void> {
 	const basePath = config.basePath || "";
 	const request = "request" in config ? config.request : config.req;
 	const isNextRequest = checkIsNextRequest(request);
