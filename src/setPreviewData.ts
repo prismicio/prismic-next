@@ -22,6 +22,8 @@ export type SetPreviewDataConfig = {
 };
 
 /**
+ * **Only use this function in the Pages Directory (/pages).**
+ *
  * Set Prismic preview data for Next.js's Preview Mode.
  */
 export function setPreviewData({ req, res }: SetPreviewDataConfig): void {

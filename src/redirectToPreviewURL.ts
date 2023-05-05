@@ -1,8 +1,6 @@
 import { redirect } from "next/navigation";
 import type * as prismic from "@prismicio/client";
 
-import { checkIsNextRequest } from "./lib/checkIsNextRequest";
-
 import {
 	FlexibleNextApiRequestLike,
 	FlexibleNextRequestLike,
@@ -56,22 +54,21 @@ export type RedirectToPreviewURLConfig = (
 	 * This option can be omitted if the app does not have a `basePath`.
 	 *
 	 * @remarks
-	 * The API route is unable to detect the app's `basePath` automatically. It
-	 * must be provided to `redirectToPreviewURL()` manually.
+	 * The Router Handler or API route is unable to detect the app's `basePath`
+	 * automatically. It must be provided to `redirectToPreviewURL()` manually.
 	 */
 	basePath?: string;
 };
 
 /**
- * Redirects a user to the URL of a previewed Prismic document from within a
- * Next.js API route.
+ * Redirects a visitor to the URL of a previewed Prismic document from within a
+ * Next.js Route Handler or API route.
  */
 export async function redirectToPreviewURL(
 	config: RedirectToPreviewURLConfig,
 ): Promise<void> {
 	const basePath = config.basePath || "";
 	const request = "request" in config ? config.request : config.req;
-	const isNextRequest = checkIsNextRequest(request);
 
 	config.client.enableAutoPreviewsFromReq(request);
 
@@ -80,7 +77,7 @@ export async function redirectToPreviewURL(
 		defaultURL: config.defaultURL || "/",
 	});
 
-	if (isNextRequest) {
+	if ("nextUrl" in request) {
 		redirect(basePath + previewUrl);
 	} else {
 		if (!("res" in config)) {

@@ -18,15 +18,8 @@
 	"sideEffects": false,
 	"exports": {
 		".": {
-			"react-server": {
-				"import": "./dist/react-server.js",
-				"require": "./dist/react-server.cjs"
-			},
-			"default": {
-				"browser": "./dist/browser.js",
-				"import": "./dist/index.js",
-				"require": "./dist/index.cjs"
-			}
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		},
 		"./package.json": "./package.json"
 	},

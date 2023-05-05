@@ -24,18 +24,17 @@ export type EnableAutoPreviewsConfig<
 	>;
 
 	/**
-	 * A Next.js context object (such as the context object from `getStaticProps`
-	 * or `getServerSideProps`).
+	 * **Only used in the Pages Directory (/pages).**
 	 *
-	 * Pass a `context` object when using `enableAutoPreviews` outside a Next.js
-	 * API endpoint.
+	 * The `previewData` object provided in the `getStaticProps()` or
+	 * `getServerSideProps()` context object.
 	 */
 	previewData?: TPreviewData;
 
 	/**
-	 * The request object from a Next.js API route.
+	 * **Only used in the Pages Directory (/pages).**
 	 *
-	 * **Alias**: `request`
+	 * The `req` object from a Next.js API route.
 	 *
 	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 	 */
@@ -67,7 +66,7 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 
 		config.client.enableAutoPreviewsFromReq(config.req);
 	} else {
-		// Assume we are in App Router (`pages` directory).
+		// Assume we are in App Router (`app` directory).
 
 		// We use a function value so the cookie is checked on every
 		// request. We don't have a static value to read from.
