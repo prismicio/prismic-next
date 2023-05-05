@@ -28,7 +28,7 @@ export function PrismicPreviewClient({
 		isAppRouter = false;
 		basePath = router.basePath;
 		isPreviewMode = router.isPreview;
-		refresh = router.reload;
+		refresh = () => router.replace(router.asPath, undefined, { scroll: false });
 	} catch {
 		// Assume we are in App Router. Ignore the error.
 
@@ -100,7 +100,7 @@ export function PrismicPreviewClient({
 		window.addEventListener("prismicPreviewUpdate", handlePrismicPreviewUpdate);
 		window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 
-		if (isPreviewMode) {
+		if (!isPreviewMode) {
 			const prismicPreviewCookie = getPrismicPreviewCookie(
 				globalThis.document.cookie,
 			);
