@@ -52,7 +52,9 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 	config: EnableAutoPreviewsConfig<TPreviewData>,
 ): void => {
 	if ("previewData" in config && config.previewData) {
-		// Assume we are in `getStaticProps()` or `getServerSideProps()` (`pages` directory).
+		// Assume we are in `getStaticProps()` or
+		// `getServerSideProps()` with active Preview Mode (`pages`
+		// directory).
 
 		if (
 			typeof config.previewData === "object" &&
@@ -66,12 +68,27 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 
 		config.client.enableAutoPreviewsFromReq(config.req);
 	} else {
-		// Assume we are in App Router (`app` directory).
+		// Assume we are in App Router (`app` directory) OR
+		// `getStaticProps()`/`getServerSideProps()` with an inactive
+		// Preview Mode (`pages` directory).
 
 		// We use a function value so the cookie is checked on every
 		// request. We don't have a static value to read from.
 		config.client.queryContentFromRef(() => {
-			const cookie = cookies().get(prismic.cookie.preview)?.value;
+			let cookie: string | undefined;
+			try {
+				cookie = cookies().get(prismic.cookie.preview)?.value;
+			} catch {
+				// noop - We are probably in
+				// `getStaticProps()` or `getServerSideProps()`
+				// with inactive Preview Mode where `cookies()`
+				// does not work. We don't need to do any
+				// preview handling.
+
+				return;
+			}
+
+			// We are probably in App Router (`app` directory).
 
 			// We only return the cookie if a Prismic Preview session is active.
 			//
