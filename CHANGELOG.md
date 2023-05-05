@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-alpha.2](https://github.com/prismicio/prismic-next/compare/v1.1.0-alpha.1...v1.1.0-alpha.2) (2023-05-05)
+
+
+### Features
+
+* support for previews in App Router ([#65](https://github.com/prismicio/prismic-next/issues/65)) ([9c6b23b](https://github.com/prismicio/prismic-next/commit/9c6b23ba311c123bc079f29b6acd5b39749f5f52))
+
+
+### Bug Fixes
+
+* regression in `<PrismicPreviewClient>` ([f0a6b2f](https://github.com/prismicio/prismic-next/commit/f0a6b2f4aae5c8d0925245176e42f70dfa3ede55))
+
 ## [1.1.0-alpha.1](https://github.com/prismicio/prismic-next/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2023-04-28)
 
 
