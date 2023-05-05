@@ -11,9 +11,18 @@ test("redirects to the previewed document's URL", async () => {
 				documentId: "foo",
 				token: "bar",
 			},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 	};
 
@@ -34,9 +43,18 @@ test("supports basePath when redirecting to the previewed document's URL", async
 				documentId: "foo",
 				token: "bar",
 			},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 		basePath: "/base/path",
 	};
@@ -58,9 +76,18 @@ test("passes the given link resolver to client.resolvePreviewURL", async () => {
 				documentId: "foo",
 				token: "bar",
 			},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 		linkResolver: () => "linkResolver",
 	};
@@ -71,12 +98,11 @@ test("passes the given link resolver to client.resolvePreviewURL", async () => {
 
 	await redirectToPreviewURL(config);
 
-	expect(resolvePreviewURLSpy).toHaveBeenCalledWith({
-		linkResolver: config.linkResolver,
-		defaultURL: "/",
-		documentID: config.req.query.documentId,
-		previewToken: config.req.query.token,
-	});
+	expect(resolvePreviewURLSpy).toHaveBeenCalledWith(
+		expect.objectContaining({
+			linkResolver: config.linkResolver,
+		}),
+	);
 });
 
 test("passes the given default URL to client.resolvePreviewURL", async () => {
@@ -87,9 +113,18 @@ test("passes the given default URL to client.resolvePreviewURL", async () => {
 				documentId: "foo",
 				token: "bar",
 			},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 		defaultURL: "/baz",
 	};
@@ -100,12 +135,11 @@ test("passes the given default URL to client.resolvePreviewURL", async () => {
 
 	await redirectToPreviewURL(config);
 
-	expect(resolvePreviewURLSpy).toHaveBeenCalledWith({
-		linkResolver: config.linkResolver,
-		defaultURL: config.defaultURL,
-		documentID: config.req.query.documentId,
-		previewToken: config.req.query.token,
-	});
+	expect(resolvePreviewURLSpy).toHaveBeenCalledWith(
+		expect.objectContaining({
+			defaultURL: config.defaultURL,
+		}),
+	);
 });
 
 test("redirects to `/` by default if the URL params do not contain documentId or token", async () => {
@@ -113,9 +147,18 @@ test("redirects to `/` by default if the URL params do not contain documentId or
 		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 		req: {
 			query: {},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 	};
 
@@ -129,9 +172,18 @@ test("supports basePath when redirecting to `/` by default if the URL params do 
 		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 		req: {
 			query: {},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 		basePath: "/base/path",
 	};
@@ -146,9 +198,18 @@ test("redirects to the given default URL if the URL params do not contain docume
 		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 		req: {
 			query: {},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 		defaultURL: "/foo",
 	};
@@ -163,9 +224,18 @@ test("supports basePath when redirecting to the given default URL if the URL par
 		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 		req: {
 			query: {},
+			cookies: {},
 		},
 		res: {
-			redirect: vi.fn().mockImplementation(() => void 0),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 		defaultURL: "/foo",
 		basePath: "/base/path",
