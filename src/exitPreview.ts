@@ -1,46 +1,34 @@
-import type { NextApiResponse, NextApiRequest } from "next";
+import { NextResponse } from "next/server";
+
+import { NextApiRequestLike, NextApiResponseLike } from "./types";
 
 /**
  * Configuration for `exitPreview`.
  */
 export type ExitPreviewConfig = {
 	/**
-	 * The `req` object from a Next.js API route. This is given as a parameter to
-	 * the API route.
+	 * The `req` object from a Next.js API route.
 	 *
-	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 	 */
-	// `req` is no longer used in `exitPreview()`. It previously would
-	// redirect the user to the referring URL, but it no longer has that
-	// behavior.
-	//
-	// `req` is retained as a parameter to make setting up an exit preview
-	// API route easier (this eliminates the awkward need to handle an
-	// unused `req` param).
-	//
-	// It is also retained in case it is needed in the future, such as
-	// reading headers or metadata about the request.
-	req: {
-		headers: NextApiRequest["headers"];
-	};
+	req: NextApiRequestLike;
 
 	/**
-	 * The `res` object from a Next.js API route. This is given as a parameter to
-	 * the API route.
+	 * The `res` object from a Next.js API route.
 	 *
-	 * @see Next.js API route docs: {@link https://nextjs.org/docs/api-routes/introduction}
+	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 	 */
-	res: {
-		clearPreviewData: NextApiResponse["clearPreviewData"];
-		status: NextApiResponse["status"];
-		json: NextApiResponse["json"];
-	};
+	res: NextApiResponseLike;
 };
 
 /**
+ * **Only use this function in the Pages Directory (/pages).**
+ *
  * Exits Next.js's Preview Mode from within a Next.js API route.
  */
-export function exitPreview(config: ExitPreviewConfig): void {
+export async function exitPreview(
+	config: ExitPreviewConfig,
+): Promise<NextResponse | void> {
 	// Exit the current user from Preview Mode.
 	config.res.clearPreviewData();
 

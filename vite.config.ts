@@ -11,12 +11,6 @@ export default defineConfig({
 		react(),
 	],
 	build: {
-		lib: {
-			entry: {
-				index: "./src/index.ts",
-				"react-server": "./src/react-server/index.ts",
-			},
-		},
 		rollupOptions: {
 			plugins: [preserveDirectives() as Plugin],
 		},

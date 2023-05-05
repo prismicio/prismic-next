@@ -18,14 +18,8 @@
 	"sideEffects": false,
 	"exports": {
 		".": {
-			"react-server": {
-				"import": "./dist/react-server.js",
-				"require": "./dist/react-server.cjs"
-			},
-			"default": {
-				"import": "./dist/index.js",
-				"require": "./dist/index.cjs"
-			}
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		},
 		"./package.json": "./package.json"
 	},
@@ -70,7 +64,7 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-tsdoc": "^0.2.17",
 		"happy-dom": "^9.9.2",
-		"next": "^13.0.0",
+		"next": "^13.4.0",
 		"prettier": "^2.8.8",
 		"prettier-plugin-jsdoc": "^0.4.2",
 		"react": "^18.1.0",

@@ -1,23 +1,72 @@
-import type { PreviewData, NextApiRequest } from "next";
+import type { PreviewData } from "next";
 import type { ClientConfig } from "@prismicio/client";
+
+// Add Next.js-specific fetchOptions to `@prismicio/client`.
+declare module "@prismicio/client" {
+	interface RequestInitLike {
+		next?: RequestInit["next"];
+	}
+}
 
 /**
  * Configuration for creating a Prismic client with automatic preview support in
  * Next.js apps.
  */
-export type CreateClientConfig = {
+export type CreateClientConfig = ClientConfig & {
 	/**
-	 * Preview data coming from Next.js context object. This context object comes
-	 * from `getStaticProps` or `getServerSideProps`.
+	 * **Only used in the Pages Directory (/pages).**
 	 *
-	 * Pass `previewData` when using outside a Next.js API endpoint.
+	 * The `previewData` object provided in the `getStaticProps()` or
+	 * `getServerSideProps()` context object.
 	 */
 	previewData?: PreviewData;
 
 	/**
-	 * A Next.js API endpoint request object.
+	 * **Only used in the Pages Directory (/pages).**
 	 *
-	 * Pass a `req` object when using in a Next.js API endpoint.
+	 * The `req` object from a Next.js API route.
+	 *
+	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 	 */
-	req?: NextApiRequest;
-} & ClientConfig;
+	req?: NextApiRequestLike;
+};
+
+/**
+ * The minimal set of properties needed from `next`'s `NextRequest` type.
+ *
+ * This request type is only compatible with Route Handlers defined in the `app`
+ * directory.
+ */
+export type NextRequestLike = {
+	headers: {
+		get(name: string): string | null;
+	};
+	url: string;
+	nextUrl: unknown;
+};
+
+/**
+ * The minimal set of properties needed from `next`'s `NextApiRequest` type.
+ *
+ * This request type is only compatible with API routes defined in the `pages`
+ * directory.
+ */
+export type NextApiRequestLike = {
+	query: Partial<Record<string, string | string[]>>;
+	cookies: Partial<Record<string, string>>;
+};
+
+/**
+ * The minimal set of properties needed from `next`'s `NextApiResponse` type.
+ *
+ * This request type is only compatible with API routes defined in the `pages`
+ * directory.
+ */
+export type NextApiResponseLike = {
+	redirect(url: string): NextApiResponseLike;
+	clearPreviewData(): NextApiResponseLike;
+	status(statusCode: number): NextApiResponseLike;
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	json(body: any): void;
+	setPreviewData(data: object | string): NextApiResponseLike;
+};
