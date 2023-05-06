@@ -12,12 +12,24 @@ function getObjectValues(input, acc = []) {
 }
 
 module.exports = [
-	...new Set([pkg.main, pkg.module, ...getObjectValues(pkg.exports)]),
+	...new Set([
+		pkg.main,
+		pkg.module,
+		...getObjectValues(pkg.bin),
+		...getObjectValues(pkg.exports),
+	]),
 ]
 	.sort()
 	.filter((path) => {
 		return path && path !== "./package.json";
 	})
 	.map((path) => {
-		return { path };
+		return {
+			path,
+			modifyEsbuildConfig(config) {
+				config.platform = "node";
+
+				return config;
+			},
+		};
 	});

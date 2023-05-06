@@ -11,6 +11,12 @@ export default defineConfig({
 		react(),
 	],
 	build: {
+		lib: {
+			entry: {
+				index: "./src/index.ts",
+				"bin/prismic-next": "./src/bin/prismic-next.ts",
+			},
+		},
 		rollupOptions: {
 			plugins: [preserveDirectives() as Plugin],
 		},
