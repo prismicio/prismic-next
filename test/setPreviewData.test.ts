@@ -12,7 +12,15 @@ test("sets preview data if req contains a `token` URL param", () => {
 			cookies: {},
 		},
 		res: {
-			setPreviewData: vi.fn(),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 	};
 
@@ -32,7 +40,15 @@ test("sets preview data if req contains a Prismic preview cookie", () => {
 			},
 		},
 		res: {
-			setPreviewData: vi.fn(),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 	};
 
@@ -54,7 +70,15 @@ test("prioritizes `token` URL param over Prismic preview cookie", () => {
 			},
 		},
 		res: {
-			setPreviewData: vi.fn(),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 	};
 
@@ -72,7 +96,15 @@ test("does not set preview data if req does not a `token` URL param or a Prismic
 			cookies: {},
 		},
 		res: {
-			setPreviewData: vi.fn(),
+			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
+			clearPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
+			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			json: vi.fn(),
+			setPreviewData: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 		},
 	};
 

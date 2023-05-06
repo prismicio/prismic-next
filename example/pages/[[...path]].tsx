@@ -1,13 +1,12 @@
-import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import type * as prismicT from "@prismicio/types";
-import * as prismicH from "@prismicio/helpers";
+import type { GetStaticPaths, GetStaticProps } from "next";
+import * as prismic from "@prismicio/client";
 import { PrismicText, PrismicRichText } from "@prismicio/react";
 
 import { createClient, linkResolver } from "../prismicio";
 
-type PageDocument = prismicT.PrismicDocumentWithUID<{
-	title: prismicT.RichTextField;
-	description: prismicT.RichTextField;
+type PageDocument = prismic.PrismicDocumentWithUID<{
+	title: prismic.RichTextField;
+	description: prismic.RichTextField;
 }>;
 
 type HomeProps = {
@@ -18,7 +17,7 @@ type HomeParams = {
 	path: string[];
 };
 
-const Home: NextPage<HomeProps> = ({ page }) => {
+const Home = ({ page }: HomeProps) => {
 	return (
 		<div>
 			<h1>
@@ -59,7 +58,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 
 	const pages = await client.getAllByType<PageDocument>("page");
 	const paths = pages
-		.map((page) => prismicH.asLink(page, linkResolver))
+		.map((page) => prismic.asLink(page, linkResolver))
 		.filter((path): path is NonNullable<typeof path> => Boolean(path));
 
 	return {

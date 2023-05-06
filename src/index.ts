@@ -1,21 +1,24 @@
-export { setPreviewData, SetPreviewDataConfig } from "./setPreviewData";
+export { setPreviewData } from "./setPreviewData";
+export type { SetPreviewDataConfig } from "./setPreviewData";
 
-export { exitPreview, ExitPreviewConfig } from "./exitPreview";
+export { exitPreview } from "./exitPreview";
+export type { ExitPreviewConfig } from "./exitPreview";
 
-export { PrismicPreview, PrismicPreviewProps } from "./PrismicPreview";
+export { PrismicPreview } from "./PrismicPreview";
+export type { PrismicPreviewProps } from "./PrismicPreview";
 
-export {
-	EnableAutoPreviewsConfig,
-	enableAutoPreviews,
-} from "./enableAutoPreviews";
+export { PrismicNextLink } from "./PrismicNextLink";
+export type { PrismicNextLinkProps } from "./PrismicNextLink";
 
-export {
-	RedirectToPreviewURLConfig,
-	redirectToPreviewURL,
-} from "./redirectToPreviewURL";
+export { enableAutoPreviews } from "./enableAutoPreviews";
+export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
 
-export { PrismicNextImage, PrismicNextImageProps } from "./PrismicNextImage";
+export { redirectToPreviewURL } from "./redirectToPreviewURL";
+export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL";
+
+export { PrismicNextImage } from "./PrismicNextImage";
+export type { PrismicNextImageProps } from "./PrismicNextImage";
 
 export { imgixLoader } from "./imgixLoader";
 
-export { CreateClientConfig } from "./types";
+export type { CreateClientConfig } from "./types";

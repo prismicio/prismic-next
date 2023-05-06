@@ -5,12 +5,15 @@ import { exitPreview, ExitPreviewConfig } from "../src";
 test("clears preview data", () => {
 	const config: ExitPreviewConfig = {
 		res: {
-			clearPreviewData: vi.fn(),
-			json: vi.fn(),
+			redirect: vi.fn().mockImplementation(() => config.res),
+			clearPreviewData: vi.fn().mockImplementation(() => config.res),
 			status: vi.fn().mockImplementation(() => config.res),
+			json: vi.fn(),
+			setPreviewData: vi.fn().mockImplementation(() => config.res),
 		},
 		req: {
-			headers: {},
+			query: {},
+			cookies: {},
 		},
 	};
 
@@ -22,12 +25,15 @@ test("clears preview data", () => {
 test("responds with 205 status code and JSON success message", () => {
 	const config: ExitPreviewConfig = {
 		res: {
-			clearPreviewData: vi.fn(),
-			json: vi.fn(),
+			redirect: vi.fn().mockImplementation(() => config.res),
+			clearPreviewData: vi.fn().mockImplementation(() => config.res),
 			status: vi.fn().mockImplementation(() => config.res),
+			json: vi.fn(),
+			setPreviewData: vi.fn().mockImplementation(() => config.res),
 		},
 		req: {
-			headers: {},
+			query: {},
+			cookies: {},
 		},
 	};
 

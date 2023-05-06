@@ -2,6 +2,54 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0-alpha.2](https://github.com/prismicio/prismic-next/compare/v1.1.0-alpha.1...v1.1.0-alpha.2) (2023-05-05)
+
+
+### Features
+
+* support for previews in App Router ([#65](https://github.com/prismicio/prismic-next/issues/65)) ([9c6b23b](https://github.com/prismicio/prismic-next/commit/9c6b23ba311c123bc079f29b6acd5b39749f5f52))
+
+
+### Bug Fixes
+
+* regression in `<PrismicPreviewClient>` ([f0a6b2f](https://github.com/prismicio/prismic-next/commit/f0a6b2f4aae5c8d0925245176e42f70dfa3ede55))
+
+## [1.1.0-alpha.1](https://github.com/prismicio/prismic-next/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2023-04-28)
+
+
+### Features
+
+* **PrismicNextLink:** restore `href` prop ([ceaf8c6](https://github.com/prismicio/prismic-next/commit/ceaf8c6d46dd3e62a0437bc9a1cad7d73447ffad))
+
+
+### Bug Fixes
+
+* bundle `@prismicio/client` v7 to prevent `npm install` issues ([eaa5a30](https://github.com/prismicio/prismic-next/commit/eaa5a3048553682efa9ddceae572967cc7767f54))
+* **PrismicNextLink:** remove `href` prop ([057ec51](https://github.com/prismicio/prismic-next/commit/057ec51fb55909e9da9d175ee2d757501b19245e))
+
+
+### Refactor
+
+* use more accurate name for unsupported error builder ([faf568c](https://github.com/prismicio/prismic-next/commit/faf568c3525c2a77ec1ae7b4054a7a8585fca6d5))
+
+## [1.1.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.0.3...v1.1.0-alpha.0) (2023-04-25)
+
+
+### Features
+
+* support React Server Components and App Router ([be9e1a1](https://github.com/prismicio/prismic-next/commit/be9e1a1a3f400ce0d7e8d4e6709081127b6c0398))
+
+
+### Bug Fixes
+
+* support projects using `@prismicio/client` v6 ([0c48157](https://github.com/prismicio/prismic-next/commit/0c481577691331608b05ab8c049b8572442f6f04))
+
+
+### Chore
+
+* **deps:** update all dependencies ([9b2cd75](https://github.com/prismicio/prismic-next/commit/9b2cd752eacfae5e5c3ded7f22027c51c0c47204))
+* fix type issue in `vite.config.ts` ([4fb85ee](https://github.com/prismicio/prismic-next/commit/4fb85eea5c35b5107501701135a9956d389b5e16))
+
 ### [1.0.3](https://github.com/prismicio/prismic-next/compare/v1.0.2...v1.0.3) (2023-02-22)
 
 
