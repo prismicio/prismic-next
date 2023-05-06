@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.1.0](https://github.com/prismicio/prismic-next/compare/v1.0.3...v1.1.0) (2023-05-06)
+
+
+### Features
+
+* support App Router ([#63](https://github.com/prismicio/prismic-next/issues/63)) ([90d795c](https://github.com/prismicio/prismic-next/commit/90d795cb9833beb57ef2ab2cefb95760859d7ec6)), closes [#65](https://github.com/prismicio/prismic-next/issues/65)
+
 ## [1.1.0-alpha.2](https://github.com/prismicio/prismic-next/compare/v1.1.0-alpha.1...v1.1.0-alpha.2) (2023-05-05)
 
 
