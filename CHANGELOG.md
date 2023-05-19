@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/prismicio/prismic-next/compare/v1.1.0...v1.2.0) (2023-05-19)
+
+
+### Features
+
+* add `prismic-next` CLI to clear cached `/api/v2` requests ([#66](https://github.com/prismicio/prismic-next/issues/66)) ([e257ae1](https://github.com/prismicio/prismic-next/commit/e257ae1381bd6fbcadff2a45b32ae299ba9e5c84))
+
+
+### Bug Fixes
+
+* **PrismicNextImage:** log error if no alternative text is available (only in non-production environments) ([#68](https://github.com/prismicio/prismic-next/issues/68)) ([2e01b67](https://github.com/prismicio/prismic-next/commit/2e01b67fcecbc74488aecced3567b868a65572be))
+
 ## [1.1.0](https://github.com/prismicio/prismic-next/compare/v1.0.3...v1.1.0) (2023-05-06)
 
 
