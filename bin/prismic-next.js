@@ -1,3 +1,3 @@
 #!/usr/bin/env node
 
-import("../dist/bin/prismic-next.cjs");
+import("../dist/cli.cjs").then((mod) => mod.run(process.argv));

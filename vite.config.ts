@@ -14,7 +14,7 @@ export default defineConfig({
 		lib: {
 			entry: {
 				index: "./src/index.ts",
-				"bin/prismic-next": "./src/bin/prismic-next.ts",
+				cli: "./src/cli/index.ts",
 			},
 		},
 		rollupOptions: {
