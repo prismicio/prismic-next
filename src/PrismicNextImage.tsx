@@ -4,7 +4,6 @@ import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import * as prismic from "@prismicio/client";
 
-import { __PRODUCTION__ } from "./lib/__PRODUCTION__";
 import { devMsg } from "./lib/devMsg";
 
 import { imgixLoader } from "./imgixLoader";
@@ -86,7 +85,7 @@ export const PrismicNextImage = ({
 	fallback = null,
 	...restProps
 }: PrismicNextImageProps): JSX.Element => {
-	if (!__PRODUCTION__) {
+	if (process.env.NODE_ENV !== "production") {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
 				`[PrismicNextImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
@@ -121,16 +120,27 @@ export const PrismicNextImage = ({
 			resolvedWidth = castedHeight * ar;
 		}
 
+		// A non-null assertion is required since we can't statically
+		// know if an alt attribute is available.
+		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+		const resolvedAlt = (alt ?? (field.alt || fallbackAlt))!;
+
+		if (
+			process.env.NODE_ENV !== "production" &&
+			typeof resolvedAlt !== "string"
+		) {
+			console.error(
+				`[PrismicNextImage] The following image is missing an "alt" property. Please add Alternative Text to the image in Prismic. To mark the image as decorative instead, add one of \`alt=""\` or \`fallbackAlt=""\`.`,
+				src,
+			);
+		}
+
 		return (
 			<Image
 				src={src}
 				width={fill ? undefined : resolvedWidth}
 				height={fill ? undefined : resolvedHeight}
-				// A non-null assertion is required since we
-				// can't statically know if an alt attribute is
-				// available.
-				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-				alt={(alt ?? (field.alt || fallbackAlt))!}
+				alt={resolvedAlt}
 				fill={fill}
 				loader={imgixLoader}
 				{...restProps}

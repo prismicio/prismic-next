@@ -157,9 +157,15 @@ test("alt is undefined if the field does not have an alt value", (ctx) => {
 	const field = ctx.mock.value.image();
 	field.alt = null;
 
+	const consoleErrorSpy = vi
+		.spyOn(console, "error")
+		.mockImplementation(() => void 0);
+
 	const img = renderJSON(<PrismicNextImage field={field} />);
 
 	expect(img?.props.alt).toBe(undefined);
+
+	consoleErrorSpy.mockRestore();
 });
 
 test("supports an explicit decorative fallback alt value if given", (ctx) => {
@@ -225,6 +231,24 @@ test("warns if a non-decorative alt value is given", (ctx) => {
 	);
 
 	consoleWarnSpy.mockRestore();
+});
+
+test("logs error if no alt text is available", (ctx) => {
+	const field = ctx.mock.value.image();
+	field.alt = null;
+
+	const consoleErrorSpy = vi
+		.spyOn(console, "error")
+		.mockImplementation(() => void 0);
+
+	renderJSON(<PrismicNextImage field={field} />);
+
+	expect(consoleErrorSpy).toHaveBeenCalledWith(
+		expect.stringMatching(/missing an "alt" property/),
+		field.url,
+	);
+
+	consoleErrorSpy.mockRestore();
 });
 
 test("supports the fill prop", (ctx) => {
