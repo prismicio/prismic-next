@@ -24,12 +24,12 @@ function color(colorCode: number, string: string) {
 
 function warn(string: string) {
 	// Yellow
-	return console.warn(`${color(33, "warn")}  - ${string}`);
+	return console.warn(`- ${color(33, "warn")} ${string}`);
 }
 
 function info(string: string) {
 	// Magenta
-	return console.info(`${color(35, "info")}  - ${string}`);
+	return console.info(`- ${color(35, "info")} ${string}`);
 }
 
 type Args = {
