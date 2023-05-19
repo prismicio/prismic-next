@@ -11,6 +11,12 @@ export default defineConfig({
 		react(),
 	],
 	build: {
+		lib: {
+			entry: {
+				index: "./src/index.ts",
+				cli: "./src/cli/index.ts",
+			},
+		},
 		rollupOptions: {
 			plugins: [preserveDirectives() as Plugin],
 		},
