@@ -2,7 +2,7 @@ import { PreviewData } from "next";
 import { cookies } from "next/headers";
 import * as prismic from "@prismicio/client";
 
-import { NextApiRequestLike } from "./types";
+import { NextApiRequestLike, PrismicPreviewData } from "./types";
 
 /**
  * Configuration for `enableAutoPreviews`.
@@ -41,6 +41,10 @@ export type EnableAutoPreviewsConfig<
 	req?: NextApiRequestLike;
 };
 
+const isPrismicPreviewData = (input: unknown): input is PrismicPreviewData => {
+	return typeof input === "object" && input !== null && "ref" in input;
+};
+
 /**
  * Configures a Prismic client to automatically query draft content during a
  * preview session. It either takes in a Next.js `getStaticProps` context object
@@ -56,11 +60,7 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 		// `getServerSideProps()` with active Preview Mode (`pages`
 		// directory).
 
-		if (
-			typeof config.previewData === "object" &&
-			"ref" in config.previewData &&
-			typeof config.previewData.ref === "string"
-		) {
+		if (isPrismicPreviewData(config.previewData)) {
 			config.client.queryContentFromRef(config.previewData.ref);
 		}
 	} else if ("req" in config && config.req) {

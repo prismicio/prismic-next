@@ -9,6 +9,13 @@ declare module "@prismicio/client" {
 }
 
 /**
+ * Prismic data saved in Next.js Preview Mode's object.
+ */
+export type PrismicPreviewData = {
+	ref: string;
+};
+
+/**
  * Configuration for creating a Prismic client with automatic preview support in
  * Next.js apps.
  */

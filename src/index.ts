@@ -21,4 +21,4 @@ export type { PrismicNextImageProps } from "./PrismicNextImage";
 
 export { imgixLoader } from "./imgixLoader";
 
-export type { CreateClientConfig } from "./types";
+export type { CreateClientConfig, PrismicPreviewData } from "./types";

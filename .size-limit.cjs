@@ -21,7 +21,7 @@ module.exports = [
 ]
 	.sort()
 	.filter((path) => {
-		return path && path !== "./package.json";
+		return path && path !== "./package.json" && !path.endsWith(".d.ts");
 	})
 	.map((path) => {
 		return {

@@ -18,8 +18,14 @@
 	"sideEffects": false,
 	"exports": {
 		".": {
-			"import": "./dist/index.js",
-			"require": "./dist/index.cjs"
+			"require": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.cjs"
+			},
+			"import": {
+				"types": "./dist/index.d.ts",
+				"default": "./dist/index.js"
+			}
 		},
 		"./package.json": "./package.json"
 	},
@@ -53,7 +59,7 @@
 		"mri": "^1.2.0"
 	},
 	"devDependencies": {
-		"@prismicio/client": "^7.0.0-alpha.3",
+		"@prismicio/client": "^7.0.1",
 		"@prismicio/mock": "^0.2.0",
 		"@size-limit/preset-small-lib": "^8.2.4",
 		"@types/react-test-renderer": "^18.0.0",

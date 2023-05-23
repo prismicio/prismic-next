@@ -123,3 +123,15 @@ test("enables auto previews in Pages Directory for the given client and previewD
 
 	expect(spy).toHaveBeenCalledWith("ref");
 });
+
+test("does not enable auto previews in Pages Directory if the given previewData is invalid", () => {
+	const config: EnableAutoPreviewsConfig = {
+		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+		previewData: {},
+	};
+	const spy = vi.spyOn(config.client, "queryContentFromRef");
+
+	enableAutoPreviews(config);
+
+	expect(spy).not.toHaveBeenCalled();
+});
