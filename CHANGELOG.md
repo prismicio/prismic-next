@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.2.1](https://github.com/prismicio/prismic-next/compare/v1.2.0...v1.2.1) (2023-05-23)
+
+
+### Bug Fixes
+
+* **cli:** update warn and info style to match new Next.js style ([c661c9f](https://github.com/prismicio/prismic-next/commit/c661c9f041558f0b55c97f947da46984c5a6485c))
+* properly resolve types when using TypeScript's latest module resolution strategy ([#70](https://github.com/prismicio/prismic-next/issues/70)) ([7966d39](https://github.com/prismicio/prismic-next/commit/7966d39992f179dc55b32051d89140b815257aa9))
+
 ## [1.2.0](https://github.com/prismicio/prismic-next/compare/v1.1.0...v1.2.0) (2023-05-19)
 
 
