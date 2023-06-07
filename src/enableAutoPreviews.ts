@@ -1,5 +1,5 @@
 import { PreviewData } from "next";
-import { cookies } from "next/headers";
+import { cookies, draftMode } from "next/headers";
 import * as prismic from "@prismicio/client";
 
 import { NextApiRequestLike, PrismicPreviewData } from "./types";
@@ -75,20 +75,29 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 		// We use a function value so the cookie is checked on every
 		// request. We don't have a static value to read from.
 		config.client.queryContentFromRef(() => {
-			let cookie: string | undefined;
+			let isDraftModeEnabled = false;
 			try {
-				cookie = cookies().get(prismic.cookie.preview)?.value;
+				isDraftModeEnabled = draftMode().isEnabled;
 			} catch {
-				// noop - We are probably in
-				// `getStaticProps()` or `getServerSideProps()`
-				// with inactive Preview Mode where `cookies()`
-				// does not work. We don't need to do any
-				// preview handling.
+				// This catch block may be reached if
+				// `draftMode()` is called in a place that does
+				// not have access to its async storage. We can
+				// ignore this case.
 
 				return;
 			}
 
-			// We are probably in App Router (`app` directory).
+			let cookie: string | undefined;
+			try {
+				cookie = cookies().get(prismic.cookie.preview)?.value;
+			} catch {
+				// We are probably in `getStaticProps()` or
+				// `getServerSideProps()` with inactive Preview
+				// Mode where `cookies()` does not work. We
+				// don't need to do any preview handling.
+
+				return;
+			}
 
 			// We only return the cookie if a Prismic Preview session is active.
 			//
@@ -104,7 +113,7 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 			// 			preview: "https://example-prismic-repo.prismic.io/previews/abc:123?websitePreviewId=xyz"
 			// 		}
 			// 	}
-			if (cookie && /\.prismic\.io/.test(cookie)) {
+			if (isDraftModeEnabled && cookie && /\.prismic\.io/.test(cookie)) {
 				return cookie;
 			}
 		});

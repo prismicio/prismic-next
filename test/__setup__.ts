@@ -12,4 +12,6 @@ vi.stubGlobal("Headers", Headers);
 
 beforeEach(async (ctx) => {
 	ctx.mock = createMockFactory({ seed: ctx.meta.name });
+
+	vi.clearAllMocks();
 });

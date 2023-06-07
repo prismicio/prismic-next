@@ -77,23 +77,17 @@ export function PrismicPreviewClient({
 			// Prevent the toolbar from reloading the page.
 			event.preventDefault();
 
-			if (isAppRouter) {
+			const resolvedExitPreviewURL = basePath + exitPreviewURL;
+
+			// Exit Next.js Preview Mode via the given preview API endpoint.
+			const res = await globalThis.fetch(resolvedExitPreviewURL);
+
+			if (res.ok) {
 				refresh();
 			} else {
-				const resolvedExitPreviewURL = basePath + exitPreviewURL;
-
-				// Exit Next.js Preview Mode via the given preview API endpoint.
-				const res = await globalThis.fetch(resolvedExitPreviewURL);
-
-				if (res.ok) {
-					// TODO: Can we do better than a full page reload?
-					// globalThis.location.reload();
-					refresh();
-				} else {
-					console.error(
-						`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
-					);
-				}
+				console.error(
+					`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
+				);
 			}
 		};
 

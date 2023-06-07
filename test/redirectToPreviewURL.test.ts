@@ -1,247 +1,356 @@
-import { test, expect, vi } from "vitest";
+import { it, expect, vi, describe } from "vitest";
+import { redirect } from "next/navigation";
 import * as prismic from "@prismicio/client";
 
 import { redirectToPreviewURL, RedirectToPreviewURLConfig } from "../src";
 
-test("redirects to the previewed document's URL", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {
-				documentId: "foo",
-				token: "bar",
+vi.mock("next/navigation", () => {
+	return {
+		redirect: vi.fn(),
+	};
+});
+
+describe("App Router", () => {
+	it("redirects to the previewed document's URL", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			request: {
+				url: "/foo",
+				nextUrl: Symbol(),
+				headers: {
+					get: vi.fn(),
+				},
 			},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-	};
+		};
 
-	vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
-		async () => "/baz",
-	);
+		vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
+			async () => "/bar",
+		);
 
-	await redirectToPreviewURL(config);
+		await redirectToPreviewURL(config);
 
-	expect(config.res.redirect).toHaveBeenCalledWith("/baz");
-});
+		expect(redirect).toHaveBeenCalledWith("/bar");
+	});
 
-test("supports basePath when redirecting to the previewed document's URL", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {
-				documentId: "foo",
-				token: "bar",
+	it("supports basePath when redirecting to the previewed document's URL", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			request: {
+				url: "/foo",
+				nextUrl: Symbol(),
+				headers: {
+					get: vi.fn(),
+				},
 			},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-		basePath: "/base/path",
-	};
+			basePath: "/base/path",
+		};
 
-	vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
-		async () => "/baz",
-	);
+		vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
+			async () => "/bar",
+		);
 
-	await redirectToPreviewURL(config);
+		await redirectToPreviewURL(config);
 
-	expect(config.res.redirect).toHaveBeenCalledWith("/base/path/baz");
+		expect(redirect).toHaveBeenCalledWith("/base/path/bar");
+	});
 });
 
-test("passes the given link resolver to client.resolvePreviewURL", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {
-				documentId: "foo",
-				token: "bar",
+describe("Pages Router", () => {
+	it("redirects to the previewed document's URL", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {
+					documentId: "foo",
+					token: "bar",
+				},
+				cookies: {},
 			},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-		linkResolver: () => "linkResolver",
-	};
-
-	const resolvePreviewURLSpy = vi
-		.spyOn(config.client, "resolvePreviewURL")
-		.mockImplementation(async () => "/baz");
-
-	await redirectToPreviewURL(config);
-
-	expect(resolvePreviewURLSpy).toHaveBeenCalledWith(
-		expect.objectContaining({
-			linkResolver: config.linkResolver,
-		}),
-	);
-});
-
-test("passes the given default URL to client.resolvePreviewURL", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {
-				documentId: "foo",
-				token: "bar",
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
 			},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-		defaultURL: "/baz",
-	};
+		};
 
-	const resolvePreviewURLSpy = vi
-		.spyOn(config.client, "resolvePreviewURL")
-		.mockImplementation(async () => "/qux");
+		vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
+			async () => "/baz",
+		);
 
-	await redirectToPreviewURL(config);
+		await redirectToPreviewURL(config);
 
-	expect(resolvePreviewURLSpy).toHaveBeenCalledWith(
-		expect.objectContaining({
-			defaultURL: config.defaultURL,
-		}),
-	);
-});
+		expect(config.res.redirect).toHaveBeenCalledWith("/baz");
+	});
 
-test("redirects to `/` by default if the URL params do not contain documentId or token", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-	};
+	it("supports basePath when redirecting to the previewed document's URL", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {
+					documentId: "foo",
+					token: "bar",
+				},
+				cookies: {},
+			},
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+			},
+			basePath: "/base/path",
+		};
 
-	await redirectToPreviewURL(config);
+		vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
+			async () => "/baz",
+		);
 
-	expect(config.res.redirect).toHaveBeenCalledWith("/");
-});
+		await redirectToPreviewURL(config);
 
-test("supports basePath when redirecting to `/` by default if the URL params do not contain documentId or token", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-		basePath: "/base/path",
-	};
+		expect(config.res.redirect).toHaveBeenCalledWith("/base/path/baz");
+	});
 
-	await redirectToPreviewURL(config);
+	it("passes the given link resolver to client.resolvePreviewURL", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {
+					documentId: "foo",
+					token: "bar",
+				},
+				cookies: {},
+			},
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+			},
+			linkResolver: () => "linkResolver",
+		};
 
-	expect(config.res.redirect).toHaveBeenCalledWith("/base/path/");
-});
+		const resolvePreviewURLSpy = vi
+			.spyOn(config.client, "resolvePreviewURL")
+			.mockImplementation(async () => "/baz");
 
-test("redirects to the given default URL if the URL params do not contain documentId or token", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-		defaultURL: "/foo",
-	};
+		await redirectToPreviewURL(config);
 
-	await redirectToPreviewURL(config);
+		expect(resolvePreviewURLSpy).toHaveBeenCalledWith(
+			expect.objectContaining({
+				linkResolver: config.linkResolver,
+			}),
+		);
+	});
 
-	expect(config.res.redirect).toHaveBeenCalledWith("/foo");
-});
+	it("passes the given default URL to client.resolvePreviewURL", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {
+					documentId: "foo",
+					token: "bar",
+				},
+				cookies: {},
+			},
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+			},
+			defaultURL: "/baz",
+		};
 
-test("supports basePath when redirecting to the given default URL if the URL params do not contain documentId or token", async () => {
-	const config: RedirectToPreviewURLConfig = {
-		client: prismic.createClient("qwerty", { fetch: vi.fn() }),
-		req: {
-			query: {},
-			cookies: {},
-		},
-		res: {
-			redirect: vi.fn().mockImplementation(() => "res" in config && config.res),
-			clearPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
-			json: vi.fn(),
-			setPreviewData: vi
-				.fn()
-				.mockImplementation(() => "res" in config && config.res),
-		},
-		defaultURL: "/foo",
-		basePath: "/base/path",
-	};
+		const resolvePreviewURLSpy = vi
+			.spyOn(config.client, "resolvePreviewURL")
+			.mockImplementation(async () => "/qux");
 
-	await redirectToPreviewURL(config);
+		await redirectToPreviewURL(config);
 
-	expect(config.res.redirect).toHaveBeenCalledWith("/base/path/foo");
+		expect(resolvePreviewURLSpy).toHaveBeenCalledWith(
+			expect.objectContaining({
+				defaultURL: config.defaultURL,
+			}),
+		);
+	});
+
+	it("redirects to `/` by default if the URL params do not contain documentId or token", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {},
+				cookies: {},
+			},
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+			},
+		};
+
+		await redirectToPreviewURL(config);
+
+		expect(config.res.redirect).toHaveBeenCalledWith("/");
+	});
+
+	it("supports basePath when redirecting to `/` by default if the URL params do not contain documentId or token", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {},
+				cookies: {},
+			},
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+			},
+			basePath: "/base/path",
+		};
+
+		await redirectToPreviewURL(config);
+
+		expect(config.res.redirect).toHaveBeenCalledWith("/base/path/");
+	});
+
+	it("redirects to the given default URL if the URL params do not contain documentId or token", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {},
+				cookies: {},
+			},
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+			},
+			defaultURL: "/foo",
+		};
+
+		await redirectToPreviewURL(config);
+
+		expect(config.res.redirect).toHaveBeenCalledWith("/foo");
+	});
+
+	it("supports basePath when redirecting to the given default URL if the URL params do not contain documentId or token", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {},
+				cookies: {},
+			},
+			res: {
+				redirect: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				clearPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				setHeader: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+				json: vi.fn(),
+				setPreviewData: vi
+					.fn()
+					.mockImplementation(() => "res" in config && config.res),
+			},
+			defaultURL: "/foo",
+			basePath: "/base/path",
+		};
+
+		await redirectToPreviewURL(config);
+
+		expect(config.res.redirect).toHaveBeenCalledWith("/base/path/foo");
+	});
+
+	it("throws if res is not provided", async () => {
+		// @ts-expect-error - We are purposely omitting `res` from the
+		// config.
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			req: {
+				query: {
+					documentId: "foo",
+					token: "bar",
+				},
+				cookies: {},
+			},
+		};
+
+		vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
+			async () => "/baz",
+		);
+
+		expect(async () => {
+			await redirectToPreviewURL(config);
+		}).rejects.toThrow(/the `res` object from the api route must be provided/i);
+	});
 });
