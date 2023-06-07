@@ -16,7 +16,9 @@ test("sets preview data if req contains a `token` URL param", () => {
 			clearPreviewData: vi
 				.fn()
 				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			setHeader: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 			json: vi.fn(),
 			setPreviewData: vi
 				.fn()
@@ -44,7 +46,9 @@ test("sets preview data if req contains a Prismic preview cookie", () => {
 			clearPreviewData: vi
 				.fn()
 				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			setHeader: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 			json: vi.fn(),
 			setPreviewData: vi
 				.fn()
@@ -74,7 +78,9 @@ test("prioritizes `token` URL param over Prismic preview cookie", () => {
 			clearPreviewData: vi
 				.fn()
 				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			setHeader: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 			json: vi.fn(),
 			setPreviewData: vi
 				.fn()
@@ -100,7 +106,9 @@ test("does not set preview data if req does not a `token` URL param or a Prismic
 			clearPreviewData: vi
 				.fn()
 				.mockImplementation(() => "res" in config && config.res),
-			status: vi.fn().mockImplementation(() => "res" in config && config.res),
+			setHeader: vi
+				.fn()
+				.mockImplementation(() => "res" in config && config.res),
 			json: vi.fn(),
 			setPreviewData: vi
 				.fn()
