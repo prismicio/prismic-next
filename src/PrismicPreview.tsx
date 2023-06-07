@@ -1,6 +1,7 @@
+import Script from "next/script";
+import { draftMode } from "next/headers";
 import * as React from "react";
 import * as prismic from "@prismicio/client";
-import Script from "next/script";
 
 import { PrismicPreviewClient } from "./PrismicPreviewClient";
 
@@ -51,11 +52,16 @@ export function PrismicPreview({
 	...props
 }: PrismicPreviewProps): JSX.Element {
 	const toolbarSrc = prismic.getToolbarSrc(repositoryName);
+	const isDraftMode = draftMode().isEnabled;
 
 	return (
 		<>
 			{children}
-			<PrismicPreviewClient repositoryName={repositoryName} {...props} />
+			<PrismicPreviewClient
+				repositoryName={repositoryName}
+				isDraftMode={isDraftMode}
+				{...props}
+			/>
 			<Script src={toolbarSrc} strategy="lazyOnload" />
 		</>
 	);

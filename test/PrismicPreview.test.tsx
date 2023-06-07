@@ -65,6 +65,16 @@ vi.mock("next/script", () => {
 	};
 });
 
+vi.mock("next/headers", () => {
+	return {
+		draftMode: vi.fn(() => {
+			return {
+				isEnabled: false,
+			};
+		}),
+	};
+});
+
 const fetch = vi.fn(async () => {
 	return {
 		ok: true,
@@ -339,6 +349,7 @@ test("supports shared links", async () => {
 	});
 
 	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
+		_tracker: "_tracker",
 		"qwerty.prismic.io": {},
 	})}`;
 

@@ -9,15 +9,18 @@ import { getPreviewCookieRepositoryName } from "./lib/getPreviewCookieRepository
 
 import { PrismicPreviewProps } from "./PrismicPreview";
 
-type PrismicPreviewClientProps = Omit<PrismicPreviewProps, "children">;
+type PrismicPreviewClientProps = Omit<PrismicPreviewProps, "children"> & {
+	isDraftMode: boolean;
+};
 
 export function PrismicPreviewClient({
 	repositoryName,
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
+	isDraftMode,
 }: PrismicPreviewClientProps): null {
+	let isPreviewActive = isDraftMode;
 	let isAppRouter = true;
-	let isPreviewMode = false;
 	let basePath = "";
 	let refresh: () => void;
 
@@ -27,7 +30,7 @@ export function PrismicPreviewClient({
 
 		isAppRouter = false;
 		basePath = router.basePath;
-		isPreviewMode = router.isPreview;
+		isPreviewActive ||= router.isPreview;
 		refresh = () => router.replace(router.asPath, undefined, { scroll: false });
 	} catch {
 		// Assume we are in App Router. Ignore the error.
@@ -94,7 +97,7 @@ export function PrismicPreviewClient({
 		window.addEventListener("prismicPreviewUpdate", handlePrismicPreviewUpdate);
 		window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 
-		if (!isPreviewMode) {
+		if (!isPreviewActive) {
 			const prismicPreviewCookie = getPrismicPreviewCookie(
 				globalThis.document.cookie,
 			);
@@ -143,7 +146,7 @@ export function PrismicPreviewClient({
 		basePath,
 		exitPreviewURL,
 		isAppRouter,
-		isPreviewMode,
+		isPreviewActive,
 		refresh,
 		repositoryName,
 		updatePreviewURL,
