@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.2.1...v1.3.0-alpha.0) (2023-06-10)
+
+
+### Features
+
+* support Draft Mode with static rendering ([b839d19](https://github.com/prismicio/prismic-next/commit/b839d198136e1667a010775c30356283b393a71c))
+
+
+### Bug Fixes
+
+* restore preview share link support ([73f2479](https://github.com/prismicio/prismic-next/commit/73f247922bcff0647e485a0ef8be4829f0fe4315))
+
+
+### Chore
+
+* remove experimental `prismic-next` CLI ([#71](https://github.com/prismicio/prismic-next/issues/71)) ([812ddd9](https://github.com/prismicio/prismic-next/commit/812ddd99f64a04e865c3ff4c5b885ccd770a51c7))
+* update to latest Next.js canary ([0e8d530](https://github.com/prismicio/prismic-next/commit/0e8d53098e746ed2c33fb73226d758cc66f16187))
+
 ### [1.2.1](https://github.com/prismicio/prismic-next/compare/v1.2.0...v1.2.1) (2023-05-23)
 
 
