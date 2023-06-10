@@ -1,5 +1,5 @@
+import { draftMode, cookies } from "next/headers";
 import { PreviewData } from "next";
-import { cookies, draftMode } from "next/headers";
 import * as prismic from "@prismicio/client";
 
 import { NextApiRequestLike, PrismicPreviewData } from "./types";
@@ -87,6 +87,10 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 				return;
 			}
 
+			if (!isDraftModeEnabled) {
+				return;
+			}
+
 			let cookie: string | undefined;
 			try {
 				cookie = cookies().get(prismic.cookie.preview)?.value;
@@ -113,7 +117,7 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 			// 			preview: "https://example-prismic-repo.prismic.io/previews/abc:123?websitePreviewId=xyz"
 			// 		}
 			// 	}
-			if (isDraftModeEnabled && cookie && /\.prismic\.io/.test(cookie)) {
+			if (cookie && /\.prismic\.io/.test(cookie)) {
 				return cookie;
 			}
 		});
