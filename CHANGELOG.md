@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0-alpha.1](https://github.com/prismicio/prismic-next/compare/v1.3.0-alpha.0...v1.3.0-alpha.1) (2023-06-10)
+
+
+### Bug Fixes
+
+* prevent `cookies()` when Draft Mode is disabled ([5485fa0](https://github.com/prismicio/prismic-next/commit/5485fa0ad872723f234c1a5537a6a7b729013ba7))
+
 ## [1.3.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.2.1...v1.3.0-alpha.0) (2023-06-10)
 
 
