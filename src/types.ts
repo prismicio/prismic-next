@@ -72,7 +72,7 @@ export type NextApiRequestLike = {
 export type NextApiResponseLike = {
 	redirect(url: string): NextApiResponseLike;
 	clearPreviewData(): NextApiResponseLike;
-	status(statusCode: number): NextApiResponseLike;
+	setHeader(name: string, value: string | string[]): NextApiResponseLike;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	json(body: any): void;
 	setPreviewData(data: object | string): NextApiResponseLike;

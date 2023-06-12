@@ -9,15 +9,18 @@ import { getPreviewCookieRepositoryName } from "./lib/getPreviewCookieRepository
 
 import { PrismicPreviewProps } from "./PrismicPreview";
 
-type PrismicPreviewClientProps = Omit<PrismicPreviewProps, "children">;
+type PrismicPreviewClientProps = Omit<PrismicPreviewProps, "children"> & {
+	isDraftMode: boolean;
+};
 
 export function PrismicPreviewClient({
 	repositoryName,
 	updatePreviewURL = "/api/preview",
 	exitPreviewURL = "/api/exit-preview",
+	isDraftMode,
 }: PrismicPreviewClientProps): null {
+	let isPreviewActive = isDraftMode;
 	let isAppRouter = true;
-	let isPreviewMode = false;
 	let basePath = "";
 	let refresh: () => void;
 
@@ -27,7 +30,7 @@ export function PrismicPreviewClient({
 
 		isAppRouter = false;
 		basePath = router.basePath;
-		isPreviewMode = router.isPreview;
+		isPreviewActive ||= router.isPreview;
 		refresh = () => router.replace(router.asPath, undefined, { scroll: false });
 	} catch {
 		// Assume we are in App Router. Ignore the error.
@@ -77,30 +80,24 @@ export function PrismicPreviewClient({
 			// Prevent the toolbar from reloading the page.
 			event.preventDefault();
 
-			if (isAppRouter) {
+			const resolvedExitPreviewURL = basePath + exitPreviewURL;
+
+			// Exit Next.js Preview Mode via the given preview API endpoint.
+			const res = await globalThis.fetch(resolvedExitPreviewURL);
+
+			if (res.ok) {
 				refresh();
 			} else {
-				const resolvedExitPreviewURL = basePath + exitPreviewURL;
-
-				// Exit Next.js Preview Mode via the given preview API endpoint.
-				const res = await globalThis.fetch(resolvedExitPreviewURL);
-
-				if (res.ok) {
-					// TODO: Can we do better than a full page reload?
-					// globalThis.location.reload();
-					refresh();
-				} else {
-					console.error(
-						`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
-					);
-				}
+				console.error(
+					`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
+				);
 			}
 		};
 
 		window.addEventListener("prismicPreviewUpdate", handlePrismicPreviewUpdate);
 		window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
 
-		if (!isPreviewMode) {
+		if (!isPreviewActive) {
 			const prismicPreviewCookie = getPrismicPreviewCookie(
 				globalThis.document.cookie,
 			);
@@ -149,7 +146,7 @@ export function PrismicPreviewClient({
 		basePath,
 		exitPreviewURL,
 		isAppRouter,
-		isPreviewMode,
+		isPreviewActive,
 		refresh,
 		repositoryName,
 		updatePreviewURL,
