@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/prismicio/prismic-next/compare/v1.2.1...v1.3.0) (2023-06-12)
+
+
+### Features
+
+* support Draft Mode with static rendering ([#72](https://github.com/prismicio/prismic-next/issues/72)) ([eafad65](https://github.com/prismicio/prismic-next/commit/eafad65c0b73230955a77f33de986420eeaac24d))
+
+
+### Chore
+
+* remove experimental `prismic-next` CLI ([#71](https://github.com/prismicio/prismic-next/issues/71)) ([812ddd9](https://github.com/prismicio/prismic-next/commit/812ddd99f64a04e865c3ff4c5b885ccd770a51c7))
+
 ## [1.3.0-alpha.1](https://github.com/prismicio/prismic-next/compare/v1.3.0-alpha.0...v1.3.0-alpha.1) (2023-06-10)
 
 
