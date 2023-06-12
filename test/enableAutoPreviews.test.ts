@@ -180,7 +180,7 @@ describe("App Router", () => {
 		}
 
 		vi.mocked(draftMode).mockReturnValue({
-			isEnabled: false,
+			isEnabled: true,
 			disable: () => void 0,
 			enable: () => void 0,
 		});
