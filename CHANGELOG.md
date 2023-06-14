@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/prismicio/prismic-next/compare/v1.3.0...v1.3.1) (2023-06-14)
+
+
+### Bug Fixes
+
+* **exitPreview:** prevent "Cannot set headers after they are sent to the client" error in the Pages Router ([#74](https://github.com/prismicio/prismic-next/issues/74)) ([e4085e3](https://github.com/prismicio/prismic-next/commit/e4085e3ba2e559b91cb788729d6a92f261ff9dc8))
+* **PrismicPreview:** prevent "missing `requestAsyncStorage`" error in the Pages Router ([#73](https://github.com/prismicio/prismic-next/issues/73)) ([8efbbe7](https://github.com/prismicio/prismic-next/commit/8efbbe71a4f340512d30a1a244498a811eb363f4))
+
 ## [1.3.0](https://github.com/prismicio/prismic-next/compare/v1.2.1...v1.3.0) (2023-06-12)
 
 
