@@ -57,18 +57,16 @@ export type ExitPreviewConfig = {
  * }
  * ```
  */
-export async function exitPreview(
-	config?: ExitPreviewConfig,
-): Promise<Response | void> {
+export function exitPreview(config?: ExitPreviewConfig): Response | void {
 	if (config?.res) {
 		// Assume Preview Mode is being used.
 
 		config.res.clearPreviewData();
 
-		// 205 status is used to prevent CDN-level caching. The default 200
-		// status code is typically treated as non-changing and cacheable.
-		config.res.json({ success: true });
+		// `Cache-Control` header is used to prevent CDN-level caching.
 		config.res.setHeader("Cache-Control", "no-store");
+
+		config.res.json({ success: true });
 
 		return;
 	} else {
@@ -76,8 +74,7 @@ export async function exitPreview(
 
 		draftMode().disable();
 
-		// 205 status is used to prevent CDN-level caching. The default 200
-		// status code is typically treated as non-changing and cacheable.
+		// `Cache-Control` header is used to prevent CDN-level caching.
 		return new Response(JSON.stringify({ success: true }), {
 			headers: {
 				"Cache-Control": "no-store",
