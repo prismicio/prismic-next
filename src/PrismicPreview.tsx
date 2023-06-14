@@ -52,7 +52,15 @@ export function PrismicPreview({
 	...props
 }: PrismicPreviewProps): JSX.Element {
 	const toolbarSrc = prismic.getToolbarSrc(repositoryName);
-	const isDraftMode = draftMode().isEnabled;
+
+	let isDraftMode = false;
+	try {
+		isDraftMode = draftMode().isEnabled;
+	} catch {
+		// noop - `requestAsyncStorage` propbably doesn't exist, such as
+		// in the Pages Router, which causes `draftMode()` to throw. We
+		// can ignore this case and assume Draft Mode is disabled.
+	}
 
 	return (
 		<>
