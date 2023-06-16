@@ -322,6 +322,35 @@ test("allows overriding fit via imgixParams prop", (ctx) => {
 	expect(src.searchParams.get("fit")).toBe("facearea");
 });
 
+test("allows removing existing Imgix params via the imgixParams prop", (ctx) => {
+	const field = ctx.mock.value.image();
+	const fieldURL = new URL(field.url);
+	fieldURL.searchParams.set("auto", "compress,format");
+	fieldURL.searchParams.set("sat", "-100");
+	fieldURL.searchParams.set("ar", "1:2");
+	field.url = fieldURL.toString();
+
+	const img = renderJSON(
+		<PrismicNextImage
+			field={field}
+			sizes="100vw"
+			imgixParams={{
+				auto: undefined,
+				// React Server Components removes `undefined`
+				// from objects, so we also support `null` as an
+				// explicit value to remove a param.
+				sat: null,
+			}}
+		/>,
+	);
+
+	const src = new URL(img?.props.src);
+
+	expect(src.searchParams.get("auto")).toBe(null);
+	expect(src.searchParams.get("sat")).toBe(null);
+	expect(src.searchParams.get("ar")).toBe("1:2");
+});
+
 test("allows falling back to the default loader", (ctx) => {
 	const field = ctx.mock.value.image();
 
