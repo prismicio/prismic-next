@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.2](https://github.com/prismicio/prismic-next/compare/v1.3.1...v1.3.2) (2023-06-16)
+
+
+### Bug Fixes
+
+* **PrismicNextImage:** allow removing Imgix params in React Server Components using `null` ([#75](https://github.com/prismicio/prismic-next/issues/75)) ([b47dd67](https://github.com/prismicio/prismic-next/commit/b47dd67ada0a36afd79483e0cd08319461b53188))
+
 ### [1.3.1](https://github.com/prismicio/prismic-next/compare/v1.3.0...v1.3.1) (2023-06-14)
 
 
