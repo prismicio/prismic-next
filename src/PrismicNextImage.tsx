@@ -146,7 +146,7 @@ export const PrismicNextImage = ({
 		// `next/image` seems to be affected by a default + named export bundling bug.
 		let ResolvedImage = Image;
 		if ("default" in ResolvedImage) {
-			ResolvedImage = ResolvedImage.default as typeof Image;
+			ResolvedImage = (ResolvedImage as { default: typeof Image }).default;
 		}
 
 		return (
