@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/prismicio/prismic-next/compare/v1.3.2...v1.3.3) (2023-07-05)
+
+
+### Bug Fixes
+
+* prevent `<PrismicNextImage>` "Element type is invalid" error ([#79](https://github.com/prismicio/prismic-next/issues/79)) ([f002052](https://github.com/prismicio/prismic-next/commit/f00205279cd53d7efb963a786e577092ba3729ec))
+
 ### [1.3.2](https://github.com/prismicio/prismic-next/compare/v1.3.1...v1.3.2) (2023-06-16)
 
 
