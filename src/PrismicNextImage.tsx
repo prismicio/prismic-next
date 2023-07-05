@@ -142,8 +142,16 @@ export const PrismicNextImage = ({
 			);
 		}
 
+		// TODO: Remove once https://github.com/vercel/next.js/issues/52216 is resolved.
+		// `next/image` seems to be affected by a default + named export bundling bug.
+		let ResolvedImage = Image;
+		if ("default" in ResolvedImage) {
+			ResolvedImage = (ResolvedImage as unknown as { default: typeof Image })
+				.default;
+		}
+
 		return (
-			<Image
+			<ResolvedImage
 				src={src}
 				width={fill ? undefined : resolvedWidth}
 				height={fill ? undefined : resolvedHeight}
