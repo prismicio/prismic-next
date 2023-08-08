@@ -1,13 +1,42 @@
-import { it, expect, vi, describe } from "vitest";
+import { it, expect, vi, describe, beforeEach } from "vitest";
 import { redirect } from "next/navigation";
 import * as prismic from "@prismicio/client";
 
 import { redirectToPreviewURL, RedirectToPreviewURLConfig } from "../src";
 
+let cookiesStore = new Map<string, string>();
+const cookies = {
+	get: vi.fn((name: string) => {
+		return cookiesStore.get(name);
+	}),
+	set: vi.fn((name: string, value: string) => {
+		return cookiesStore.set(name, value);
+	}),
+};
+
+const draftMode = {
+	enable: vi.fn(),
+};
+
+vi.mock("next/headers", () => {
+	return {
+		cookies() {
+			return cookies;
+		},
+		draftMode() {
+			return draftMode;
+		},
+	};
+});
+
 vi.mock("next/navigation", () => {
 	return {
 		redirect: vi.fn(),
 	};
+});
+
+beforeEach(() => {
+	cookiesStore = new Map();
 });
 
 describe("App Router", () => {
@@ -16,7 +45,13 @@ describe("App Router", () => {
 			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 			request: {
 				url: "/foo",
-				nextUrl: Symbol(),
+				nextUrl: {
+					searchParams: {
+						get() {
+							return null;
+						},
+					},
+				},
 				headers: {
 					get: vi.fn(),
 				},
@@ -37,7 +72,13 @@ describe("App Router", () => {
 			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 			request: {
 				url: "/foo",
-				nextUrl: Symbol(),
+				nextUrl: {
+					searchParams: {
+						get() {
+							return null;
+						},
+					},
+				},
 				headers: {
 					get: vi.fn(),
 				},
@@ -52,6 +93,66 @@ describe("App Router", () => {
 		await redirectToPreviewURL(config);
 
 		expect(redirect).toHaveBeenCalledWith("/base/path/bar");
+	});
+
+	it("enables draft mode", async () => {
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			request: {
+				url: `/foo`,
+				nextUrl: {
+					searchParams: {
+						get() {
+							return null;
+						},
+					},
+				},
+				headers: {
+					get: vi.fn(),
+				},
+			},
+		};
+
+		vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
+			async () => "/bar",
+		);
+
+		await redirectToPreviewURL(config);
+
+		expect(draftMode.enable).toHaveBeenCalled();
+	});
+
+	it("sets the initial preview cookie provided by the preview URL", async () => {
+		const token = "previewToken";
+
+		const config: RedirectToPreviewURLConfig = {
+			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
+			request: {
+				url: `/foo?token=${token}`,
+				nextUrl: {
+					searchParams: {
+						get(name) {
+							if (name === "token") {
+								return token;
+							}
+
+							return null;
+						},
+					},
+				},
+				headers: {
+					get: vi.fn(),
+				},
+			},
+		};
+
+		vi.spyOn(config.client, "resolvePreviewURL").mockImplementation(
+			async () => "/bar",
+		);
+
+		await redirectToPreviewURL(config);
+
+		expect(cookies.set).toHaveBeenCalledWith("io.prismic.preview", token);
 	});
 });
 
