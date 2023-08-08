@@ -49,7 +49,11 @@ export type NextRequestLike = {
 		get(name: string): string | null;
 	};
 	url: string;
-	nextUrl: unknown;
+	nextUrl: {
+		searchParams: {
+			get(name: string): string | null;
+		};
+	};
 };
 
 /**

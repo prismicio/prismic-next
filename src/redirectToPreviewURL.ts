@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
-import type * as prismic from "@prismicio/client";
+import { cookies, draftMode } from "next/headers";
+import * as prismic from "@prismicio/client";
 
 import {
 	NextApiRequestLike,
@@ -92,6 +93,18 @@ export async function redirectToPreviewURL(
 	});
 
 	if ("nextUrl" in request) {
+		draftMode().enable();
+
+		// Set the initial preview cookie, if available.
+		// Setting the cookie here is necessary to support unpublished
+		// previews. Without setting it here, the page will try to
+		// render without the preview cookie, leading to a
+		// PrismicNotFound error.
+		const previewCookie = request.nextUrl.searchParams.get("token");
+		if (previewCookie) {
+			cookies().set(prismic.cookie.preview, previewCookie);
+		}
+
 		redirect(basePath + previewUrl);
 	} else {
 		if (!("res" in config)) {
