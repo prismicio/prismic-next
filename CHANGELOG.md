@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.4](https://github.com/prismicio/prismic-next/compare/v1.3.3...v1.3.4) (2023-08-08)
+
+
+### Bug Fixes
+
+* **redirectToPreviewURL:** support unpublished previews in the App Router ([#80](https://github.com/prismicio/prismic-next/issues/80)) ([414434b](https://github.com/prismicio/prismic-next/commit/414434b2e3642e50354d21beb7f5fe6888982217))
+
 ### [1.3.3](https://github.com/prismicio/prismic-next/compare/v1.3.2...v1.3.3) (2023-07-05)
 
 
