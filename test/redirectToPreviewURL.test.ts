@@ -433,8 +433,7 @@ describe("Pages Router", () => {
 	});
 
 	it("throws if res is not provided", async () => {
-		// @ts-expect-error - We are purposely omitting `res` from the
-		// config.
+		// @ts-expect-error - We are purposely omitting `res` from the config.
 		const config: RedirectToPreviewURLConfig = {
 			client: prismic.createClient("qwerty", { fetch: vi.fn() }),
 			req: {
@@ -451,7 +450,10 @@ describe("Pages Router", () => {
 		);
 
 		expect(async () => {
-			await redirectToPreviewURL(config);
+			await redirectToPreviewURL(
+				// @ts-expect-error - We are purposely omitting `res` from the config.
+				config,
+			);
 		}).rejects.toThrow(/the `res` object from the api route must be provided/i);
 	});
 });
