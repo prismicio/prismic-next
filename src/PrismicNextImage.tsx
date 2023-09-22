@@ -72,6 +72,7 @@ export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
  *
  * @returns A responsive image component using `next/image` for the given Image
  *   field.
+ *
  * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
  */
 export const PrismicNextImage = ({
