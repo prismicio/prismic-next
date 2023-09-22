@@ -8,34 +8,7 @@ import {
 	NextRequestLike,
 } from "./types";
 
-/**
- * Preview config for enabling previews with redirectToPreviewURL
- */
-export type RedirectToPreviewURLConfig = (
-	| {
-			/**
-			 * The `request` object from a Next.js Route Handler.
-			 *
-			 * @see Next.js Route Handler docs: \<https://beta.nextjs.org/docs/routing/route-handlers\>
-			 */
-			request: NextRequestLike;
-	  }
-	| {
-			/**
-			 * The `req` object from a Next.js API route.
-			 *
-			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
-			 */
-			req: NextApiRequestLike;
-
-			/**
-			 * The `res` object from a Next.js API route.
-			 *
-			 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
-			 */
-			res: NextApiResponseLike;
-	  }
-) & {
+type RedirectToPreviewURLConfigBase = {
 	/**
 	 * The Prismic client configured for the preview session's repository.
 	 */
@@ -75,13 +48,46 @@ export type RedirectToPreviewURLConfig = (
 	basePath?: string;
 };
 
-/**
- * Redirects a visitor to the URL of a previewed Prismic document from within a
- * Next.js Route Handler or API route.
- */
+export type RedirectToPreviewURLRouteHandlerConfig =
+	RedirectToPreviewURLConfigBase & {
+		/**
+		 * The `request` object from a Next.js Route Handler.
+		 *
+		 * @see Next.js Route Handler docs: \<https://nextjs.org/docs/app/building-your-application/routing/route-handlers\>
+		 */
+		request: NextRequestLike;
+	};
+
+export type RedirectToPreviewURLAPIEndpointConfig =
+	RedirectToPreviewURLConfigBase & {
+		/**
+		 * The `req` object from a Next.js API route.
+		 *
+		 * @see Next.js API route docs: \<https://nextjs.org/docs/pages/building-your-application/routing/api-routes\>
+		 */
+		req: NextApiRequestLike;
+
+		/**
+		 * The `res` object from a Next.js API route.
+		 *
+		 * @see Next.js API route docs: \<https://nextjs.org/docs/pages/building-your-application/routing/api-routes\>
+		 */
+		res: NextApiResponseLike;
+	};
+
+export type RedirectToPreviewURLConfig =
+	| RedirectToPreviewURLRouteHandlerConfig
+	| RedirectToPreviewURLAPIEndpointConfig;
+
+export async function redirectToPreviewURL(
+	config: RedirectToPreviewURLRouteHandlerConfig,
+): Promise<never>;
+export async function redirectToPreviewURL(
+	config: RedirectToPreviewURLAPIEndpointConfig,
+): Promise<void>;
 export async function redirectToPreviewURL(
 	config: RedirectToPreviewURLConfig,
-): Promise<void> {
+): Promise<never | void> {
 	const basePath = config.basePath || "";
 	const request = "request" in config ? config.request : config.req;
 

@@ -3,9 +3,16 @@ import { draftMode } from "next/headers";
 import { NextApiRequestLike, NextApiResponseLike } from "./types";
 
 /**
- * Configuration for `exitPreview`.
+ * @deprecated Use `ExitPreviewAPIRouteConfig` instead when `exitPreview()` is
+ *   used in a Pages Router API endpoint. `exitPreview()` does not require any
+ *   configuration when used in an App Router Route Handler.
  */
-export type ExitPreviewConfig = {
+export type ExitPreviewConfig = ExitPreviewAPIRouteConfig;
+
+/**
+ * Configuration for `exitPreview()` when used in a Pages Router API route.
+ */
+export type ExitPreviewAPIRouteConfig = {
 	/**
 	 * **Only use this parameter in the Pages Directory (/pages).**
 	 *
@@ -27,21 +34,18 @@ export type ExitPreviewConfig = {
 
 /**
  * Ends a Prismic preview session within a Next.js app. This function should be
- * used in a Router Handler or an API Route, depending on which you are using
+ * used in a Router Handler or an API route, depending on whether you are using
  * the App Router or Pages Router.
- *
- * `exitPreview()` assumes Draft Mode is being used unless a Pages Router API
- * Route `res` object is provided to the function.
  *
  * @example Usage within an App Router Route Handler.
  *
  * ```typescript
- * // src/app/exit-preview/route.js
+ * // src/app/api/exit-preview/route.js
  *
  * import { exitPreview } from "@prismicio/next";
  *
- * export async function GET() {
- * 	await exitPreview();
+ * export function GET() {
+ * 	return exitPreview();
  * }
  * ```
  *
@@ -52,12 +56,16 @@ export type ExitPreviewConfig = {
  *
  * import { exitPreview } from "@prismicio/next";
  *
- * export default async function handler(req, res) {
- * 	await exitPreview({ req, res });
+ * export default function handler(req, res) {
+ * 	exitPreview({ req, res });
  * }
  * ```
  */
-export function exitPreview(config?: ExitPreviewConfig): Response | void {
+export function exitPreview(): Response;
+export function exitPreview(config: ExitPreviewAPIRouteConfig): void;
+export function exitPreview(
+	config?: ExitPreviewAPIRouteConfig,
+): Response | void {
 	if (config?.res) {
 		// Assume Preview Mode is being used.
 
