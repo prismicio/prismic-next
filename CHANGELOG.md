@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.5](https://github.com/prismicio/prismic-next/compare/v1.3.4...v1.3.5) (2023-09-22)
+
+
+### Bug Fixes
+
+* prevent `next build` TypeScript errors from `redirectToPreviewURL()` and `exitPreview()` ([#85](https://github.com/prismicio/prismic-next/issues/85)) ([ab3dcab](https://github.com/prismicio/prismic-next/commit/ab3dcaba0908db796600a603fa461ba0e721024f))
+
+
+### Chore
+
+* **deps:** update dependencies ([#86](https://github.com/prismicio/prismic-next/issues/86)) ([34b99b1](https://github.com/prismicio/prismic-next/commit/34b99b117861de16bd8915317ea73d1dc7c9293c))
+
 ### [1.3.4](https://github.com/prismicio/prismic-next/compare/v1.3.3...v1.3.4) (2023-08-08)
 
 
