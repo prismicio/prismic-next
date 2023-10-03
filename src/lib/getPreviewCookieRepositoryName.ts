@@ -9,6 +9,6 @@
 export const getPreviewCookieRepositoryName = (
 	previewCookie: string,
 ): string | undefined => {
-	return (decodeURIComponent(previewCookie).match(/,"(.+).prismic.io"/) ||
+	return (decodeURIComponent(previewCookie).match(/"([^"]+)\.prismic\.io"/) ||
 		[])[1];
 };
