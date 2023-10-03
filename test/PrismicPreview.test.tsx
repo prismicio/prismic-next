@@ -365,6 +365,34 @@ test("supports shared links", async () => {
 	renderer.act(() => unmount());
 });
 
+test("supports shared links when `_tracker` is not in the preview cookie", async () => {
+	const replace = vi.fn() as NextRouter["replace"];
+
+	vi.mocked(useRouter).mockImplementation(() => {
+		return {
+			isPreview: false,
+			basePath: "",
+			asPath: mockPagePath,
+			replace,
+		} as NextRouter;
+	});
+
+	globalThis.document.cookie = `io.prismic.preview=${JSON.stringify({
+		"qwerty.prismic.io": {},
+	})}`;
+
+	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+
+	await tick();
+
+	expect(fetch).toHaveBeenCalledWith("/api/preview");
+	expect(replace).toHaveBeenCalledWith(mockPagePath, undefined, {
+		scroll: false,
+	});
+
+	renderer.act(() => unmount());
+});
+
 test("ignores invalid preview cookie", async () => {
 	const replace = vi.fn() as NextRouter["replace"];
 
