@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.6](https://github.com/prismicio/prismic-next/compare/v1.3.5...v1.3.6) (2023-10-03)
+
+
+### Bug Fixes
+
+* support shared previews when the preview cookie does not contain `_tracker` ([#88](https://github.com/prismicio/prismic-next/issues/88)) ([02ca22a](https://github.com/prismicio/prismic-next/commit/02ca22a934ba7ae9326d5ab23ef57a684afd4f79))
+
 ### [1.3.5](https://github.com/prismicio/prismic-next/compare/v1.3.4...v1.3.5) (2023-09-22)
 
 
