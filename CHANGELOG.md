@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/prismicio/prismic-next/compare/v1.3.6...v1.4.0) (2023-10-30)
+
+
+### Features
+
+* **deps:** support Next 14 ([7933bae](https://github.com/prismicio/prismic-next/commit/7933bae545267c49ca2f61d37bb36c8e1ad08a53))
+
 ### [1.3.6](https://github.com/prismicio/prismic-next/compare/v1.3.5...v1.3.6) (2023-10-03)
 
 
