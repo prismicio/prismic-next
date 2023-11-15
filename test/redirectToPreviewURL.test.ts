@@ -46,6 +46,7 @@ describe("App Router", () => {
 			request: {
 				url: "/foo",
 				nextUrl: {
+					pathname: "/foo",
 					searchParams: {
 						get() {
 							return null;
@@ -73,6 +74,7 @@ describe("App Router", () => {
 			request: {
 				url: "/foo",
 				nextUrl: {
+					pathname: "/foo",
 					searchParams: {
 						get() {
 							return null;
@@ -101,6 +103,7 @@ describe("App Router", () => {
 			request: {
 				url: `/foo`,
 				nextUrl: {
+					pathname: "/foo",
 					searchParams: {
 						get() {
 							return null;
@@ -130,6 +133,7 @@ describe("App Router", () => {
 			request: {
 				url: `/foo?token=${token}`,
 				nextUrl: {
+					pathname: "/foo",
 					searchParams: {
 						get(name) {
 							if (name === "token") {

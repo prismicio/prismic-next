@@ -23,6 +23,9 @@ export type {
 	RedirectToPreviewURLAPIEndpointConfig,
 } from "./redirectToPreviewURL";
 
+export { createLocaleRedirect } from "./createLocaleRedirect";
+export type { CreateLocaleRedirectConfig } from "./createLocaleRedirect";
+
 export { PrismicNextImage } from "./PrismicNextImage";
 export type { PrismicNextImageProps } from "./PrismicNextImage";
 

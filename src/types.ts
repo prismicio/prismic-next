@@ -46,10 +46,11 @@ export type CreateClientConfig = ClientConfig & {
  */
 export type NextRequestLike = {
 	headers: {
-		get(name: string): string | null;
+		get(name: string): string | string[] | null;
 	};
 	url: string;
 	nextUrl: {
+		pathname: string;
 		searchParams: {
 			get(name: string): string | null;
 		};
