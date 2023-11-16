@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/prismicio/prismic-next/compare/v1.4.0...v1.5.0) (2023-11-16)
+
+
+### Features
+
+* add `createLocaleRedirect()` to simplify i18n routing ([#89](https://github.com/prismicio/prismic-next/issues/89)) ([7527b32](https://github.com/prismicio/prismic-next/commit/7527b3209858af211bef293cb1bf1feea0e0c6d4))
+
 ## [1.4.0](https://github.com/prismicio/prismic-next/compare/v1.3.6...v1.4.0) (2023-10-30)
 
 
