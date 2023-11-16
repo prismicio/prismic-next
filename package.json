@@ -52,12 +52,15 @@
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size"
 	},
 	"dependencies": {
-		"imgix-url-builder": "^0.0.4"
+		"@formatjs/intl-localematcher": "^0.5.2",
+		"imgix-url-builder": "^0.0.4",
+		"negotiator": "^0.6.3"
 	},
 	"devDependencies": {
 		"@prismicio/client": "^7.2.0",
 		"@prismicio/mock": "^0.3.1",
 		"@size-limit/preset-small-lib": "^9.0.0",
+		"@types/negotiator": "^0.6.3",
 		"@types/react-test-renderer": "^18.0.2",
 		"@typescript-eslint/eslint-plugin": "^6.7.2",
 		"@typescript-eslint/parser": "^6.7.2",

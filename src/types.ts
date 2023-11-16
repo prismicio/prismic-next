@@ -50,6 +50,7 @@ export type NextRequestLike = {
 	};
 	url: string;
 	nextUrl: {
+		pathname: string;
 		searchParams: {
 			get(name: string): string | null;
 		};
