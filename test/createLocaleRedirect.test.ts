@@ -121,7 +121,7 @@ it("allows for custom locale codes", async () => {
 			acceptLanguage: "fr-fr,fr;q=0.5",
 		}),
 		localeOverrides: {
-			"fr-fr": "custom-locale",
+			"fr-fr": "jp",
 		},
 	};
 
@@ -132,9 +132,7 @@ it("allows for custom locale codes", async () => {
 
 	const redirect = await createLocaleRedirect(config);
 
-	expect(redirect?.headers.get("location")).toBe(
-		"https://example.com/custom-locale/foo",
-	);
+	expect(redirect?.headers.get("location")).toBe("https://example.com/jp/foo");
 	expect(redirect?.status).toBe(302);
 });
 
