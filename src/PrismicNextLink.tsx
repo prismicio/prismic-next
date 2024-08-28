@@ -32,7 +32,7 @@ export const PrismicNextLink = React.forwardRef<
 	HTMLAnchorElement,
 	PrismicNextLinkProps
 >(function PrismicNextLink(
-	{ field, document, linkResolver, ...restProps },
+	{ field, document, linkResolver, children, ...restProps },
 	ref,
 ): JSX.Element | null {
 	const {
@@ -51,5 +51,14 @@ export const PrismicNextLink = React.forwardRef<
 		rel = restProps.rel;
 	}
 
-	return <Link ref={ref} {...attrs} {...restProps} href={href} rel={rel} />;
+	let text: string | undefined;
+	if (field && "text" in field) {
+		text = field.text;
+	}
+
+	return (
+		<Link ref={ref} {...attrs} {...restProps} href={href} rel={rel}>
+			{children || text}
+		</Link>
+	);
 });

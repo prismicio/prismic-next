@@ -237,3 +237,35 @@ it("forwards ref", (ctx) => {
 
 	expect(ref).toHaveBeenCalledWith({ tagName: "a" });
 });
+
+it("renders a next/link with text and without children", (ctx) => {
+	const field = ctx.mock.value.link({
+		type: "Web",
+		model: { type: "Link", config: { text: { type: "Text" } } },
+	});
+
+	const actual = renderJSON(<PrismicNextLink field={field} />);
+	const expected = renderJSON(
+		<Link href={field.url} rel="noreferrer">
+			{field.text}
+		</Link>,
+	);
+
+	expectLinkToEqual(actual, expected);
+});
+
+it("renders a next/link with text and children", (ctx) => {
+	const field = ctx.mock.value.link({ type: "Web" });
+	const children = ctx.mock.value.keyText();
+
+	const actual = renderJSON(
+		<PrismicNextLink field={field}>{children}</PrismicNextLink>,
+	);
+	const expected = renderJSON(
+		<Link href={field.url} rel="noreferrer">
+			{children}
+		</Link>,
+	);
+
+	expectLinkToEqual(actual, expected);
+});
