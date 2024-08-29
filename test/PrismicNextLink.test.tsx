@@ -238,11 +238,9 @@ it("forwards ref", (ctx) => {
 	expect(ref).toHaveBeenCalledWith({ tagName: "a" });
 });
 
-it("renders a next/link with text and without children", (ctx) => {
-	const field = ctx.mock.value.link({
-		type: "Web",
-		model: { type: "Link", config: { text: { type: "Text" } } },
-	});
+it("renders a next/link with text", (ctx) => {
+	const model = ctx.mock.model.link({ text: true });
+	const field = ctx.mock.value.link({ type: "Web", model });
 
 	const actual = renderJSON(<PrismicNextLink field={field} />);
 	const expected = renderJSON(
@@ -254,8 +252,9 @@ it("renders a next/link with text and without children", (ctx) => {
 	expectLinkToEqual(actual, expected);
 });
 
-it("renders a next/link with text and children", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" });
+it("renders a next/link with the given children, overriding the link's text", (ctx) => {
+	const model = ctx.mock.model.link({ text: true });
+	const field = ctx.mock.value.link({ type: "Web", model });
 	const children = ctx.mock.value.keyText();
 
 	const actual = renderJSON(
