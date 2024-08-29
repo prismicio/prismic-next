@@ -239,7 +239,7 @@ it("forwards ref", (ctx) => {
 });
 
 it("renders a next/link with text", (ctx) => {
-	const model = ctx.mock.model.link({ text: true });
+	const model = ctx.mock.model.link({ text: true, allowTargetBlank: false });
 	const field = ctx.mock.value.link({ type: "Web", model });
 
 	const actual = renderJSON(<PrismicNextLink field={field} />);
@@ -253,7 +253,7 @@ it("renders a next/link with text", (ctx) => {
 });
 
 it("renders a next/link with the given children, overriding the link's text", (ctx) => {
-	const model = ctx.mock.model.link({ text: true });
+	const model = ctx.mock.model.link({ text: true, allowTargetBlank: false });
 	const field = ctx.mock.value.link({ type: "Web", model });
 	const children = ctx.mock.value.keyText();
 
