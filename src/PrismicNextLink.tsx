@@ -54,7 +54,7 @@ export const PrismicNextLink = React.forwardRef<
 
 	return (
 		<Link ref={ref} {...attrs} {...restProps} href={href} rel={rel}>
-			{children || text}
+			{"children" in restProps ? children : text}
 		</Link>
 	);
 });
