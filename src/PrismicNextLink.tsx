@@ -31,10 +31,8 @@ export type PrismicNextLinkProps = Omit<
 export const PrismicNextLink = React.forwardRef<
 	HTMLAnchorElement,
 	PrismicNextLinkProps
->(function PrismicNextLink(
-	{ field, document, linkResolver, children, ...restProps },
-	ref,
-): JSX.Element | null {
+>(function PrismicNextLink(props, ref): JSX.Element | null {
+	const { field, document, linkResolver, children, ...restProps } = props;
 	const {
 		href: computedHref,
 		rel: computedRel,
@@ -54,7 +52,7 @@ export const PrismicNextLink = React.forwardRef<
 
 	return (
 		<Link ref={ref} {...attrs} {...restProps} href={href} rel={rel}>
-			{"children" in restProps ? children : text}
+			{"children" in props ? children : text}
 		</Link>
 	);
 });
