@@ -43,7 +43,6 @@ export const PrismicNextLink = React.forwardRef<
 	});
 
 	const href = ("href" in restProps ? restProps.href : computedHref) || "";
-	const text = prismic.isFilled.link(field) ? field.text : undefined;
 
 	let rel = computedRel;
 	if ("rel" in restProps && typeof restProps.rel !== "function") {
@@ -52,7 +51,7 @@ export const PrismicNextLink = React.forwardRef<
 
 	return (
 		<Link ref={ref} {...attrs} {...restProps} href={href} rel={rel}>
-			{"children" in props ? children : text}
+			{"children" in props ? children : field?.text}
 		</Link>
 	);
 });
