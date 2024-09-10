@@ -243,7 +243,7 @@ it("renders a next/link with text", (ctx) => {
 		allowText: true,
 		allowTargetBlank: false,
 	});
-	const field = ctx.mock.value.link({ type: "Web", model });
+	const field = ctx.mock.value.link({ type: "Web", model, withText: true });
 
 	const actual = renderJSON(<PrismicNextLink field={field} />);
 	const expected = renderJSON(
@@ -260,7 +260,7 @@ it("renders a next/link with the given children, overriding the link's text", (c
 		allowText: true,
 		allowTargetBlank: false,
 	});
-	const field = ctx.mock.value.link({ type: "Web", model });
+	const field = ctx.mock.value.link({ type: "Web", model, withText: true });
 	const children = ctx.mock.value.keyText();
 
 	const actual = renderJSON(
