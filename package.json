@@ -57,8 +57,8 @@
 		"negotiator": "^0.6.3"
 	},
 	"devDependencies": {
-		"@prismicio/client": "7.9.0-alpha.3",
-		"@prismicio/mock": "0.3.8-alpha.2",
+		"@prismicio/client": "^7.11.0",
+		"@prismicio/mock": "^0.4.0",
 		"@size-limit/preset-small-lib": "^9.0.0",
 		"@types/negotiator": "^0.6.3",
 		"@types/react-test-renderer": "^18.0.2",
@@ -99,9 +99,5 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"overrides": {
-		"@prismicio/client": "7.9.0-alpha.3",
-		"@prismicio/mock": "0.3.8-alpha.2"
 	}
 }
