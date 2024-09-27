@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/prismicio/prismic-next/compare/v1.7.0-alpha.0...v1.7.0) (2024-09-27)
+
+## [1.7.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.5.0...v1.7.0-alpha.0) (2024-09-10)
+
+
+### Features
+
+* support link text ([bdc244e](https://github.com/prismicio/prismic-next/commit/bdc244e50a35fffc342968811621fac6720ec461))
+* Support Next 15 & React 19 ([864bfed](https://github.com/prismicio/prismic-next/commit/864bfedb14a31401ae6ce2e8799767d217e2562d))
+
+
+### Chore
+
+* **release:** 1.6.0 ([e97fcca](https://github.com/prismicio/prismic-next/commit/e97fcca55e599131d0945d90dd6bb3f8732092ca))
+
 ## [1.6.0](https://github.com/prismicio/prismic-next/compare/v1.5.0...v1.6.0) (2024-05-30)
 
 

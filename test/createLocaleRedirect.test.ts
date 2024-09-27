@@ -49,7 +49,7 @@ it("creates a redirect with the request's preferred locale", async () => {
 
 	mockGetRepository({
 		client,
-		languages: [{ id: "fr-fr", name: "French (France)" }],
+		languages: [{ id: "fr-fr", name: "French (France)", is_master: true }],
 	});
 
 	const redirect = await createLocaleRedirect(config);
@@ -74,8 +74,8 @@ it("returns undefined if the request already contains a locale", async () => {
 	mockGetRepository({
 		client,
 		languages: [
-			{ id: "fr-fr", name: "French (France)" },
-			{ id: "en-us", name: "English (US)" },
+			{ id: "fr-fr", name: "French (France)", is_master: false },
+			{ id: "en-us", name: "English (US)", is_master: true },
 		],
 	});
 
@@ -98,8 +98,8 @@ it("uses the default locale if the request's preferred language is unavailable",
 	mockGetRepository({
 		client,
 		languages: [
-			{ id: "en-us", name: "English (US)" },
-			{ id: "en-uk", name: "English (UK)" },
+			{ id: "en-us", name: "English (US)", is_master: true },
+			{ id: "en-uk", name: "English (UK)", is_master: false },
 		],
 	});
 
@@ -127,7 +127,7 @@ it("allows for custom locale codes", async () => {
 
 	mockGetRepository({
 		client,
-		languages: [{ id: "fr-fr", name: "French (France)" }],
+		languages: [{ id: "fr-fr", name: "French (France)", is_master: true }],
 	});
 
 	const redirect = await createLocaleRedirect(config);
@@ -150,7 +150,7 @@ it("returns undefined when omitDefaultLocale is true and the preferred locale is
 
 	mockGetRepository({
 		client,
-		languages: [{ id: "fr-fr", name: "French (France)" }],
+		languages: [{ id: "fr-fr", name: "French (France)", is_master: true }],
 	});
 
 	const redirect = await createLocaleRedirect(config);
@@ -171,7 +171,7 @@ it("uses the default locale when the accept-language header is not set", async (
 
 	mockGetRepository({
 		client,
-		languages: [{ id: "fr-fr", name: "French (France)" }],
+		languages: [{ id: "fr-fr", name: "French (France)", is_master: true }],
 	});
 
 	const redirect = await createLocaleRedirect(config);
