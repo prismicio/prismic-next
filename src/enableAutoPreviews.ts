@@ -74,10 +74,10 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 
 		// We use a function value so the cookie is checked on every
 		// request. We don't have a static value to read from.
-		config.client.queryContentFromRef(() => {
+		config.client.queryContentFromRef(async () => {
 			let isDraftModeEnabled = false;
 			try {
-				isDraftModeEnabled = draftMode().isEnabled;
+				isDraftModeEnabled = (await draftMode()).isEnabled;
 			} catch {
 				// This catch block may be reached if
 				// `draftMode()` is called in a place that does
@@ -93,7 +93,7 @@ export const enableAutoPreviews = <TPreviewData extends PreviewData>(
 
 			let cookie: string | undefined;
 			try {
-				cookie = cookies().get(prismic.cookie.preview)?.value;
+				cookie = (await cookies()).get(prismic.cookie.preview)?.value;
 			} catch {
 				// We are probably in `getStaticProps()` or
 				// `getServerSideProps()` with inactive Preview

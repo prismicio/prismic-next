@@ -102,9 +102,9 @@ afterEach(() => {
 	vi.mocked(router.replace).mockRestore();
 });
 
-test("renders the Prismic toolbar for the given repository using next/script", () => {
+test("renders the Prismic toolbar for the given repository using next/script", async () => {
 	const { unmount, toJSON } = render(
-		<PrismicPreview repositoryName="qwerty" />,
+		await PrismicPreview({ repositoryName: "qwerty" }),
 	);
 
 	const actual = toJSON();
@@ -123,7 +123,9 @@ test("renders the Prismic toolbar for the given repository using next/script", (
 
 test("calls the default preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
 	const router = useRouter();
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
@@ -142,7 +144,10 @@ test("calls the default preview API endpoint on prismicPreviewUpdate toolbar eve
 test("calls the given preview API endpoint on prismicPreviewUpdate toolbar events", async () => {
 	const router = useRouter();
 	const { unmount } = render(
-		<PrismicPreview repositoryName="qwerty" updatePreviewURL="/foo" />,
+		await PrismicPreview({
+			repositoryName: "qwerty",
+			updatePreviewURL: "/foo",
+		}),
 	);
 
 	window.dispatchEvent(
@@ -171,7 +176,9 @@ test("supports basePath on prismicPreviewUpdate toolbar events with default prev
 		} as NextRouter;
 	});
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
@@ -197,7 +204,10 @@ test("supports basePath on prismicPreviewUpdate toolbar events with given previe
 	});
 
 	const { unmount } = render(
-		<PrismicPreview repositoryName="qwerty" updatePreviewURL="/bar" />,
+		await PrismicPreview({
+			repositoryName: "qwerty",
+			updatePreviewURL: "/bar",
+		}),
 	);
 
 	window.dispatchEvent(
@@ -213,7 +223,9 @@ test("supports basePath on prismicPreviewUpdate toolbar events with given previe
 
 test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
 	const router = useRouter();
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
@@ -232,7 +244,7 @@ test("calls the default exit preview API endpoint on prismicPreviewEnd toolbar e
 test("calls the given exit preview API endpoint on prismicPreviewEnd toolbar events", async () => {
 	const router = useRouter();
 	const { unmount } = render(
-		<PrismicPreview repositoryName="qwerty" exitPreviewURL="/bar" />,
+		await PrismicPreview({ repositoryName: "qwerty", exitPreviewURL: "/bar" }),
 	);
 
 	window.dispatchEvent(
@@ -261,7 +273,9 @@ test("supports basePath on prismicPreviewEnd toolbar events with default preview
 		} as NextRouter;
 	});
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),
@@ -287,7 +301,7 @@ test("supports basePath on prismicPreviewEnd toolbar events with given preview A
 	});
 
 	const { unmount } = render(
-		<PrismicPreview repositoryName="qwerty" exitPreviewURL="/bar" />,
+		await PrismicPreview({ repositoryName: "qwerty", exitPreviewURL: "/bar" }),
 	);
 
 	window.dispatchEvent(
@@ -303,7 +317,9 @@ test("supports basePath on prismicPreviewEnd toolbar events with given preview A
 
 test("unregisters prismicPreviewUpdate event listener on unmount", async () => {
 	const router = useRouter();
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	renderer.act(() => {
 		unmount();
@@ -320,7 +336,9 @@ test("unregisters prismicPreviewUpdate event listener on unmount", async () => {
 });
 
 test("unregisters prismicPreviewEnd event listener on unmount", async () => {
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	renderer.act(() => {
 		unmount();
@@ -353,7 +371,9 @@ test("supports shared links", async () => {
 		"qwerty.prismic.io": {},
 	})}`;
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	await tick();
 
@@ -381,7 +401,9 @@ test("supports shared links when `_tracker` is not in the preview cookie", async
 		"qwerty.prismic.io": {},
 	})}`;
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	await tick();
 
@@ -409,7 +431,9 @@ test("ignores invalid preview cookie", async () => {
 		"invalid.example.com": {},
 	})}`;
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	await tick();
 
@@ -433,7 +457,9 @@ test("does nothing if not an active preview session", async () => {
 
 	globalThis.document.cookie = `io.prismic.preview=`;
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	await tick();
 
@@ -443,11 +469,12 @@ test("does nothing if not an active preview session", async () => {
 	renderer.act(() => unmount());
 });
 
-test("renders children untouched", () => {
+test("renders children untouched", async () => {
 	const actual = render(
-		<PrismicPreview repositoryName="qwerty">
-			<span>children</span>
-		</PrismicPreview>,
+		await PrismicPreview({
+			repositoryName: "qwerty",
+			children: <span>children</span>,
+		}),
 	).toJSON() as renderer.ReactTestRendererJSON;
 
 	const expected = render(
@@ -467,7 +494,9 @@ test("logs error if updatePreviewURL is not accessible", async () => {
 	const router = useRouter();
 	vi.mocked(fetch).mockReturnValue(Promise.resolve({ ok: false } as Response));
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewUpdate", { detail: { ref: "ref" } }),
@@ -487,7 +516,9 @@ test("logs error if updatePreviewURL is not accessible", async () => {
 test("logs error if exitPreviewURL is not accessible", async () => {
 	vi.mocked(fetch).mockReturnValue(Promise.resolve({ ok: false } as Response));
 
-	const { unmount } = render(<PrismicPreview repositoryName="qwerty" />);
+	const { unmount } = render(
+		await PrismicPreview({ repositoryName: "qwerty" }),
+	);
 
 	window.dispatchEvent(
 		new CustomEvent("prismicPreviewEnd", { detail: { ref: "ref" } }),

@@ -1,5 +1,6 @@
 import Script from "next/script";
 import { draftMode } from "next/headers";
+import { useRouter as usePagesRouter } from "next/router";
 import * as React from "react";
 import * as prismic from "@prismicio/client";
 
@@ -50,19 +51,11 @@ export function PrismicPreview({
 	repositoryName,
 	children,
 	...props
-}: PrismicPreviewProps): JSX.Element {
+}: PrismicPreviewProps): JSX.Element | Promise<JSX.Element> {
 	const toolbarSrc = prismic.getToolbarSrc(repositoryName);
-
 	let isDraftMode = false;
-	try {
-		isDraftMode = draftMode().isEnabled;
-	} catch {
-		// noop - `requestAsyncStorage` propbably doesn't exist, such as
-		// in the Pages Router, which causes `draftMode()` to throw. We
-		// can ignore this case and assume Draft Mode is disabled.
-	}
 
-	return (
+	const result = (
 		<>
 			{children}
 			<PrismicPreviewClient
@@ -73,4 +66,29 @@ export function PrismicPreview({
 			<Script src={toolbarSrc} strategy="lazyOnload" />
 		</>
 	);
+
+	// We need to check `draftMode()`, an async method, when running in the
+	// App Router. The Pages Router does not support async components, so we
+	// need to do some trickery to return a Promise in the App Router and
+	// unwrapped JSX in the Pages Router.
+	//
+	// Alternatively, we could serve a special server-only
+	// `<PrismicPreview>`, but that requires extra set up and depends on the
+	// compiler to recognize the `react-server` entry point. It is an
+	// undocumented feature that could be removed.
+	let isAppRouter = true;
+	try {
+		usePagesRouter();
+		isAppRouter = false;
+	} catch {}
+
+	if (isAppRouter) {
+		return new Promise(async (res) => {
+			isDraftMode = (await draftMode()).isEnabled;
+
+			res(result);
+		});
+	}
+
+	return result;
 }
