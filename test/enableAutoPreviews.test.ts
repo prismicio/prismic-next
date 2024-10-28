@@ -30,7 +30,7 @@ describe("App Router", () => {
 		_tracker: "abc123",
 	});
 
-	it("enables auto previews", () => {
+	it("enables auto previews", async () => {
 		const client = prismic.createClient("qwerty", { fetch: vi.fn() });
 		const enableAutoPreviewsFromReqSpy = vi.spyOn(
 			client,
@@ -49,11 +49,13 @@ describe("App Router", () => {
 			expect.fail("The given ref should be a thunk, but it was not.");
 		}
 
-		vi.mocked(draftMode).mockReturnValue({
-			isEnabled: true,
-			disable: () => void 0,
-			enable: () => void 0,
-		});
+		vi.mocked(draftMode).mockReturnValue(
+			Promise.resolve({
+				isEnabled: true,
+				disable: () => void 0,
+				enable: () => void 0,
+			}),
+		);
 
 		vi.mocked(cookiesGet).mockImplementation((input) => {
 			if (input === prismic.cookie.preview) {
@@ -64,10 +66,10 @@ describe("App Router", () => {
 			}
 		});
 
-		expect(refThunk()).toBe(activeCookie);
+		expect(await refThunk()).toBe(activeCookie);
 	});
 
-	it("ignores inactive preview cookies", () => {
+	it("ignores inactive preview cookies", async () => {
 		const client = prismic.createClient("qwerty", { fetch: vi.fn() });
 		const enableAutoPreviewsFromReqSpy = vi.spyOn(
 			client,
@@ -99,10 +101,10 @@ describe("App Router", () => {
 			}
 		});
 
-		expect(refThunk()).toBe(undefined);
+		expect(await refThunk()).toBe(undefined);
 	});
 
-	it("does not enable previews if draft mode is disabled", () => {
+	it("does not enable previews if draft mode is disabled", async () => {
 		const client = prismic.createClient("qwerty", { fetch: vi.fn() });
 		const enableAutoPreviewsFromReqSpy = vi.spyOn(
 			client,
@@ -121,18 +123,20 @@ describe("App Router", () => {
 			expect.fail("The given ref should be a thunk, but it was not.");
 		}
 
-		vi.mocked(draftMode).mockReturnValue({
-			isEnabled: false,
-			disable: () => void 0,
-			enable: () => void 0,
-		});
+		vi.mocked(draftMode).mockReturnValue(
+			Promise.resolve({
+				isEnabled: false,
+				disable: () => void 0,
+				enable: () => void 0,
+			}),
+		);
 
 		expect(cookiesGet).not.toHaveBeenCalled();
 
-		expect(refThunk()).toBe(undefined);
+		expect(await refThunk()).toBe(undefined);
 	});
 
-	it("does not enable previews if draftMode() throws", () => {
+	it("does not enable previews if draftMode() throws", async () => {
 		const client = prismic.createClient("qwerty", { fetch: vi.fn() });
 		const enableAutoPreviewsFromReqSpy = vi.spyOn(
 			client,
@@ -157,10 +161,10 @@ describe("App Router", () => {
 
 		expect(cookiesGet).not.toHaveBeenCalled();
 
-		expect(refThunk()).toBe(undefined);
+		expect(await refThunk()).toBe(undefined);
 	});
 
-	it("does not enable previews if cookies() throws", () => {
+	it("does not enable previews if cookies() throws", async () => {
 		const client = prismic.createClient("qwerty", { fetch: vi.fn() });
 		const enableAutoPreviewsFromReqSpy = vi.spyOn(
 			client,
@@ -179,17 +183,19 @@ describe("App Router", () => {
 			expect.fail("The given ref should be a thunk, but it was not.");
 		}
 
-		vi.mocked(draftMode).mockReturnValue({
-			isEnabled: true,
-			disable: () => void 0,
-			enable: () => void 0,
-		});
+		vi.mocked(draftMode).mockReturnValue(
+			Promise.resolve({
+				isEnabled: true,
+				disable: () => void 0,
+				enable: () => void 0,
+			}),
+		);
 
 		vi.mocked(cookies).mockImplementation(() => {
 			throw new Error("not implemented");
 		});
 
-		expect(refThunk()).toBe(undefined);
+		expect(await refThunk()).toBe(undefined);
 	});
 });
 

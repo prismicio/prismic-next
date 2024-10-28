@@ -46,16 +46,16 @@ export type PrismicPreviewProps = {
  * This component can be wrapped around your app or added anywhere in your app's
  * tree. It must be rendered on every page.
  */
-export function PrismicPreview({
+export async function PrismicPreview({
 	repositoryName,
 	children,
 	...props
-}: PrismicPreviewProps): JSX.Element {
+}: PrismicPreviewProps): Promise<JSX.Element> {
 	const toolbarSrc = prismic.getToolbarSrc(repositoryName);
 
 	let isDraftMode = false;
 	try {
-		isDraftMode = draftMode().isEnabled;
+		isDraftMode = (await draftMode()).isEnabled;
 	} catch {
 		// noop - `requestAsyncStorage` propbably doesn't exist, such as
 		// in the Pages Router, which causes `draftMode()` to throw. We

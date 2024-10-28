@@ -61,11 +61,13 @@ export type ExitPreviewAPIRouteConfig = {
  * }
  * ```
  */
-export function exitPreview(): Response;
-export function exitPreview(config: ExitPreviewAPIRouteConfig): void;
-export function exitPreview(
+export async function exitPreview(): Promise<Response>;
+export async function exitPreview(
+	config: ExitPreviewAPIRouteConfig,
+): Promise<void>;
+export async function exitPreview(
 	config?: ExitPreviewAPIRouteConfig,
-): Response | void {
+): Promise<Response | void> {
 	if (config?.res) {
 		// Assume Preview Mode is being used.
 
@@ -80,7 +82,7 @@ export function exitPreview(
 	} else {
 		// Assume Draft Mode is being used.
 
-		draftMode().disable();
+		(await draftMode()).disable();
 
 		// `Cache-Control` header is used to prevent CDN-level caching.
 		return new Response(JSON.stringify({ success: true }), {

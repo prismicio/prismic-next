@@ -99,7 +99,7 @@ export async function redirectToPreviewURL(
 	});
 
 	if ("nextUrl" in request) {
-		draftMode().enable();
+		(await draftMode()).enable();
 
 		// Set the initial preview cookie, if available.
 		// Setting the cookie here is necessary to support unpublished
@@ -108,7 +108,7 @@ export async function redirectToPreviewURL(
 		// PrismicNotFound error.
 		const previewCookie = request.nextUrl.searchParams.get("token");
 		if (previewCookie) {
-			cookies().set(prismic.cookie.preview, previewCookie);
+			(await cookies()).set(prismic.cookie.preview, previewCookie);
 		}
 
 		redirect(basePath + previewUrl);
