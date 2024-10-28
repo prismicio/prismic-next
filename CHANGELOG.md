@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/prismicio/prismic-next/compare/v1.7.0...v1.7.1) (2024-10-28)
+
+
+### Bug Fixes
+
+* `draftMode()` and `cookies()` error when using Next.js 15 ([#98](https://github.com/prismicio/prismic-next/issues/98)) ([bfc69ba](https://github.com/prismicio/prismic-next/commit/bfc69ba12e7313cec17cde208162d97303fdbf06))
+
 ## [1.7.0](https://github.com/prismicio/prismic-next/compare/v1.7.0-alpha.0...v1.7.0) (2024-09-27)
 
 ## [1.7.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.5.0...v1.7.0-alpha.0) (2024-09-10)

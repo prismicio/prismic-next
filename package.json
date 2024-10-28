@@ -1,6 +1,6 @@
 {
 	"name": "@prismicio/next",
-	"version": "1.7.0",
+	"version": "1.7.1",
 	"description": "Helpers to integrate Prismic into Next.js apps",
 	"keywords": [
 		"typescript",
