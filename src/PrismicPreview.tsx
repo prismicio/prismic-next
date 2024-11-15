@@ -1,8 +1,7 @@
+import type { ReactNode } from "react";
+import { cookies, draftMode } from "next/headers";
 import Script from "next/script";
-import { draftMode } from "next/headers";
-import { useRouter as usePagesRouter } from "next/router";
-import * as React from "react";
-import * as prismic from "@prismicio/client";
+import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
 
 import { PrismicPreviewClient } from "./PrismicPreviewClient";
 
@@ -35,7 +34,7 @@ export type PrismicPreviewProps = {
 	/**
 	 * Children to render adjacent to the Prismic Toolbar.
 	 */
-	children?: React.ReactNode;
+	children?: ReactNode;
 };
 
 /**
@@ -47,48 +46,31 @@ export type PrismicPreviewProps = {
  * This component can be wrapped around your app or added anywhere in your app's
  * tree. It must be rendered on every page.
  */
-export function PrismicPreview({
-	repositoryName,
-	children,
-	...props
-}: PrismicPreviewProps): JSX.Element | Promise<JSX.Element> {
-	const toolbarSrc = prismic.getToolbarSrc(repositoryName);
-	let isDraftMode = false;
+export async function PrismicPreview(
+	props: PrismicPreviewProps,
+): Promise<JSX.Element> {
+	const { repositoryName, children, ...otherProps } = props;
 
-	const result = (
+	const toolbarSrc = getToolbarSrc(repositoryName);
+	const isDraftMode = (await draftMode()).isEnabled;
+
+	const cookieJar = await cookies();
+	const cookie = cookieJar.get(prismicCookie.preview)?.value;
+
+	const cookieRepositoryName = cookie
+		? (decodeURIComponent(cookie).match(/"([^"]+)\.prismic\.io"/) || [])[1]
+		: undefined;
+	const hasCookieForRepository = cookieRepositoryName === repositoryName;
+
+	return (
 		<>
 			{children}
 			<PrismicPreviewClient
-				repositoryName={repositoryName}
 				isDraftMode={isDraftMode}
-				{...props}
+				hasCookieForRepository={hasCookieForRepository}
+				{...otherProps}
 			/>
 			<Script src={toolbarSrc} strategy="lazyOnload" />
 		</>
 	);
-
-	// We need to check `draftMode()`, an async method, when running in the
-	// App Router. The Pages Router does not support async components, so we
-	// need to do some trickery to return a Promise in the App Router and
-	// unwrapped JSX in the Pages Router.
-	//
-	// Alternatively, we could serve a special server-only
-	// `<PrismicPreview>`, but that requires extra set up and depends on the
-	// compiler to recognize the `react-server` entry point. It is an
-	// undocumented feature that could be removed.
-	let isAppRouter = true;
-	try {
-		usePagesRouter();
-		isAppRouter = false;
-	} catch {}
-
-	if (isAppRouter) {
-		return new Promise(async (res) => {
-			isDraftMode = (await draftMode()).isEnabled;
-
-			res(result);
-		});
-	}
-
-	return result;
 }

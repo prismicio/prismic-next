@@ -1,6 +1,6 @@
-import * as prismic from "@prismicio/client";
+import { cookie } from "@prismicio/client";
 
-import { NextApiRequestLike, NextApiResponseLike } from "./types";
+import type { NextApiRequestLike, NextApiResponseLike } from "./types";
 
 /**
  * Configuration for `setPreviewData`.
@@ -27,7 +27,7 @@ export type SetPreviewDataConfig = {
  * Set Prismic preview data for Next.js's Preview Mode.
  */
 export function setPreviewData({ req, res }: SetPreviewDataConfig): void {
-	const ref = req.query.token || req.cookies[prismic.cookie.preview];
+	const ref = req.query.token || req.cookies[cookie.preview];
 
 	if (ref) {
 		res.setPreviewData({ ref });

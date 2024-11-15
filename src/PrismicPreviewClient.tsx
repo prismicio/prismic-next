@@ -1,155 +1,89 @@
 "use client";
 
 import { useEffect } from "react";
-import { useRouter as usePagesRouter } from "next/router";
 import { useRouter } from "next/navigation";
 
-import { getPrismicPreviewCookie } from "./lib/getPrismicPreviewCookie";
-import { getPreviewCookieRepositoryName } from "./lib/getPreviewCookieRepositoryName";
-
-import { PrismicPreviewProps } from "./PrismicPreview";
-
-type PrismicPreviewClientProps = Omit<PrismicPreviewProps, "children"> & {
+type PrismicPreviewClientProps = {
 	isDraftMode: boolean;
+	hasCookieForRepository: boolean;
+	updatePreviewURL?: string;
+	exitPreviewURL?: string;
 };
 
-export function PrismicPreviewClient({
-	repositoryName,
-	updatePreviewURL = "/api/preview",
-	exitPreviewURL = "/api/exit-preview",
-	isDraftMode,
-}: PrismicPreviewClientProps): null {
-	let isPreviewActive = isDraftMode;
-	let isAppRouter = true;
-	let basePath = "";
-	let refresh: () => void;
+export function PrismicPreviewClient(props: PrismicPreviewClientProps): null {
+	const {
+		isDraftMode,
+		hasCookieForRepository,
+		updatePreviewURL = "/api/preview",
+		exitPreviewURL = "/api/exit-preview",
+	} = props;
 
-	try {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const router = usePagesRouter();
-
-		isAppRouter = false;
-		basePath = router.basePath;
-		isPreviewActive ||= router.isPreview;
-		refresh = () => router.replace(router.asPath, undefined, { scroll: false });
-	} catch {
-		// Assume we are in App Router. Ignore the error.
-
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const router = useRouter();
-
-		refresh = router.refresh;
-	}
+	const { refresh } = useRouter();
 
 	useEffect(() => {
-		/**
-		 * Starts Preview Mode and refreshes the page's props.
-		 */
-		const startPreviewMode = async () => {
-			const resolvedUpdatePreviewURL = basePath + updatePreviewURL;
+		const { signal, abort } = new AbortController();
 
-			// Start Next.js Preview Mode via the given preview API endpoint.
-			const res = await globalThis.fetch(resolvedUpdatePreviewURL);
+		window.addEventListener("prismicPreviewUpdate", onUpdate, { signal });
+		window.addEventListener("prismicPreviewEnd", onEnd, { signal });
 
+		// Start the preview for preview share links. Previews from
+		// share links do not go to the `updatePreviewURL` like a normal
+		// preview.
+		if (hasCookieForRepository && !isDraftMode) {
 			// We check for `res.redirected` rather than `res.ok`
 			// since the update preview endpoint may redirect to a
 			// 404 page. As long as it redirects, we know the
-			// endpoint exists and at least attempted to set
-			// preview data.
-			if (res.redirected) {
-				refresh();
-			} else {
-				console.error(
-					`[<PrismicPreview>] Failed to start or update Preview Mode using the "${resolvedUpdatePreviewURL}" API endpoint. Does it exist?`,
-				);
-			}
-		};
+			// endpoint exists and at least attempted to set preview
+			// data.
+			globalThis
+				.fetch(updatePreviewURL, { signal })
+				.then((res) => {
+					if (!res.redirected) {
+						console.error(
+							`[<PrismicPreview>] Failed to start the preview using "${updatePreviewURL}". Does it exist?`,
+						);
 
-		const handlePrismicPreviewUpdate = async (event: Event) => {
-			// Prevent the toolbar from reloading the page.
-			event.preventDefault();
+						return;
+					}
 
-			if (isAppRouter) {
-				refresh();
-			} else {
-				await startPreviewMode();
-			}
-		};
-
-		const handlePrismicPreviewEnd = async (event: Event) => {
-			// Prevent the toolbar from reloading the page.
-			event.preventDefault();
-
-			const resolvedExitPreviewURL = basePath + exitPreviewURL;
-
-			// Exit Next.js Preview Mode via the given preview API endpoint.
-			const res = await globalThis.fetch(resolvedExitPreviewURL);
-
-			if (res.ok) {
-				refresh();
-			} else {
-				console.error(
-					`[<PrismicPreview>] Failed to exit Preview Mode using the "${resolvedExitPreviewURL}" API endpoint. Does it exist?`,
-				);
-			}
-		};
-
-		window.addEventListener("prismicPreviewUpdate", handlePrismicPreviewUpdate);
-		window.addEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
-
-		if (!isPreviewActive) {
-			const prismicPreviewCookie = getPrismicPreviewCookie(
-				globalThis.document.cookie,
-			);
-
-			if (prismicPreviewCookie) {
-				// If a Prismic preview cookie is present, but Next.js Preview
-				// Mode is not active, we must activate Preview Mode manually.
-				//
-				// This will happen when a visitor accesses the page using a
-				// Prismic preview share link.
-
-				/**
-				 * Determines if the current location is a descendant of the app's base
-				 * path.
-				 *
-				 * This is used to prevent infinite refrehes; when
-				 * `isDescendantOfBasePath` is `false`, `router.isPreview` is also
-				 * `false`.
-				 *
-				 * If the app does not have a base path, this should always be `true`.
-				 */
-				const locationIsDescendantOfBasePath = window.location.href.startsWith(
-					window.location.origin + basePath,
-				);
-
-				const prismicPreviewCookieRepositoryName =
-					getPreviewCookieRepositoryName(prismicPreviewCookie);
-
-				if (
-					locationIsDescendantOfBasePath &&
-					prismicPreviewCookieRepositoryName === repositoryName
-				) {
-					startPreviewMode();
-				}
-			}
+					refresh();
+				})
+				.catch(() => {
+					// noop
+				});
 		}
 
-		return () => {
-			window.removeEventListener(
-				"prismicPreviewUpdate",
-				handlePrismicPreviewUpdate,
-			);
-			window.removeEventListener("prismicPreviewEnd", handlePrismicPreviewEnd);
-		};
+		function onUpdate() {
+			refresh();
+		}
+
+		function onEnd(event: Event) {
+			event.preventDefault();
+			globalThis
+				.fetch(exitPreviewURL, { signal })
+				.then((res) => {
+					if (!res.ok) {
+						console.error(
+							`[<PrismicPreview>] Failed to exit Preview Mode using the "${exitPreviewURL}" API endpoint. Does it exist?`,
+						);
+
+						return;
+					}
+
+					refresh();
+				})
+				.catch(() => {
+					// noop
+				});
+		}
+
+		return () => abort();
 	}, [
-		basePath,
-		exitPreviewURL,
-		isAppRouter,
-		isPreviewActive,
-		refresh,
-		repositoryName,
+		hasCookieForRepository,
+		isDraftMode,
 		updatePreviewURL,
+		exitPreviewURL,
+		refresh,
 	]);
 
 	return null;

@@ -7,7 +7,7 @@ import { version } from "../../package.json";
  *
  * ```ts
  * devMsg("missing-param");
- * // => "https://prismic.dev/msg/next/v1.2.3/missing-param.md"
+ * // => "https://prismic.dev/msg/next/v1.2.3/missing-param"
  * ```
  *
  * @param slug - Slug for the message. This corresponds to a Markdown file in
