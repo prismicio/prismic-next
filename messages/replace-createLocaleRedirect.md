@@ -1,10 +1,8 @@
 # Replace `createLocaleRedirect()`
 
-`createLocaleRedirect()` was provided to simplify internationalization support in Prismic websites. The function was designed to be used in [`middleware.ts`](https://nextjs.org/docs/app/building-your-application/routing/middleware) to redirect websites visitors to a URL with the correct locale.
+`createLocaleRedirect()` was provided to simplify internationalization support in Prismic websites. The function redirects websites visitors to a URL with the correct locale from [`middleware.ts`](https://nextjs.org/docs/app/building-your-application/routing/middleware).
 
-The function fetched the Prismic repository's supported locales using the [Repository API](https://prismic.io/docs/repository-api-technical-reference).
-
-Unfortunately, that network request could never be cached and introduced a delay to every page, usually around 200 ms.
+The function fetched the Prismic repository's supported locales using the [Repository API](https://prismic.io/docs/repository-api-technical-reference). Unfortunately, that network request could never be cached and introduced a delay to every page, usually around 200 ms.
 
 The function should be removed from Next.js projects to ensure the best possible website performance.
 
@@ -73,7 +71,7 @@ The function should be removed from Next.js projects to ensure the best possible
    }
    ```
 
-   1. Create or modify your `middleware.ts` file with the following:
+1. Create or modify your `middleware.ts` file with the following:
 
    ```ts
    import type { NextRequest } from "next/server";
