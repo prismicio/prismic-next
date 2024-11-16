@@ -62,7 +62,7 @@
 		"imgix-url-builder": "^0.0.5"
 	},
 	"devDependencies": {
-		"@prismicio/client": "^7",
+		"@prismicio/client": "^7.12.0",
 		"@prismicio/mock": "^0.4.0",
 		"@rollup/plugin-typescript": "^12.1.1",
 		"@size-limit/preset-small-lib": "^11.1.6",
