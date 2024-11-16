@@ -24,7 +24,16 @@ export function enableAutoPreviews(config: EnableAutoPreviewsConfig): void {
 	// We use a function value so the cookie is checked on every
 	// request. We don't have a static value to read from.
 	config.client.queryContentFromRef(async () => {
-		const isDraftModeEnabled = (await draftMode()).isEnabled;
+		let isDraftModeEnabled = false;
+		try {
+			isDraftModeEnabled = (await draftMode()).isEnabled;
+		} catch {
+			// `draftMode()` may have been called in a palce that
+			// does not have access to its async storage. This
+			// occurs in places like `generateStaticParams()`. We
+			// can ignore this case.
+			return;
+		}
 		if (!isDraftModeEnabled) {
 			return;
 		}

@@ -4,9 +4,9 @@ import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import * as prismic from "@prismicio/client";
 
-import { devMsg } from "./lib/devMsg";
+import { devMsg } from "./lib/devMsg.js";
 
-import { imgixLoader } from "./imgixLoader";
+import { imgixLoader } from "./imgixLoader.js";
 
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {

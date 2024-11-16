@@ -1,6 +1,6 @@
 import type { ClientConfig } from "@prismicio/client";
 
-import { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
+import { EnableAutoPreviewsConfig } from "./enableAutoPreviews.js";
 
 /**
  * Configuration for creating a Prismic client with automatic preview support in
@@ -8,13 +8,6 @@ import { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
  */
 export type CreateClientConfig = ClientConfig &
 	Pick<EnableAutoPreviewsConfig, "previewData" | "req">;
-
-/**
- * Prismic data saved in Next.js Preview Mode's object.
- */
-export type PrismicPreviewData = {
-	ref: string;
-};
 
 /**
  * The minimal set of properties needed from `next`'s `NextApiRequest` type.

@@ -1,6 +1,6 @@
 import type { LinkResolverFunction, Client } from "@prismicio/client";
 
-import type { NextApiRequestLike, NextApiResponseLike } from "./types";
+import type { NextApiRequestLike, NextApiResponseLike } from "./types.js";
 
 export type RedirectToPreviewURLConfig = {
 	/**

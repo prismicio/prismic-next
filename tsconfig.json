@@ -1,20 +1,18 @@
 {
 	"compilerOptions": {
 		"strict": true,
-		"skipLibCheck": true,
 
 		"target": "esnext",
 		"module": "esnext",
-		"declaration": false,
-		"moduleResolution": "node",
+		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
-		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
 
-		"forceConsistentCasingInFileNames": true,
 		"jsx": "react-jsx",
 		"lib": ["esnext", "dom"],
-		"types": ["node"]
+
+		"declaration": true,
+		"outDir": "./dist",
+		"rootDir": "./src"
 	},
-	"exclude": ["node_modules", "dist", "examples"]
+	"exclude": ["./node_modules", "./dist", "./examples"]
 }

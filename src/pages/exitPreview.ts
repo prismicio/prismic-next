@@ -1,4 +1,4 @@
-import type { NextApiResponseLike } from "./types";
+import type { NextApiResponseLike } from "./types.js";
 
 /**
  * Configuration for `exitPreview()`.

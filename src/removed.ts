@@ -1,4 +1,4 @@
-import { devMsg } from "./lib/devMsg";
+import { devMsg } from "./lib/devMsg.js";
 
 export function createLocaleRedirect() {
 	throw new Error(

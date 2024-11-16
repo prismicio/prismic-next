@@ -3,7 +3,7 @@ import { cookies, draftMode } from "next/headers";
 import Script from "next/script";
 import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
 
-import { PrismicPreviewClient } from "./PrismicPreviewClient";
+import { PrismicPreviewClient } from "./PrismicPreviewClient.js";
 
 /**
  * Props for `<PrismicPreview>`.
@@ -54,13 +54,15 @@ export async function PrismicPreview(
 	const toolbarSrc = getToolbarSrc(repositoryName);
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	const cookieJar = await cookies();
-	const cookie = cookieJar.get(prismicCookie.preview)?.value;
-
-	const cookieRepositoryName = cookie
-		? (decodeURIComponent(cookie).match(/"([^"]+)\.prismic\.io"/) || [])[1]
-		: undefined;
-	const hasCookieForRepository = cookieRepositoryName === repositoryName;
+	let hasCookieForRepository = false;
+	if (isDraftMode) {
+		const cookieJar = await cookies();
+		const cookie = cookieJar.get(prismicCookie.preview)?.value;
+		const cookieRepositoryName = cookie
+			? (decodeURIComponent(cookie).match(/"([^"]+)\.prismic\.io"/) || [])[1]
+			: undefined;
+		hasCookieForRepository = cookieRepositoryName === repositoryName;
+	}
 
 	return (
 		<>
