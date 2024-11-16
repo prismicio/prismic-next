@@ -1,5 +1,9 @@
 import { devMsg } from "./lib/devMsg.js";
 
+/**
+ * @deprecated `createLocaleRedirect()` has been removed due to performance
+ *   issues.
+ */
 export function createLocaleRedirect() {
 	throw new Error(
 		`createLocaleRedirect() has been removed due to performance issues. See ${devMsg(
