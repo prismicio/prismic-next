@@ -69,7 +69,7 @@ jobs:
         run: npm run build
 
       - name: Coverage
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 16
+        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
         uses: codecov/codecov-action@v3
 
   types:
@@ -80,7 +80,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest]
-        node: [16]
+        node: [22]
         typescript: ["4.7", "4.8", "4.9", "5.0"]
 
     steps:
