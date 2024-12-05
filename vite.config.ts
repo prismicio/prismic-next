@@ -36,11 +36,5 @@ export default defineConfig({
 		coverage: {
 			reporter: ["lcovonly", "text"],
 		},
-		browser: {
-			provider: "playwright",
-			enabled: true,
-			// headless: true,
-			name: "chromium",
-		},
 	},
 });

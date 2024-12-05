@@ -23,7 +23,10 @@ const castInt = (input: string | number | undefined): number | undefined => {
 	}
 };
 
-export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
+export type PrismicNextImageProps = Omit<
+	ImageProps,
+	"src" | "alt" | "loader"
+> & {
 	/** The Prismic Image field or thumbnail to render. */
 	field: prismic.ImageFieldImage | null | undefined;
 
@@ -56,6 +59,8 @@ export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
 	 * be rendered.
 	 */
 	fallback?: React.ReactNode;
+
+	loader?: ImageProps["loader"] | null;
 };
 
 /**
@@ -83,8 +88,10 @@ export const PrismicNextImage = ({
 	width,
 	height,
 	fallback = null,
+	loader = imgixLoader,
 	...restProps
 }: PrismicNextImageProps): JSX.Element => {
+
 	if (DEV) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
@@ -154,7 +161,7 @@ export const PrismicNextImage = ({
 				height={fill ? undefined : resolvedHeight}
 				alt={resolvedAlt}
 				fill={fill}
-				loader={imgixLoader}
+				loader={loader === null ? undefined : loader}
 				{...restProps}
 			/>
 		);
