@@ -18,7 +18,7 @@ export default defineWorkspace([
 				enabled: true,
 				headless: true,
 				name: "chromium",
-				screenshotFailures:false
+				screenshotFailures: false,
 			},
 		},
 	},

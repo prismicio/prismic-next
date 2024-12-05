@@ -18,6 +18,5 @@ export const render = (
 		root = renderer.create(element, options);
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	return root!;
 };

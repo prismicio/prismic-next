@@ -19,6 +19,5 @@ export const renderJSON = (
 		root = renderer.create(element, options);
 	});
 
-	// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 	return root!.toJSON() as renderer.ReactTestRendererJSON;
 };

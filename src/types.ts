@@ -7,9 +7,7 @@ declare module "@prismicio/client" {
 	}
 }
 
-/**
- * @deprecated Use `@prismicio/client`'s `ClientConfig`.
- */
+/** @deprecated Use `@prismicio/client`'s `ClientConfig`. */
 export type CreateClientConfig = ClientConfig;
 
 /**

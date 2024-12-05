@@ -3,9 +3,7 @@ import type { LinkResolverFunction, Client } from "@prismicio/client";
 import type { NextApiRequestLike, NextApiResponseLike } from "./types.js";
 
 export type RedirectToPreviewURLConfig = {
-	/**
-	 * The Prismic client configured for the preview session's repository.
-	 */
+	/** The Prismic client configured for the preview session's repository. */
 	// `Pick` is used to use the smallest possible subset of
 	// `prismic.Client`. Doing this reduces the surface area for breaking
 	// type changes.

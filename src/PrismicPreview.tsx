@@ -5,9 +5,7 @@ import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
 
 import { PrismicPreviewClient } from "./PrismicPreviewClient.js";
 
-/**
- * Props for `<PrismicPreview>`.
- */
+/** Props for `<PrismicPreview>`. */
 export type PrismicPreviewProps = {
 	/**
 	 * The name of your Prismic repository. A Prismic Toolbar will be registered
@@ -31,9 +29,7 @@ export type PrismicPreviewProps = {
 	 */
 	exitPreviewURL?: string;
 
-	/**
-	 * Children to render adjacent to the Prismic Toolbar.
-	 */
+	/** Children to render adjacent to the Prismic Toolbar. */
 	children?: ReactNode;
 };
 

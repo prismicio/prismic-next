@@ -91,7 +91,6 @@ export const PrismicNextImage = ({
 	loader = imgixLoader,
 	...restProps
 }: PrismicNextImageProps): JSX.Element => {
-
 	if (DEV) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
@@ -136,7 +135,7 @@ export const PrismicNextImage = ({
 
 		// A non-null assertion is required since we can't statically
 		// know if an alt attribute is available.
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
 		const resolvedAlt = (alt ?? (field.alt || fallbackAlt))!;
 
 		if (DEV && typeof resolvedAlt !== "string") {

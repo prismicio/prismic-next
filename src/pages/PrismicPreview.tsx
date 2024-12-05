@@ -3,9 +3,7 @@ import { useRouter } from "next/router";
 import Script from "next/script";
 import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
 
-/**
- * Props for `<PrismicPreview>`.
- */
+/** Props for `<PrismicPreview>`. */
 export type PrismicPreviewProps = {
 	/**
 	 * The name of your Prismic repository. A Prismic Toolbar will be registered
@@ -29,9 +27,7 @@ export type PrismicPreviewProps = {
 	 */
 	exitPreviewURL?: string;
 
-	/**
-	 * Children to render adjacent to the Prismic Toolbar.
-	 */
+	/** Children to render adjacent to the Prismic Toolbar. */
 	children?: ReactNode;
 };
 

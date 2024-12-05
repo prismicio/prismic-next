@@ -21,6 +21,7 @@ export const it = test.extend<Fixtures>({
 		const repositoryName = await sha1(task.name);
 		await use(repositoryName);
 	},
+	// eslint-disable-next-line no-empty-pattern
 	fetch: async ({}, use) => {
 		const fetch = vi.fn<FetchLike>(async () => Response.json({}));
 
@@ -53,6 +54,7 @@ export const it = test.extend<Fixtures>({
 
 		await use(cookie);
 	},
+	// eslint-disable-next-line no-empty-pattern
 	inactiveCookie: async ({}, use) => {
 		const cookie = JSON.stringify({ _tracker: "abc123" });
 

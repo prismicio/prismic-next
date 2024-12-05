@@ -9,10 +9,10 @@ import { PrismicNextLink } from "../src";
 const mock = createValueMockFactory({ seed: "PrismicNextLink" });
 
 describe("web links", () => {
-	const internalWebLink = mock.link({ type: "Web" });
+	const internalWebLink = mock.link({ type: "Web", withTargetBlank: false });
 	internalWebLink.url = "/foo";
 
-	const externalWebLink = mock.link({ type: "Web" });
+	const externalWebLink = mock.link({ type: "Web", withTargetBlank: false });
 	externalWebLink.url = "https://example.com";
 
 	const webLinkWithTarget = mock.link({ type: "Web", withTargetBlank: true });

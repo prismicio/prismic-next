@@ -1,8 +1,6 @@
 import type { NextApiResponseLike } from "./types.js";
 
-/**
- * Configuration for `exitPreview()`.
- */
+/** Configuration for `exitPreview()`. */
 export type ExitPreviewAPIRouteConfig = {
 	/**
 	 * The `res` object from a Next.js API route.

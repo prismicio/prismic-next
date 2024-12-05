@@ -1,13 +1,9 @@
 import { draftMode, cookies } from "next/headers";
 import { type Client, cookie as prismicCookie } from "@prismicio/client";
 
-/**
- * Configuration for `enableAutoPreviews`.
- */
+/** Configuration for `enableAutoPreviews`. */
 export type EnableAutoPreviewsConfig = {
-	/**
-	 * Prismic client with which automatic previews will be enabled.
-	 */
+	/** Prismic client with which automatic previews will be enabled. */
 	// `Pick` is used to use the smallest possible subset of
 	// `prismic.Client`. Doing this reduces the surface area for breaking
 	// type changes.
