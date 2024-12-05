@@ -26,14 +26,21 @@ export default defineConfig({
 				...Object.keys(dependencies),
 				...Object.keys(peerDependencies),
 			].map((name) => new RegExp(`^${name}(?:\/.*)?$`)),
-			plugins: [typescript(), preserveDirectives()],
+			plugins: [typescript({ rootDir: "./src" }), preserveDirectives()],
 		},
+	},
+	define: {
+		"process.env": JSON.stringify({}),
 	},
 	test: {
 		coverage: {
-			provider: "v8",
 			reporter: ["lcovonly", "text"],
 		},
-		setupFiles: ["./test/__setup__"],
+		browser: {
+			provider: "playwright",
+			enabled: true,
+			// headless: true,
+			name: "chromium",
+		},
 	},
 });

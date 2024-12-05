@@ -1,276 +1,255 @@
-// @vitest-environment happy-dom
+import { describe, expect, vi } from "vitest";
+import { render } from "vitest-browser-react";
+import { createValueMockFactory } from "@prismicio/mock";
 
-import { it, expect, vi } from "vitest";
-import { ReactTestRendererJSON } from "react-test-renderer";
-import { LinkResolverFunction } from "@prismicio/client";
-import Link from "next/link";
-
-import { renderJSON } from "./__testutils__/renderJSON";
+import { it } from "./it";
 
 import { PrismicNextLink } from "../src";
 
-function expectLinkToEqual(
-	actual: ReactTestRendererJSON | null,
-	expected: ReactTestRendererJSON | null,
-) {
-	if (actual == null) {
-		expect.fail(
-			"`actual` must not be null to use `expectLinkToEqual()`, but a null value was provided.",
+const mock = createValueMockFactory({ seed: "PrismicNextLink" });
+
+describe("web links", () => {
+	const internalWebLink = mock.link({ type: "Web" });
+	internalWebLink.url = "/foo";
+
+	const externalWebLink = mock.link({ type: "Web" });
+	externalWebLink.url = "https://example.com";
+
+	const webLinkWithTarget = mock.link({ type: "Web", withTargetBlank: true });
+
+	it("renders an internal web link", async () => {
+		const screen = render(
+			<PrismicNextLink field={internalWebLink} data-testid="link" />,
 		);
-	}
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", internalWebLink.url);
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
 
-	if (expected == null) {
-		expect.fail(
-			"`expected` must not be null to use `expectLinkToEqual()`, but a null value was provided.",
+	it("renders an external web link", async () => {
+		const screen = render(
+			<PrismicNextLink field={externalWebLink} data-testid="link" />,
 		);
-	}
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", externalWebLink.url);
+		await expect.element(link).toHaveAttribute("rel", "noreferrer");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
 
-	expect(actual.type, "type").toBe(expected.type);
-	expect(actual.props.href, "href").toBe(expected.props.href);
-	expect(actual.props.target, "target").toBe(expected.props.target);
-	expect(actual.props.rel, "rel").toBe(expected.props.rel);
-	expect(actual.children, "children").toEqual(expected.children);
-}
+	it("renders a web link with _blank target", async () => {
+		const screen = render(
+			<PrismicNextLink field={webLinkWithTarget} data-testid="link" />,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("target", "_blank");
+	});
 
-it("renders a next/link for web link", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" });
+	it("renders an external web link with a provided target", async () => {
+		const screen = render(
+			<PrismicNextLink
+				field={webLinkWithTarget}
+				target="foo"
+				data-testid="link"
+			/>,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("target", "foo");
+	});
 
-	const actual = renderJSON(
-		<PrismicNextLink field={field}>Foo</PrismicNextLink>,
-	);
-	const expected = renderJSON(
-		<Link href={field.url} rel="noreferrer">
-			Foo
-		</Link>,
-	);
+	it("renders an external web link with a provided rel", async () => {
+		const screen = render(
+			<PrismicNextLink
+				field={webLinkWithTarget}
+				rel="foo"
+				data-testid="link"
+			/>,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("rel", "foo");
+	});
 
-	expectLinkToEqual(actual, expected);
-});
+	it("can render an external web link without a rel", async () => {
+		const screen = render(
+			<PrismicNextLink
+				field={webLinkWithTarget}
+				rel={undefined}
+				data-testid="link"
+			/>,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).not.toHaveAttribute("rel");
+	});
 
-it('renders a next/link for web link with "Open in new tab" checked', (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web", withTargetBlank: true });
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field}>Foo</PrismicNextLink>,
-	);
-	const expected = renderJSON(
-		<Link href={field.url} target="_blank" rel="noreferrer">
-			Foo
-		</Link>,
-	);
-
-	expectLinkToEqual(actual, expected);
-});
-
-it("renders a next/link for document link with Route Resolver", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Document" });
-	field.url = "/foo";
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field}>Foo</PrismicNextLink>,
-	);
-	const expected = renderJSON(<Link href={field.url}>Foo</Link>);
-
-	expectLinkToEqual(actual, expected);
-});
-
-it("renders a next/link for document link with Link Resolver", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Document" });
-	field.url = undefined;
-
-	const linkResolver: LinkResolverFunction = (field) => `/${field.uid}`;
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field} linkResolver={linkResolver}>
-			Foo
-		</PrismicNextLink>,
-	);
-	const expected = renderJSON(<Link href={`/${field.uid}`}>Foo</Link>);
-
-	expectLinkToEqual(actual, expected);
-});
-
-it("renders a next/link for media link", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Media" });
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field}>Foo</PrismicNextLink>,
-	);
-	const expected = renderJSON(
-		<Link href={field.url} rel="noreferrer">
-			Foo
-		</Link>,
-	);
-
-	expectLinkToEqual(actual, expected);
-});
-
-it("renders a next/link for document with Route Resolver", (ctx) => {
-	const doc = ctx.mock.value.document();
-	doc.url = "https://prismic.io";
-
-	const actual = renderJSON(
-		<PrismicNextLink document={doc}>Foo</PrismicNextLink>,
-	);
-	const expected = renderJSON(
-		<Link href={doc.url} rel="noreferrer">
-			Foo
-		</Link>,
-	);
-
-	expectLinkToEqual(actual, expected);
-});
-
-it("renders a next/link for document with Link Resolver", (ctx) => {
-	const doc = ctx.mock.value.document();
-	doc.uid = "foo";
-
-	const linkResolver: LinkResolverFunction = (field) => `/${field.uid}`;
-
-	const actual = renderJSON(
-		<PrismicNextLink document={doc} linkResolver={linkResolver}>
-			Foo
-		</PrismicNextLink>,
-	);
-	const expected = renderJSON(<Link href={`/${doc.uid}`}>Foo</Link>);
-
-	expectLinkToEqual(actual, expected);
-});
-
-it('includes `rel="noreferrer"` when the href is external', (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" });
-	field.url = "https://prismic.io";
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field}>Foo</PrismicNextLink>,
-	);
-
-	expect(actual?.props.rel).toBe("noreferrer");
-});
-
-it("passes through target", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" });
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field} target="foo">
-			Foo
-		</PrismicNextLink>,
-	);
-
-	expect(actual?.props.target).toBe("foo");
-});
-
-it("passes through rel", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" });
-	field.url = "https://prismic.io";
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field} rel="foo">
-			Foo
-		</PrismicNextLink>,
-	);
-
-	expect(actual?.props.rel).toBe("foo");
-});
-
-it("allows removing an automatic rel", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" });
-	field.url = "https://prismic.io";
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field} rel={undefined}>
-			Foo
-		</PrismicNextLink>,
-	);
-
-	expect(actual?.props.rel).toBe(undefined);
-});
-
-it("allows defining rel with a function", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web", withTargetBlank: true });
-	field.url = "https://prismic.io";
-
-	const rel = vi.fn(() => "foo");
-
-	const actual = renderJSON(
-		<PrismicNextLink field={field} rel={rel}>
-			Foo
-		</PrismicNextLink>,
-	);
-
-	expect(actual?.props.rel).toBe("foo");
-	expect(rel).toHaveBeenCalledWith({
-		href: field.url,
-		target: field.target,
-		isExternal: true,
+	it("can render an external web link with rel derived from a function", async () => {
+		const relFn = vi.fn(() => "foo");
+		const screen = render(
+			<PrismicNextLink
+				field={webLinkWithTarget}
+				rel={relFn}
+				data-testid="link"
+			/>,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("rel", "foo");
+		expect(relFn).toHaveBeenCalledWith({
+			href: webLinkWithTarget.url,
+			isExternal: true,
+			target: webLinkWithTarget.target,
+		});
 	});
 });
 
-it("passes through href", () => {
-	const actual = renderJSON(<PrismicNextLink href="/foo">Foo</PrismicNextLink>);
+describe("document links", () => {
+	const documentLinkWithURL = mock.link({ type: "Document" });
+	documentLinkWithURL.url = "/foo";
 
-	expect(actual?.props.href).toBe("/foo");
-});
+	const documentLinkWithoutURL = mock.link({ type: "Document" });
+	documentLinkWithoutURL.url = undefined;
+	documentLinkWithoutURL.uid = "foo";
 
-it("falsey href falls back to empty string", () => {
-	const actual = renderJSON(
-		// @ts-expect-error - We are purposely providing an invalid `href` value.
-		<PrismicNextLink href={undefined}>Foo</PrismicNextLink>,
-	);
-
-	expect(actual?.props.href).toBe("");
-});
-
-it("forwards ref", (ctx) => {
-	const field = ctx.mock.value.link({ type: "Web" });
-
-	const ref = vi.fn();
-
-	renderJSON(
-		<PrismicNextLink ref={ref} field={field}>
-			Foo
-		</PrismicNextLink>,
-		{
-			createNodeMock: (element) => ({ tagName: element.type }),
-		},
-	);
-
-	expect(ref).toHaveBeenCalledWith({ tagName: "a" });
-});
-
-it("renders a next/link with text", (ctx) => {
-	const model = ctx.mock.model.link({
-		allowText: true,
-		allowTargetBlank: false,
+	it("renders a document link with a route resolver", async () => {
+		const screen = render(
+			<PrismicNextLink field={documentLinkWithURL} data-testid="link" />,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", "/foo");
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
 	});
-	const field = ctx.mock.value.link({ type: "Web", model, withText: true });
 
-	const actual = renderJSON(<PrismicNextLink field={field} />);
-	const expected = renderJSON(
-		<Link href={field.url} rel="noreferrer">
-			{field.text}
-		</Link>,
-	);
-
-	expectLinkToEqual(actual, expected);
+	it("renders a document link with a link resolver", async () => {
+		const screen = render(
+			<PrismicNextLink
+				field={documentLinkWithoutURL}
+				linkResolver={(link) => `/${link.uid}`}
+				data-testid="link"
+			/>,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", "/foo");
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
 });
 
-it("renders a next/link with the given children, overriding the link's text", (ctx) => {
-	const model = ctx.mock.model.link({
-		allowText: true,
-		allowTargetBlank: false,
+describe("media links", () => {
+	const mediaLink = mock.link({ type: "Media" });
+	mediaLink.url = "https://example.com/image.png";
+
+	it("renders a media link", async () => {
+		const screen = render(
+			<PrismicNextLink field={mediaLink} data-testid="link" />,
+		);
+		const link = screen.getByTestId("link");
+		await expect
+			.element(link)
+			.toHaveAttribute("href", "https://example.com/image.png");
+		await expect.element(link).toHaveAttribute("rel", "noreferrer");
+		await expect.element(link).not.toHaveAttribute("target");
 	});
-	const field = ctx.mock.value.link({ type: "Web", model, withText: true });
-	const children = ctx.mock.value.keyText();
+});
 
-	const actual = renderJSON(
-		<PrismicNextLink field={field}>{children}</PrismicNextLink>,
-	);
-	const expected = renderJSON(
-		<Link href={field.url} rel="noreferrer">
-			{children}
-		</Link>,
-	);
+describe("documents", () => {
+	const documentWithURL = mock.document();
+	documentWithURL.url = "/foo";
 
-	expectLinkToEqual(actual, expected);
+	const documentWithoutURL = mock.document();
+	documentWithoutURL.url = null;
+	documentWithoutURL.uid = "foo";
+
+	it("renders a document link with a route resolver via the document prop", async () => {
+		const screen = render(
+			<PrismicNextLink document={documentWithURL} data-testid="link" />,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", "/foo");
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
+
+	it("renders a document link with a link resolver via the document prop", async () => {
+		const screen = render(
+			<PrismicNextLink
+				document={documentWithoutURL}
+				linkResolver={(link) => `/${link.uid}`}
+				data-testid="link"
+			/>,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", "/foo");
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
+});
+
+describe("href", () => {
+	it("renders an external href", async () => {
+		const screen = render(
+			<PrismicNextLink href="https://example.com" data-testid="link" />,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", "https://example.com");
+		// TODO: We should be setting `rel="noreferrer"` with an external `href`.
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
+
+	it("renders an internal href", async () => {
+		const screen = render(<PrismicNextLink href="/foo" data-testid="link" />);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", "/foo");
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
+
+	it("renders an empty string on falsy href", async () => {
+		const screen = render(
+			// @ts-expect-error - We are purposely providing an invalid `href` value.
+			<PrismicNextLink href={undefined} data-testid="link" />,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toHaveAttribute("href", "");
+		await expect.element(link).not.toHaveAttribute("rel");
+		await expect.element(link).not.toHaveAttribute("target");
+	});
+});
+
+describe("with text", () => {
+	const withText = mock.link({ withText: true });
+	withText.text = "foo";
+
+	it("renders a link's text as children", async () => {
+		const screen = render(
+			<PrismicNextLink field={withText} data-testid="link" />,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toContainHTML("foo");
+	});
+
+	it("renders the given children, overriding the link's text", async () => {
+		const screen = render(
+			<PrismicNextLink field={withText} data-testid="link">
+				override
+			</PrismicNextLink>,
+		);
+		const link = screen.getByTestId("link");
+		await expect.element(link).toContainHTML("override");
+	});
+});
+
+describe("ref", () => {
+	it("forwards ref", async () => {
+		let ref = null as HTMLAnchorElement | null;
+		render(
+			<PrismicNextLink
+				ref={(el) => {
+					ref = el;
+				}}
+				href=""
+				data-testid="link"
+			/>,
+		);
+		expect(ref?.tagName).toBe("A");
+	});
 });
