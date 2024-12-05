@@ -8,6 +8,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         node: [18, 20, 22]
+      fail-fast: false
 
     runs-on: ${{ matrix.os }}
 
