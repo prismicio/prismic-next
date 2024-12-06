@@ -1,5 +1,3 @@
-"use client";
-
 import * as React from "react";
 import * as prismic from "@prismicio/client";
 import Link from "next/link";

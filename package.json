@@ -56,7 +56,10 @@
 		"test": "npm run lint && npm run types && npm run unit && npm run build && npm run size",
 		"types": "tsc --noEmit",
 		"unit": "vitest run --coverage",
-		"unit:watch": "vitest watch"
+		"unit:watch": "vitest watch",
+		"e2e": "playwright test",
+		"e2e:ui": "npm run e2e -- --ui",
+		"e2e:install": "npm install --prefix tests-app"
 	},
 	"dependencies": {
 		"esm-env": "^1.2.1",
@@ -64,6 +67,7 @@
 	},
 	"devDependencies": {
 		"@eslint/js": "^9.16.0",
+		"@playwright/test": "^1.49.0",
 		"@prismicio/client": "^7.12.0",
 		"@prismicio/mock": "^0.5.0",
 		"@rollup/plugin-typescript": "^12.1.1",
