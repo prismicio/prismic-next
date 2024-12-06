@@ -1,7 +1,6 @@
 /* eslint react-hooks/rules-of-hooks: 0 */
 
 import { test, vi } from "vitest";
-import * as crypto from "node:crypto";
 import { Client, FetchLike, createClient } from "@prismicio/client";
 import { MockFactory, createMockFactory } from "@prismicio/mock";
 
