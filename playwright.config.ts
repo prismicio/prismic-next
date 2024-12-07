@@ -1,4 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
+import dotenv from "dotenv";
+import assert from "node:assert";
+
+dotenv.config({ path: ".env.test.local" });
 
 // https://playwright.dev/docs/test-configuration
 export default defineConfig({
@@ -20,9 +24,29 @@ export default defineConfig({
 	],
 	webServer: [
 		{
-			command: "npm run dev --prefix tests-app -- --turbopack",
+			command: "npm run dev --prefix tests-app -- --turbo",
 			port: 4321,
 			reuseExistingServer: !process.env.CI,
 		},
 	],
 });
+
+declare global {
+	// eslint-disable-next-line @typescript-eslint/no-namespace
+	namespace NodeJS {
+		interface ProcessEnv {
+			CI: boolean;
+			PLAYWRIGHT_PRISMIC_USERNAME: string;
+			PLAYWRIGHT_PRISMIC_PASSWORD: string;
+		}
+	}
+}
+
+assert.ok(
+	process.env.PLAYWRIGHT_PRISMIC_USERNAME,
+	"Missing PLAYWRIGHT_PRISMIC_USERNAME env variable.",
+);
+assert.ok(
+	process.env.PLAYWRIGHT_PRISMIC_PASSWORD,
+	"Missing PLAYWRIGHT_PRISMIC_PASSWORD env variable.",
+);

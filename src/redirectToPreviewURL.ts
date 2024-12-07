@@ -45,6 +45,9 @@ export async function redirectToPreviewURL(
 ): Promise<never> {
 	const { client, request, linkResolver, defaultURL = "/" } = config;
 
+	const documentID =
+		request.nextUrl.searchParams.get("documentId") ?? undefined;
+
 	// Set the initial preview cookie. Setting the cookie here is necessary
 	// to support unpublished previews. Without setting it here, the page
 	// will try to render without the preview cookie, leading to a
@@ -56,9 +59,10 @@ export async function redirectToPreviewURL(
 	}
 
 	const previewURL = await client.resolvePreviewURL({
-		linkResolver,
-		defaultURL,
+		documentID,
 		previewToken,
+		defaultURL,
+		linkResolver,
 	});
 
 	(await draftMode()).enable();

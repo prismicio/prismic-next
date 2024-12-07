@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
-import { cookies, draftMode } from "next/headers";
+import { draftMode } from "next/headers";
 import Script from "next/script";
-import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
+import { getToolbarSrc } from "@prismicio/client";
 
 import { PrismicPreviewClient } from "./PrismicPreviewClient.js";
 
@@ -50,22 +50,12 @@ export async function PrismicPreview(
 	const toolbarSrc = getToolbarSrc(repositoryName);
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	let hasCookieForRepository = false;
-	if (isDraftMode) {
-		const cookieJar = await cookies();
-		const cookie = cookieJar.get(prismicCookie.preview)?.value;
-		const cookieRepositoryName = cookie
-			? (decodeURIComponent(cookie).match(/"([^"]+)\.prismic\.io"/) || [])[1]
-			: undefined;
-		hasCookieForRepository = cookieRepositoryName === repositoryName;
-	}
-
 	return (
 		<>
 			{children}
 			<PrismicPreviewClient
+				repositoryName={repositoryName}
 				isDraftMode={isDraftMode}
-				hasCookieForRepository={hasCookieForRepository}
 				{...otherProps}
 			/>
 			<Script src={toolbarSrc} strategy="lazyOnload" />
