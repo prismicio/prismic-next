@@ -17,9 +17,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
+          registry-url: "https://registry.npmjs.org/"
       - run: npm ci
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       - run: npm ci --prefix e2e-projects/app-router && npm ci --prefix e2e-projects/pages-router
       - run: npx playwright install --with-deps
       - run: npm run lint
