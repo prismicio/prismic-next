@@ -53,10 +53,14 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 	const toolbarSrc = getToolbarSrc(repositoryName);
 
 	useEffect(() => {
-		const { signal, abort } = new AbortController();
+		const controller = new AbortController();
 
-		window.addEventListener("prismicPreviewUpdate", onUpdate, { signal });
-		window.addEventListener("prismicPreviewEnd", onEnd, { signal });
+		window.addEventListener("prismicPreviewUpdate", onUpdate, {
+			signal: controller.signal,
+		});
+		window.addEventListener("prismicPreviewEnd", onEnd, {
+			signal: controller.signal,
+		});
 
 		// Start the preview for preview share links. Previews from
 		// share links do not go to the `updatePreviewURL` like a normal
@@ -76,8 +80,7 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 
 		function onEnd(event: Event) {
 			event.preventDefault();
-			globalThis
-				.fetch(router.basePath + exitPreviewURL, { signal })
+			fetch(router.basePath + exitPreviewURL, { signal: controller.signal })
 				.then((res) => {
 					if (!res.ok) {
 						console.error(
@@ -87,7 +90,7 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 						return;
 					}
 
-					refresh();
+					router.replace(router.asPath, undefined, { scroll: false });
 				})
 				.catch(() => {});
 		}
@@ -102,8 +105,7 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 			// 404 page. As long as it redirects, we know the
 			// endpoint exists and at least attempted to set preview
 			// data.
-			globalThis
-				.fetch(router.basePath + updatePreviewURL, { signal })
+			fetch(router.basePath + updatePreviewURL, { signal: controller.signal })
 				.then((res) => {
 					if (!res.redirected) {
 						console.error(
@@ -113,16 +115,12 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 						return;
 					}
 
-					refresh();
+					router.replace(router.asPath, undefined, { scroll: false });
 				})
 				.catch(() => {});
 		}
 
-		function refresh() {
-			router.replace(router.asPath, undefined, { scroll: false });
-		}
-
-		return () => abort();
+		return () => controller.abort();
 	}, [exitPreviewURL, updatePreviewURL, repositoryName, router]);
 
 	return (

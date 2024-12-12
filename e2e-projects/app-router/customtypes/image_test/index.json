@@ -1,0 +1,51 @@
+{
+	"format": "custom",
+	"id": "image_test",
+	"label": "Image Test",
+	"repeatable": false,
+	"status": true,
+	"json": {
+		"Main": {
+			"empty": {
+				"type": "Image",
+				"config": {
+					"label": "Empty",
+					"constraint": {},
+					"thumbnails": []
+				}
+			},
+			"filled": {
+				"type": "Image",
+				"config": {
+					"label": "Filled",
+					"constraint": {},
+					"thumbnails": []
+				}
+			},
+			"with_alt_text": {
+				"type": "Image",
+				"config": {
+					"label": "With Alt Text",
+					"constraint": {},
+					"thumbnails": []
+				}
+			},
+			"without_alt_text": {
+				"type": "Image",
+				"config": {
+					"label": "Without Alt Text",
+					"constraint": {},
+					"thumbnails": []
+				}
+			},
+			"with_crop": {
+				"type": "Image",
+				"config": {
+					"label": "With Crop",
+					"constraint": {},
+					"thumbnails": []
+				}
+			}
+		}
+	}
+}

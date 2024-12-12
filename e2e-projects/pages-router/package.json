@@ -1,0 +1,22 @@
+{
+	"name": "pages-router",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --port=4322 --turbo",
+		"build": "next build",
+		"start": "next start --port=4322"
+	},
+	"dependencies": {
+		"@prismicio/client": "^7.13.0",
+		"@prismicio/mock": "^0.4.0",
+		"next": "15.0.3",
+		"react": "19.0.0-rc-66855b96-20241106",
+		"react-dom": "19.0.0-rc-66855b96-20241106"
+	},
+	"devDependencies": {
+		"@types/node": "^20",
+		"@types/react": "^18",
+		"@types/react-dom": "^18",
+		"typescript": "^5"
+	}
+}

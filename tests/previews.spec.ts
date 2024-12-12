@@ -1,8 +1,5 @@
 import { test, expect } from "./test";
 
-// Required since Prismic doesn't like concurrent document publishes.
-test.describe.configure({ mode: "serial" });
-
 test("adds the Prismic toolbar script", async ({
 	appRouterPage,
 	document,
@@ -64,4 +61,23 @@ test("supports sharable links", async ({ appRouterPage, document }) => {
 	await appRouterPage.setPreviewSessionCookie(previewSession.session_id);
 	await appRouterPage.goToDocument(document);
 	await expect(appRouterPage.payload).toContainText("foo");
+});
+
+test("supports custom update endpoint", async ({ appRouterPage, document }) => {
+	await appRouterPage.goToDocument(document, "/with-custom-preview-endpoints");
+	await expect(appRouterPage.payload).not.toContainText("foo");
+	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
+	await appRouterPage.preview(updatedDocument);
+	await expect(appRouterPage.payload).toContainText("foo");
+});
+
+test("supports custom exit endpoint", async ({ appRouterPage, document }) => {
+	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
+	await appRouterPage.preview(updatedDocument);
+	await appRouterPage.goToDocument(
+		updatedDocument,
+		"/with-custom-preview-endpoints",
+	);
+	await appRouterPage.exitPreview();
+	await expect(appRouterPage.payload).not.toContainText("foo");
 });

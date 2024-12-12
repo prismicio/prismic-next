@@ -1,0 +1,81 @@
+{
+	"format": "custom",
+	"id": "link_test",
+	"label": "Link Test",
+	"repeatable": false,
+	"status": true,
+	"json": {
+		"Main": {
+			"empty": {
+				"type": "Link",
+				"config": {
+					"label": "Empty",
+					"placeholder": "",
+					"allowTargetBlank": true,
+					"select": null,
+					"allowText": false
+				}
+			},
+			"internal_web": {
+				"type": "Link",
+				"config": {
+					"label": "Internal Web",
+					"placeholder": "",
+					"allowTargetBlank": true,
+					"select": null,
+					"allowText": false
+				}
+			},
+			"external_web": {
+				"type": "Link",
+				"config": {
+					"label": "External Web",
+					"placeholder": "",
+					"allowTargetBlank": true,
+					"select": null,
+					"allowText": false
+				}
+			},
+			"external_web_with_target": {
+				"type": "Link",
+				"config": {
+					"label": "External Web With Target",
+					"placeholder": "",
+					"allowTargetBlank": true,
+					"select": null,
+					"allowText": false
+				}
+			},
+			"document": {
+				"type": "Link",
+				"config": {
+					"label": "Document",
+					"placeholder": "",
+					"allowTargetBlank": true,
+					"select": null,
+					"allowText": false
+				}
+			},
+			"media": {
+				"type": "Link",
+				"config": {
+					"label": "Media",
+					"placeholder": "",
+					"allowTargetBlank": true,
+					"select": null,
+					"allowText": false
+				}
+			},
+			"with_text": {
+				"type": "Link",
+				"config": {
+					"label": "With Text",
+					"placeholder": "",
+					"allowTargetBlank": true,
+					"select": null,
+					"allowText": true
+				}
+			}
+		}
+	}
+}

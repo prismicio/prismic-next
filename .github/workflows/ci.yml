@@ -18,9 +18,11 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
       - run: npm ci
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm ci --prefix e2e-projects/app-router && npm ci --prefix e2e-projects/pages-router
       - run: npx playwright install --with-deps
       - run: npm run lint
-      - run: npm run unit
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
@@ -28,6 +30,7 @@ jobs:
           path: playwright-report/
           retention-days: 30
       - run: npm run build
+      - run: npm run e2e
       - uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-latest' && matrix.node == 22
       - uses: andresz1/size-limit-action@v1

@@ -1,0 +1,8 @@
+{
+	"workspaces": [
+		"*"
+	],
+	"dependencies": {
+		"@prismicio/next": "file:.."
+	}
+}

@@ -7,7 +7,7 @@ test.beforeEach(async ({ appRouterPage }) => {
 test.describe("web links", () => {
 	test("renders an internal web link", async ({ page }) => {
 		const link = page.getByTestId("internal-web");
-		await expect(link).toHaveAttribute("href", "/foo");
+		await expect(link).toHaveAttribute("href", "/example");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -19,10 +19,15 @@ test.describe("web links", () => {
 		await expect(link).not.toHaveAttribute("target");
 	});
 
+	test("renders an external web link with _blank target", async ({ page }) => {
+		const link = page.getByTestId("external-web-with-target");
+		await expect(link).toHaveAttribute("target", "_blank");
+	});
+
 	test("renders an external web link with a provided target", async ({
 		page,
 	}) => {
-		const link = page.getByTestId("external-web-with-target-prop");
+		const link = page.getByTestId("external-web-with-target-override");
 		await expect(link).toHaveAttribute("target", "foo");
 	});
 
@@ -54,14 +59,14 @@ test.describe("web links", () => {
 test.describe("document links", () => {
 	test("renders a document link with a route resolver", async ({ page }) => {
 		const link = page.getByTestId("document-link-with-route-resolver");
-		await expect(link).toHaveAttribute("href", "/foo");
+		await expect(link).toHaveAttribute("href", "/example");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
 
 	test("renders a document link with a link resolver", async ({ page }) => {
 		const link = page.getByTestId("document-link-with-link-resolver");
-		await expect(link).toHaveAttribute("href", "/foo");
+		await expect(link).toHaveAttribute("href", "/example");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -70,7 +75,10 @@ test.describe("document links", () => {
 test.describe("media links", () => {
 	test("renders a media link", async ({ page }) => {
 		const link = page.getByTestId("media-link");
-		await expect(link).toHaveAttribute("href", "https://example.com/image.png");
+		await expect(link).toHaveAttribute(
+			"href",
+			"https://images.prismic.io/prismicio-next-test/Z1eqf5bqstJ98PjU_ryoji-iwata-n31JPLu8_Pw-unsplash.jpg?auto=format,compress?auto=compress,format",
+		);
 		await expect(link).toHaveAttribute("rel", "noreferrer");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -81,7 +89,7 @@ test.describe("documents", () => {
 		page,
 	}) => {
 		const link = page.getByTestId("document-prop-with-route-resolver");
-		await expect(link).toHaveAttribute("href", "/foo");
+		await expect(link).toHaveAttribute("href", "/example");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -90,7 +98,7 @@ test.describe("documents", () => {
 		page,
 	}) => {
 		const link = page.getByTestId("document-prop-with-link-resolver");
-		await expect(link).toHaveAttribute("href", "/foo");
+		await expect(link).toHaveAttribute("href", "/example");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -107,14 +115,17 @@ test.describe("href", () => {
 
 	test("renders an internal href", async ({ page }) => {
 		const link = page.getByTestId("internal-href-prop");
-		await expect(link).toHaveAttribute("href", "/foo");
+		await expect(link).toHaveAttribute("href", "/example");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
 
-	test("renders an empty string on falsy href", async ({ page }) => {
+	test("renders default next/link href on falsy href", async ({ page }) => {
 		const link = page.getByTestId("falsy-href-prop");
-		await expect(link).toHaveAttribute("href", "");
+		const defaultHref = await page
+			.getByTestId("default-link-falsy-href")
+			.getAttribute("href");
+		expect(await link.getAttribute("href")).toEqual(defaultHref);
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});

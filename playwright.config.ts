@@ -8,24 +8,41 @@ dotenv.config({ path: ".env.test.local" });
 export default defineConfig({
 	testDir: "./tests",
 	testMatch: "**/*.spec.*",
-	fullyParallel: true,
+	fullyParallel: false,
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 2 : 0,
-	workers: process.env.CI ? 1 : undefined,
+	// Ensure projects run serially to avoid concurrent
+	// Prismic publish actions.
+	workers: 1,
 	reporter: "html",
 	use: {
 		trace: "on-first-retry",
 	},
 	projects: [
 		{
-			name: "chromium",
-			use: { ...devices["Desktop Chrome"] },
+			name: "App Router",
+			use: {
+				...devices["Desktop Chrome"],
+				baseURL: "http://localhost:4321",
+			},
+		},
+		{
+			name: "Pages Router",
+			use: {
+				...devices["Desktop Chrome"],
+				baseURL: "http://localhost:4322",
+			},
 		},
 	],
 	webServer: [
 		{
-			command: "npm run dev --prefix tests-app -- --turbo",
+			command: "npm run dev --prefix e2e-projects/app-router",
 			port: 4321,
+			reuseExistingServer: !process.env.CI,
+		},
+		{
+			command: "npm run dev --prefix e2e-projects/pages-router",
+			port: 4322,
 			reuseExistingServer: !process.env.CI,
 		},
 	],

@@ -1,0 +1,25 @@
+{
+	"name": "app-router",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --port=4321 --turbo",
+		"build": "next build",
+		"start": "next start --port=4321",
+		"slicemachine": "start-slicemachine"
+	},
+	"dependencies": {
+		"@prismicio/client": "^7.13.0",
+		"@prismicio/mock": "^0.4.0",
+		"next": "15.0.3",
+		"react": "19.0.0-rc-66855b96-20241106",
+		"react-dom": "19.0.0-rc-66855b96-20241106"
+	},
+	"devDependencies": {
+		"@slicemachine/adapter-next": "^0.3.59",
+		"@types/node": "^20",
+		"@types/react": "^18",
+		"@types/react-dom": "^18",
+		"slice-machine-ui": "^2.10.5",
+		"typescript": "^5"
+	}
+}

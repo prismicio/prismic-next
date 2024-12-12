@@ -43,8 +43,9 @@ export const test = base.extend<Fixtures>({
 		await manager.tearDown();
 	},
 	repository: async ({ repositoriesManager }, use) => {
-		const repository =
-			repositoriesManager.getRepositoryManager("prismicio-next-dev");
+		const repository = repositoriesManager.getRepositoryManager(
+			"prismicio-next-test",
+		);
 		await use(repository);
 	},
 	appRouterPage: async ({ page, repositoriesManager, repository }, use) => {
@@ -138,12 +139,13 @@ class DefaultPage {
 	}
 
 	async goto(path: string) {
-		return await this.page.goto(new URL(path, this.baseURL).toString());
+		return await this.page.goto(path);
+		// return await this.page.goto(new URL(path, this.baseURL).toString());
 	}
 
-	async goToDocument(document: CoreApiDocument) {
+	async goToDocument(document: CoreApiDocument, pathPrefix = "") {
 		const apiDocument = await this.client.getByID(document.id);
-		return await this.goto(apiDocument.url!);
+		return await this.page.goto(pathPrefix + apiDocument.url!);
 	}
 
 	async createNewDraft(document: CoreApiDocument, payload: string) {
