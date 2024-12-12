@@ -21,19 +21,20 @@ jobs:
       - run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-          PLAYWRIGHT_PRISMIC_USERNAME: ${{ secrets.PLAYWRIGHT_PRISMIC_USERNAME }}
-          PLAYWRIGHT_PRISMIC_PASSWORD: ${{ secrets.PLAYWRIGHT_PRISMIC_PASSWORD }}
       - run: npm ci --prefix e2e-projects/app-router && npm ci --prefix e2e-projects/pages-router
       - run: npx playwright install --with-deps
       - run: npm run lint
+      - run: npm run build
+      - run: npm run e2e
+        env:
+          PLAYWRIGHT_PRISMIC_USERNAME: ${{ secrets.PLAYWRIGHT_PRISMIC_USERNAME }}
+          PLAYWRIGHT_PRISMIC_PASSWORD: ${{ secrets.PLAYWRIGHT_PRISMIC_PASSWORD }}
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-      - run: npm run build
-      - run: npm run e2e
       - uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-latest' && matrix.node == 22
       - uses: andresz1/size-limit-action@v1
