@@ -21,10 +21,13 @@ jobs:
       - run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-      - run: npm ci --prefix e2e-projects/app-router && npm ci --prefix e2e-projects/pages-router
       - run: npx playwright install --with-deps
       - run: npm run lint
       - run: npm run build
+      - run: npm ci
+        working-directory: ./e2e-projects/app-router
+      - run: npm ci
+        working-directory: ./e2e-projects/pages-router
       - run: npm run e2e
         env:
           PLAYWRIGHT_PRISMIC_USERNAME: ${{ secrets.PLAYWRIGHT_PRISMIC_USERNAME }}
