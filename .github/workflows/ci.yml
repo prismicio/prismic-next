@@ -21,6 +21,8 @@ jobs:
       - run: npm ci
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+          PLAYWRIGHT_PRISMIC_USERNAME: ${{ secrets.PLAYWRIGHT_PRISMIC_USERNAME }}
+          PLAYWRIGHT_PRISMIC_PASSWORD: ${{ secrets.PLAYWRIGHT_PRISMIC_PASSWORD }}
       - run: npm ci --prefix e2e-projects/app-router && npm ci --prefix e2e-projects/pages-router
       - run: npx playwright install --with-deps
       - run: npm run lint
