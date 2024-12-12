@@ -4,6 +4,8 @@ on: push
 
 jobs:
   ci:
+    name: Prepare (${{ matrix.os}}, Node.js ${{ matrix.node }})
+
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -24,10 +26,12 @@ jobs:
       - run: npx playwright install --with-deps
       - run: npm run lint
       - run: npm run build
-      - run: npm ci
-        working-directory: ./e2e-projects/app-router
-      - run: npm ci
-        working-directory: ./e2e-projects/pages-router
+      - uses: andresz1/size-limit-action@v1
+        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 22
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - run: npm ci --prefix e2e-projects/app-router
+      - run: npm ci --prefix e2e-projects/pages-router
       - run: npm run e2e
         env:
           PLAYWRIGHT_PRISMIC_USERNAME: ${{ secrets.PLAYWRIGHT_PRISMIC_USERNAME }}
@@ -40,7 +44,3 @@ jobs:
           retention-days: 30
       - uses: codecov/codecov-action@v5
         if: matrix.os == 'ubuntu-latest' && matrix.node == 22
-      - uses: andresz1/size-limit-action@v1
-        if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 22
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
