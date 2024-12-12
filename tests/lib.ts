@@ -2,6 +2,7 @@ import {
 	RepositoriesManager,
 	RepositoryManager,
 } from "@prismicio/e2e-tests-utils";
+import { randomUUID } from "node:crypto";
 
 export type CoreApiDocument = Awaited<
 	ReturnType<RepositoryManager["createDocument"]>
@@ -58,7 +59,7 @@ export async function createNewDraft(
 
 export function createDocumentData(
 	payload?: string,
-	uid = crypto.randomUUID(),
+	uid: string = randomUUID(),
 ) {
 	return {
 		uid,
