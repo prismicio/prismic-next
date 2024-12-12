@@ -42,5 +42,3 @@ jobs:
           name: playwright-report (${{ matrix.os }}, Node.js ${{ matrix.node }})
           path: playwright-report/
           retention-days: 30
-      - uses: codecov/codecov-action@v5
-        if: matrix.os == 'ubuntu-latest' && matrix.node == 22
