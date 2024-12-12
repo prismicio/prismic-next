@@ -32,9 +32,4 @@ export default defineConfig({
 	define: {
 		"process.env": JSON.stringify({}),
 	},
-	test: {
-		coverage: {
-			reporter: ["lcovonly", "text"],
-		},
-	},
 });
