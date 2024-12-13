@@ -1,83 +1,95 @@
 import { test, expect } from "./test";
+import { content } from "./data/page";
 
 test("adds the Prismic toolbar script", async ({
-	appRouterPage,
-	document,
+	appPage,
+	pageDocument,
 	repository,
 }) => {
-	await appRouterPage.goToDocument(document);
-	await expect(appRouterPage.toolbarScript).toHaveCount(1);
-	const repo = await appRouterPage.getToolbarScriptParam("repo");
+	await appPage.goToDocument(pageDocument);
+	await expect(appPage.toolbarScript).toHaveCount(1);
+	const repo = await appPage.getToolbarScriptParam("repo");
 	expect(repo).toBe(repository.name);
 });
 
 test("supports previews on published documents", async ({
-	appRouterPage,
-	document,
+	appPage,
+	pageDocument,
 }) => {
-	await appRouterPage.goToDocument(document);
-	await expect(appRouterPage.payload).not.toContainText("foo");
-	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
-	await appRouterPage.preview(updatedDocument);
-	await expect(appRouterPage.payload).toContainText("foo");
+	await appPage.goToDocument(pageDocument);
+	await expect(appPage.payload).not.toContainText("foo");
+	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
+		content(uid, { payload: "foo" }),
+	);
+	await appPage.preview(updatedDocument);
+	await expect(appPage.payload).toContainText("foo");
 });
 
 test("supports previews on unpublished documents", async ({
-	appRouterPage,
-	unpublishedDocument,
+	appPage,
+	unpublishedPageDocument,
 }) => {
-	const updatedDocument = await appRouterPage.createNewDraft(
-		unpublishedDocument,
-		"foo",
+	const updatedDocument = await appPage.createNewDraft(
+		unpublishedPageDocument,
+		(uid) => content(uid, { payload: "foo" }),
 	);
-	await appRouterPage.preview(updatedDocument);
-	await expect(appRouterPage.payload).toContainText("foo");
+	await appPage.preview(updatedDocument);
+	await expect(appPage.payload).toContainText("foo");
 });
 
-test("updates previews", async ({ appRouterPage, document }) => {
-	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
-	await appRouterPage.preview(updatedDocument);
-	await expect(appRouterPage.payload).toContainText("foo");
-	await appRouterPage.createNewDraft(updatedDocument, "bar");
-	await expect(appRouterPage.payload).toContainText("bar");
+test("updates previews", async ({ appPage, pageDocument }) => {
+	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
+		content(uid, { payload: "foo" }),
+	);
+	await appPage.preview(updatedDocument);
+	await expect(appPage.payload).toContainText("foo");
+	await appPage.createNewDraft(updatedDocument, (uid) =>
+		content(uid, { payload: "bar" }),
+	);
+	await expect(appPage.payload).toContainText("bar");
 });
 
-test("restores published document on exit", async ({
-	appRouterPage,
-	document,
+test("restores published pageDocument on exit", async ({
+	appPage,
+	pageDocument,
 }) => {
-	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
-	await appRouterPage.preview(updatedDocument);
-	await appRouterPage.exitPreview();
-	await expect(appRouterPage.payload).not.toContainText("foo");
+	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
+		content(uid, { payload: "foo" }),
+	);
+	await appPage.preview(updatedDocument);
+	await appPage.exitPreview();
+	await expect(appPage.payload).not.toContainText("foo");
 });
 
 // We can't get a real shareable link because we aren't authenticated with a
 // SESSION cookie. Instead, we can simulate what the link does by setting
 // an `io.prismic.previewSession` cookie.
-test("supports sharable links", async ({ appRouterPage, document }) => {
-	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
-	const previewSession = await appRouterPage.getPreviewSession(updatedDocument);
-	await appRouterPage.setPreviewSessionCookie(previewSession.session_id);
-	await appRouterPage.goToDocument(document);
-	await expect(appRouterPage.payload).toContainText("foo");
-});
-
-test("supports custom update endpoint", async ({ appRouterPage, document }) => {
-	await appRouterPage.goToDocument(document, "/with-custom-preview-endpoints");
-	await expect(appRouterPage.payload).not.toContainText("foo");
-	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
-	await appRouterPage.preview(updatedDocument);
-	await expect(appRouterPage.payload).toContainText("foo");
-});
-
-test("supports custom exit endpoint", async ({ appRouterPage, document }) => {
-	const updatedDocument = await appRouterPage.createNewDraft(document, "foo");
-	await appRouterPage.preview(updatedDocument);
-	await appRouterPage.goToDocument(
-		updatedDocument,
-		"/with-custom-preview-endpoints",
+test("supports sharable links", async ({ appPage, pageDocument }) => {
+	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
+		content(uid, { payload: "foo" }),
 	);
-	await appRouterPage.exitPreview();
-	await expect(appRouterPage.payload).not.toContainText("foo");
+	const previewSession = await appPage.getPreviewSession(updatedDocument);
+	await appPage.setPreviewSessionCookie(previewSession.session_id);
+	await appPage.goToDocument(pageDocument);
+	await expect(appPage.payload).toContainText("foo");
+});
+
+test("supports custom update endpoint", async ({ appPage, pageDocument }) => {
+	await appPage.goToDocument(pageDocument, "/with-custom-preview-endpoints");
+	await expect(appPage.payload).not.toContainText("foo");
+	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
+		content(uid, { payload: "foo" }),
+	);
+	await appPage.preview(updatedDocument);
+	await expect(appPage.payload).toContainText("foo");
+});
+
+test("supports custom exit endpoint", async ({ appPage, pageDocument }) => {
+	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
+		content(uid, { payload: "foo" }),
+	);
+	await appPage.preview(updatedDocument);
+	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints");
+	await appPage.exitPreview();
+	await expect(appPage.payload).not.toContainText("foo");
 });

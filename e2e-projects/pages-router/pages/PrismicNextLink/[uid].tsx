@@ -1,34 +1,15 @@
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
+import { PrismicNextLink } from "@prismicio/next/pages";
 import { isFilled } from "@prismicio/client";
-import { PrismicNextLink } from "@prismicio/next";
 import assert from "assert";
+
 import { createClient } from "@/prismicio";
 
-export default async function Page() {
-	const client = createClient();
-	const { data: tests } = await client.getSingle("link_test");
-	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
-	const doc = await client.getByID(tests.document.id);
-
-	assert(isFilled.linkToMedia(tests.media));
-	assert(
-		isFilled.link(tests.internal_web) &&
-			tests.internal_web.link_type === "Web" &&
-			!tests.internal_web.url.startsWith("http"),
-	);
-	assert(
-		isFilled.link(tests.external_web) &&
-			tests.external_web.link_type === "Web" &&
-			tests.external_web.url.startsWith("http"),
-	);
-	assert(
-		isFilled.link(tests.external_web_with_target) &&
-			tests.external_web_with_target.link_type === "Web" &&
-			tests.external_web_with_target.url.startsWith("http") &&
-			tests.external_web_with_target.target,
-	);
-	assert(isFilled.link(tests.with_text) && tests.with_text.text);
-
+export default function Page({
+	tests,
+	doc,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<>
 			<PrismicNextLink
@@ -95,4 +76,43 @@ export default async function Page() {
 			</PrismicNextLink>
 		</>
 	);
+}
+
+export async function getServerSideProps({
+	req,
+	params,
+}: GetServerSidePropsContext<{ uid: string }>) {
+	const repositoryName = req.cookies["repository-name"];
+	assert(
+		repositoryName && typeof repositoryName === "string",
+		"A repository-name cookie is required.",
+	);
+
+	const client = createClient(repositoryName, {
+		routes: [{ type: "page", path: "/:uid" }],
+	});
+	const { data: tests } = await client.getByUID("link_test", params!.uid);
+	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
+	const doc = await client.getByID(tests.document.id);
+
+	assert(isFilled.linkToMedia(tests.media));
+	assert(
+		isFilled.link(tests.internal_web) &&
+			tests.internal_web.link_type === "Web" &&
+			!tests.internal_web.url.startsWith("http"),
+	);
+	assert(
+		isFilled.link(tests.external_web) &&
+			tests.external_web.link_type === "Web" &&
+			tests.external_web.url.startsWith("http"),
+	);
+	assert(
+		isFilled.link(tests.external_web_with_target) &&
+			tests.external_web_with_target.link_type === "Web" &&
+			tests.external_web_with_target.url.startsWith("http") &&
+			tests.external_web_with_target.target,
+	);
+	assert(isFilled.link(tests.with_text) && tests.with_text.text);
+
+	return { props: { tests, doc } };
 }

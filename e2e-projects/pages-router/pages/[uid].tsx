@@ -1,11 +1,13 @@
-import { GetStaticPropsContext, InferGetStaticPropsType } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { PrismicPreview } from "@prismicio/next/pages";
+import assert from "node:assert";
 
-import { createClient, repositoryName } from "@/prismicio";
+import { createClient } from "@/prismicio";
 
 export default function Page({
+	repositoryName,
 	page,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<>
 			<div data-testid="payload">{page.data.payload}</div>
@@ -14,22 +16,19 @@ export default function Page({
 	);
 }
 
-export async function getStaticProps({
+export async function getServerSideProps({
+	req,
 	params,
 	previewData,
-}: GetStaticPropsContext<{ uid: string }>) {
-	const client = createClient({ previewData });
+}: GetServerSidePropsContext<{ uid: string }>) {
+	const repositoryName = req.cookies["repository-name"];
+	assert(
+		repositoryName && typeof repositoryName === "string",
+		"A repository-name cookie is required.",
+	);
+
+	const client = createClient(repositoryName, { previewData });
 	const page = await client.getByUID("page", params!.uid);
 
-	return { props: { page } };
-}
-
-export async function getStaticPaths() {
-	const client = createClient();
-	const pages = await client.getAllByType("page");
-
-	return {
-		paths: pages.map((page) => ({ params: { uid: page.uid } })),
-		fallback: "blocking",
-	};
+	return { props: { repositoryName, page } };
 }

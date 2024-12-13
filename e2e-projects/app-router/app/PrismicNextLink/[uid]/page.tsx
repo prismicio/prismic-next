@@ -1,15 +1,48 @@
-import { InferGetStaticPropsType } from "next";
 import Link from "next/link";
-import { PrismicNextLink } from "@prismicio/next/pages";
-import { isFilled } from "@prismicio/client";
+import { notFound } from "next/navigation";
+import { NotFoundError, isFilled } from "@prismicio/client";
+import { PrismicNextLink } from "@prismicio/next";
 import assert from "assert";
 
 import { createClient } from "@/prismicio";
 
-export default function Page({
-	tests,
-	doc,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+type Params = { uid: string };
+
+export default async function Page({ params }: { params: Promise<Params> }) {
+	const { uid } = await params;
+
+	const client = await createClient({
+		routes: [{ type: "page", path: "/:uid" }],
+	});
+	const { data: tests } = await client
+		.getByUID("link_test", uid)
+		.catch((error) => {
+			if (error instanceof NotFoundError) notFound();
+			throw error;
+		});
+	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
+	const doc = await client.getByID(tests.document.id);
+	console.log({ doc: JSON.stringify(doc) });
+
+	assert(isFilled.linkToMedia(tests.media));
+	assert(
+		isFilled.link(tests.internal_web) &&
+			tests.internal_web.link_type === "Web" &&
+			!tests.internal_web.url.startsWith("http"),
+	);
+	assert(
+		isFilled.link(tests.external_web) &&
+			tests.external_web.link_type === "Web" &&
+			tests.external_web.url.startsWith("http"),
+	);
+	assert(
+		isFilled.link(tests.external_web_with_target) &&
+			tests.external_web_with_target.link_type === "Web" &&
+			tests.external_web_with_target.url.startsWith("http") &&
+			tests.external_web_with_target.target,
+	);
+	assert(isFilled.link(tests.with_text) && tests.with_text.text);
+
 	return (
 		<>
 			<PrismicNextLink
@@ -76,32 +109,4 @@ export default function Page({
 			</PrismicNextLink>
 		</>
 	);
-}
-
-export async function getStaticProps() {
-	const client = createClient();
-	const { data: tests } = await client.getSingle("link_test");
-	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
-	const doc = await client.getByID(tests.document.id);
-
-	assert(isFilled.linkToMedia(tests.media));
-	assert(
-		isFilled.link(tests.internal_web) &&
-			tests.internal_web.link_type === "Web" &&
-			!tests.internal_web.url.startsWith("http"),
-	);
-	assert(
-		isFilled.link(tests.external_web) &&
-			tests.external_web.link_type === "Web" &&
-			tests.external_web.url.startsWith("http"),
-	);
-	assert(
-		isFilled.link(tests.external_web_with_target) &&
-			tests.external_web_with_target.link_type === "Web" &&
-			tests.external_web_with_target.url.startsWith("http") &&
-			tests.external_web_with_target.target,
-	);
-	assert(isFilled.link(tests.with_text) && tests.with_text.text);
-
-	return { props: { tests, doc } };
 }

@@ -8,6 +8,7 @@ import { DEV } from "esm-env";
 import { devMsg } from "./lib/devMsg.js";
 
 import { imgixLoader } from "./imgixLoader.js";
+import { ReactElement } from "react";
 
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
@@ -90,7 +91,7 @@ export const PrismicNextImage = ({
 	fallback = null,
 	loader = imgixLoader,
 	...restProps
-}: PrismicNextImageProps): JSX.Element => {
+}: PrismicNextImageProps): ReactElement => {
 	if (DEV) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(

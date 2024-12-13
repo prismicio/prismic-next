@@ -8,12 +8,10 @@ dotenv.config({ path: ".env.test.local" });
 export default defineConfig({
 	testDir: "./tests",
 	testMatch: "**/*.spec.*",
-	fullyParallel: false,
+	fullyParallel: true,
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 2 : 0,
-	// Ensure projects run serially to avoid concurrent
-	// Prismic publish actions.
-	workers: 1,
+	workers: process.env.CI ? 1 : undefined,
 	reporter: "html",
 	use: {
 		trace: "on-first-retry",

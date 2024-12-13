@@ -1,7 +1,7 @@
 import { test, expect } from "./test";
 
-test.beforeEach(async ({ appRouterPage }) => {
-	await appRouterPage.goto("/PrismicNextLink");
+test.beforeEach(async ({ appPage, linkDocument }) => {
+	await appPage.goToDocument(linkDocument);
 });
 
 test.describe("web links", () => {
@@ -57,16 +57,28 @@ test.describe("web links", () => {
 });
 
 test.describe("document links", () => {
-	test("renders a document link with a route resolver", async ({ page }) => {
+	test("renders a document link with a route resolver", async ({
+		page,
+		pageDocument,
+	}) => {
 		const link = page.getByTestId("document-link-with-route-resolver");
-		await expect(link).toHaveAttribute("href", "/example");
+		await expect(link).toHaveAttribute(
+			"href",
+			`/${pageDocument.versions[0].uid}`,
+		);
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
 
-	test("renders a document link with a link resolver", async ({ page }) => {
+	test("renders a document link with a link resolver", async ({
+		page,
+		pageDocument,
+	}) => {
 		const link = page.getByTestId("document-link-with-link-resolver");
-		await expect(link).toHaveAttribute("href", "/example");
+		await expect(link).toHaveAttribute(
+			"href",
+			`/${pageDocument.versions[0].uid}`,
+		);
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -87,18 +99,26 @@ test.describe("media links", () => {
 test.describe("documents", () => {
 	test("renders a document link with a route resolver via the document prop", async ({
 		page,
+		pageDocument,
 	}) => {
 		const link = page.getByTestId("document-prop-with-route-resolver");
-		await expect(link).toHaveAttribute("href", "/example");
+		await expect(link).toHaveAttribute(
+			"href",
+			`/${pageDocument.versions[0].uid}`,
+		);
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
 
 	test("renders a document link with a link resolver via the document prop", async ({
 		page,
+		pageDocument,
 	}) => {
 		const link = page.getByTestId("document-prop-with-link-resolver");
-		await expect(link).toHaveAttribute("href", "/example");
+		await expect(link).toHaveAttribute(
+			"href",
+			`/${pageDocument.versions[0].uid}`,
+		);
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -146,8 +166,8 @@ test.describe("with text", () => {
 });
 
 test.describe("ref", () => {
-	test.beforeEach(async ({ appRouterPage }) => {
-		await appRouterPage.goto("/PrismicNextLink/client");
+	test.beforeEach(async ({ page }) => {
+		await page.goto("/PrismicNextLink/client");
 	});
 
 	test("forwards ref", async ({ page }) => {

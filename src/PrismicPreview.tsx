@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import { draftMode } from "next/headers";
 import Script from "next/script";
 import { getToolbarSrc } from "@prismicio/client";
@@ -44,7 +44,7 @@ export type PrismicPreviewProps = {
  */
 export async function PrismicPreview(
 	props: PrismicPreviewProps,
-): Promise<JSX.Element> {
+): Promise<ReactElement> {
 	const { repositoryName, children, ...otherProps } = props;
 
 	const toolbarSrc = getToolbarSrc(repositoryName);

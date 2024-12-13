@@ -1,4 +1,4 @@
-import { InferGetStaticPropsType } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { PrismicNextImage } from "@prismicio/next/pages";
 import { isFilled } from "@prismicio/client";
 import assert from "assert";
@@ -7,7 +7,7 @@ import { createClient } from "@/prismicio";
 
 export default function Page({
 	tests,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<>
 			<PrismicNextImage data-testid="filled" field={tests.filled} />
@@ -103,9 +103,18 @@ export default function Page({
 	);
 }
 
-export async function getStaticProps() {
-	const client = createClient();
-	const { data: tests } = await client.getSingle("image_test");
+export async function getServerSideProps({
+	req,
+	params,
+}: GetServerSidePropsContext<{ uid: string }>) {
+	const repositoryName = req.cookies["repository-name"];
+	assert(
+		repositoryName && typeof repositoryName === "string",
+		"A repository-name cookie is required.",
+	);
+
+	const client = createClient(repositoryName);
+	const { data: tests } = await client.getByUID("image_test", params!.uid);
 
 	assert(
 		isFilled.image(tests.with_alt_text) && tests.with_alt_text.alt !== null,
