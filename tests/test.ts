@@ -8,11 +8,12 @@ import {
 import { createClient } from "@prismicio/client";
 import assert from "assert";
 
-import * as data from "./data";
-
 export { expect } from "@playwright/test";
 
-type CoreApiDocument = Awaited<ReturnType<RepositoryManager["createDocument"]>>;
+export type CoreApiDocument = Awaited<
+	ReturnType<RepositoryManager["createDocument"]>
+>;
+
 type CoreApiPreview = { id: string; label: string; url: string };
 
 type Fixtures = {
@@ -36,86 +37,51 @@ export const test = base.extend<Fixtures>({
 			},
 		});
 		await use(manager);
-		await manager.tearDown();
 	},
-	repository: async ({ repositoriesManager, baseURL, context }, use) => {
+	repository: async ({ page, repositoriesManager, baseURL }, use) => {
 		assert(baseURL, "A baseURL must be configured to test Prismic previews.");
-		const repository = await repositoriesManager.createRepository({
-			prefix: "prismicio-next",
-			defaultLocale: "fr-fr",
-			preview: {
-				name: "preview",
+		const cookies = await page.context().cookies();
+		const repositoryName = cookies.find(
+			(cookie) => cookie.name === "repository-name",
+		)?.value;
+		assert(
+			repositoryName,
+			"There is no repository-name cookie. The setup project must run first.",
+		);
+		const repository = repositoriesManager.getRepositoryManager(repositoryName);
+		const previewConfigs = await getPreviewConfigs(
+			repositoriesManager,
+			repository,
+		);
+		const previewConfig = previewConfigs.find(
+			(config) => new URL(config.url).origin === baseURL,
+		);
+		if (!previewConfig) {
+			await repository.createPreview({
+				name: baseURL,
 				websiteURL: baseURL,
 				resolverPath: "/api/preview",
-			},
-		});
-		await context.addCookies([
-			{
-				name: "repository-name",
-				value: repository.name,
-				domain: new URL(baseURL).hostname,
-				path: "/",
-			},
-		]);
+			});
+		}
 		await use(repository);
 	},
-	pageDocument: async ({ repository }, use) => {
-		await repository.createCustomTypes([data.page.model]);
-		const document = await repository.createDocument(
-			{
-				custom_type_id: "page",
-				title: test.info().title,
-				tags: [],
-				integration_field_ids: [],
-				data: data.page.content(),
-			},
+	pageDocument: async ({ repositoriesManager, repository }, use) => {
+		const document = await getDocumentByUID(
+			repositoriesManager,
+			repository,
+			"page",
 			"published",
 		);
 		await use(document);
 	},
-	unpublishedPageDocument: async ({ repository }, use) => {
-		await repository.createCustomTypes([data.page.model]);
-		const document = await repository.createDocument(
-			{
-				custom_type_id: "page",
-				title: test.info().title,
-				tags: [],
-				integration_field_ids: [],
-				data: data.page.content(),
-			},
-			"draft",
+	unpublishedPageDocument: async ({ repositoriesManager, repository }, use) => {
+		const document = await getDocumentByUID(
+			repositoriesManager,
+			repository,
+			"page",
+			"unpublished",
 		);
 		await use(document);
-	},
-	linkDocument: async ({ repository, pageDocument }, use) => {
-		await repository.createCustomTypes([data.link.model]);
-		const linkDocument = await repository.createDocument(
-			{
-				custom_type_id: "link_test",
-				title: test.info().title,
-				tags: [],
-				integration_field_ids: [],
-				data: data.link.content(undefined, {
-					documentLinkID: pageDocument.id,
-				}),
-			},
-			"published",
-		);
-		await use(linkDocument);
-	},
-	imageDocument: async ({ repository }, use) => {
-		await repository.createCustomTypes([data.image.model]);
-		const imageDocument = await repository.createDocument(
-			{
-				custom_type_id: "image_test",
-				title: test.info().title,
-				tags: [],
-				integration_field_ids: [],
-				data: data.image.content(),
-			},
-			"published",
-		);
-		await use(imageDocument);
 	},
 	appPage: async ({ page, repositoriesManager, repository }, use) => {
 		const appPage = new AppPage(page, repositoriesManager, repository);
@@ -241,17 +207,48 @@ class AppPage {
 		return new URL(src ?? "").searchParams.get(name);
 	}
 
-	async #getPreviewConfigs(): Promise<CoreApiPreview[]> {
-		const token = await this.repositoriesManager.getUserApiToken();
-		const res = await fetch(
-			new URL(
-				"/core/repository/preview_configs",
-				this.repositoryManager.getBaseURL(),
-			),
-			{ headers: { authorization: `Bearer ${token}` } },
+	async #getPreviewConfigs() {
+		return await getPreviewConfigs(
+			this.repositoriesManager,
+			this.repositoryManager,
 		);
-		const json = await res.json();
-
-		return json.results;
 	}
+}
+
+async function getPreviewConfigs(
+	repositoriesManager: RepositoriesManager,
+	repository: RepositoryManager,
+): Promise<CoreApiPreview[]> {
+	const token = await repositoriesManager.getUserApiToken();
+	const res = await fetch(
+		new URL("/core/repository/preview_configs", repository.getBaseURL()),
+		{ headers: { authorization: `Bearer ${token}` } },
+	);
+	const json = await res.json();
+
+	return json.results;
+}
+
+async function getDocumentByUID(
+	repositoriesManager: RepositoriesManager,
+	repository: RepositoryManager,
+	type: string,
+	uid: string,
+): Promise<CoreApiDocument> {
+	const token = await repositoriesManager.getUserApiToken();
+	const url = new URL("/core/documents", repository.getBaseURL());
+	url.searchParams.set("uid", uid);
+	const res = await fetch(url, {
+		headers: { authorization: `Bearer ${token}` },
+	});
+	const json: { results: CoreApiDocument[] } = await res.json();
+
+	const document = json.results.find(
+		(result) => result.custom_type_id === type,
+	);
+	assert(
+		document,
+		`Did not find document with type "${type}" and UID "${uid}".`,
+	);
+	return document;
 }

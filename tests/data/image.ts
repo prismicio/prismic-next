@@ -1,19 +1,11 @@
-import { randomUUID } from "node:crypto";
-
 export const model = {
 	format: "custom",
 	id: "image_test",
 	label: "Image Test",
-	repeatable: true,
+	repeatable: false,
 	status: true,
 	json: {
 		Main: {
-			uid: {
-				type: "UID",
-				config: {
-					label: "UID",
-				},
-			},
 			empty: {
 				type: "Image",
 				config: {
@@ -58,9 +50,8 @@ export const model = {
 	},
 } as const;
 
-export function content(uid: string = randomUUID()) {
+export function content() {
 	return {
-		uid,
 		filled: {
 			edit: {
 				background: "transparent",
@@ -148,7 +139,6 @@ export function content(uid: string = randomUUID()) {
 			thumbnails: {},
 			url: "https://images.prismic.io/prismicio-next-test/Z1evSZbqstJ98PkD_image.jpg?auto=format%2Ccompress&rect=175%2C0%2C450%2C600&w=300&h=400",
 		},
-		uid_TYPE: "UID",
 		empty_TYPE: "Image",
 		filled_TYPE: "Image",
 		with_alt_text_TYPE: "Image",

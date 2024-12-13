@@ -1,28 +1,15 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
-import { NotFoundError, isFilled } from "@prismicio/client";
+import { isFilled } from "@prismicio/client";
 import { PrismicNextLink } from "@prismicio/next";
 import assert from "assert";
 
 import { createClient } from "@/prismicio";
 
-type Params = { uid: string };
-
-export default async function Page({ params }: { params: Promise<Params> }) {
-	const { uid } = await params;
-
-	const client = await createClient({
-		routes: [{ type: "page", path: "/:uid" }],
-	});
-	const { data: tests } = await client
-		.getByUID("link_test", uid)
-		.catch((error) => {
-			if (error instanceof NotFoundError) notFound();
-			throw error;
-		});
+export default async function Page() {
+	const client = await createClient();
+	const { data: tests } = await client.getSingle("link_test");
 	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
 	const doc = await client.getByID(tests.document.id);
-	console.log({ doc: JSON.stringify(doc) });
 
 	assert(isFilled.linkToMedia(tests.media));
 	assert(

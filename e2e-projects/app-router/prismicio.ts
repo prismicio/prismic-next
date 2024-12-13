@@ -9,6 +9,7 @@ export async function createClient(config: prismic.ClientConfig = {}) {
 	assert(repositoryName, "A repository-name cookie is required.");
 
 	const client = prismic.createClient(repositoryName, {
+		routes: [{ type: "page", path: "/:uid" }],
 		fetchOptions: { cache: "no-store" },
 		...config,
 	});

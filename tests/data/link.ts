@@ -1,19 +1,11 @@
-import { randomUUID } from "node:crypto";
-
 export const model = {
 	format: "custom",
 	id: "link_test",
 	label: "Link Test",
-	repeatable: true,
+	repeatable: false,
 	status: true,
 	json: {
 		Main: {
-			uid: {
-				type: "UID",
-				config: {
-					label: "UID",
-				},
-			},
 			empty: {
 				type: "Link",
 				config: {
@@ -88,14 +80,10 @@ export const model = {
 	},
 } as const;
 
-export function content(
-	uid: string = randomUUID(),
-	args: { documentLinkID: string },
-) {
+export function content(args: { documentLinkID: string }) {
 	const { documentLinkID } = args;
 
 	return {
-		uid,
 		external_web: {
 			key: "d783f7b6-4966-4b32-b259-20f8f175cf12",
 			url: "https://example.com",
@@ -130,7 +118,6 @@ export function content(
 			key: "69e09a1a-8d52-4172-810c-623fc13736b3",
 			url: "/example",
 		},
-		uid_TYPE: "UID",
 		empty_TYPE: "Link",
 		internal_web_TYPE: "Link",
 		external_web_TYPE: "Link",

@@ -1,22 +1,12 @@
-import { notFound } from "next/navigation";
-import { NotFoundError, isFilled } from "@prismicio/client";
+import { isFilled } from "@prismicio/client";
 import { PrismicNextImage } from "@prismicio/next";
 import assert from "assert";
 
 import { createClient } from "@/prismicio";
 
-type Params = { uid: string };
-
-export default async function Page({ params }: { params: Promise<Params> }) {
-	const { uid } = await params;
-
+export default async function Page() {
 	const client = await createClient();
-	const { data: tests } = await client
-		.getByUID("image_test", uid)
-		.catch((error) => {
-			if (error instanceof NotFoundError) notFound();
-			throw error;
-		});
+	const { data: tests } = await client.getSingle("image_test");
 
 	assert(
 		isFilled.image(tests.with_alt_text) && tests.with_alt_text.alt !== null,

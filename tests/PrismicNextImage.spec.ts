@@ -1,7 +1,7 @@
 import { test, expect } from "./test";
 
-test.beforeEach(async ({ appPage, imageDocument }) => {
-	await appPage.goToDocument(imageDocument);
+test.beforeEach(async ({ page }) => {
+	await page.goto("/PrismicNextImage");
 });
 
 test("renders an image field", async ({ page }) => {

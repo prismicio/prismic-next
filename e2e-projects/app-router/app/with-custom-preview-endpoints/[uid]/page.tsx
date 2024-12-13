@@ -1,19 +1,16 @@
-import { NotFoundError } from "@prismicio/client";
 import { PrismicPreview } from "@prismicio/next";
-import { notFound } from "next/navigation";
 
 import { createClient } from "@/prismicio";
 
-type Params = { uid: string };
-
-export default async function Page({ params }: { params: Promise<Params> }) {
+export default async function Page({
+	params,
+}: {
+	params: Promise<{ uid: string }>;
+}) {
 	const { uid } = await params;
 
 	const client = await createClient();
-	const page = await client.getByUID("page", uid).catch((error) => {
-		if (error instanceof NotFoundError) notFound();
-		throw error;
-	});
+	const page = await client.getByUID("page", uid);
 
 	return (
 		<>

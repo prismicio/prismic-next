@@ -1,6 +1,8 @@
 import { test, expect } from "./test";
 import { content } from "./data/page";
 
+test.describe.configure({ mode: "serial" });
+
 test("adds the Prismic toolbar script", async ({
 	appPage,
 	pageDocument,
