@@ -33,9 +33,7 @@ The function should be removed from Next.js projects to ensure the best possible
    	"fr-fr": "fr",
    };
 
-   /**
-    * Creates a redirect with an auto-detected locale prepended to the URL.
-    */
+   /** Creates a redirect with an auto-detected locale prepended to the URL. */
    export function createLocaleRedirect(request: NextRequest): Response {
    	const headers = {
    		"accept-language": request.headers.get("accept-language"),
@@ -49,9 +47,7 @@ The function should be removed from Next.js projects to ensure the best possible
    	return Response.redirect(request.nextUrl);
    }
 
-   /**
-    * Determines if a pathname has a locale as its first segment.
-    */
+   /** Determines if a pathname has a locale as its first segment. */
    export function pathnameHasLocale(request: NextRequest): boolean {
    	const regexp = new RegExp(`^/(${Object.values(LOCALES).join("|")})(\/|$)`);
 

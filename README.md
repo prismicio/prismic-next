@@ -9,8 +9,9 @@
 
 Helpers to integrate Prismic into Next.js apps.
 
-- 👁️ &nbsp;Easily set up Prismic Preview
-- 🖼️ &nbsp;Render optimized images using [`next/image`][next-image] and Prismic's built-in [Imgix][imgix] integration
+- 👁️ &nbsp;Easily set up Prismic previews
+- 👁️ &nbsp;Render Prismic links with [`next/link`][next-link]
+- 🖼️ &nbsp;Optimize Prismic images using [`next/image`][next-image] and Prismic's built-in [Imgix][imgix] integration
 
 ## Install
 
@@ -58,7 +59,8 @@ For more clarity on this project and its structure you can also check out the de
 
 [prismic]: https://prismic.io
 [imgix]: https://imgix.com/
-[next-image]: https://nextjs.org/docs/basic-features/image-optimization
+[next-link]: https://nextjs.org/docs/app/api-reference/components/link
+[next-image]: https://nextjs.org/docs/app/api-reference/components/image
 
 <!-- TODO: Replace link with a more useful one if available -->
 

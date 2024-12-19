@@ -1,14 +1,14 @@
 "use client";
 
+import { ReactElement } from "react";
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
-import * as prismic from "@prismicio/client";
+import { ImageFieldImage, isFilled } from "@prismicio/client";
 import { DEV } from "esm-env";
 
 import { devMsg } from "./lib/devMsg.js";
 
 import { imgixLoader } from "./imgixLoader.js";
-import { ReactElement } from "react";
 
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
@@ -29,7 +29,7 @@ export type PrismicNextImageProps = Omit<
 	"src" | "alt" | "loader"
 > & {
 	/** The Prismic Image field or thumbnail to render. */
-	field: prismic.ImageFieldImage | null | undefined;
+	field: ImageFieldImage | null | undefined;
 
 	/**
 	 * An object of Imgix URL API parameters to transform the image.
@@ -110,7 +110,7 @@ export const PrismicNextImage = ({
 		}
 	}
 
-	if (prismic.isFilled.imageThumbnail(field)) {
+	if (isFilled.imageThumbnail(field)) {
 		const resolvedImgixParams = imgixParams;
 		for (const x in imgixParams) {
 			if (resolvedImgixParams[x as keyof typeof resolvedImgixParams] === null) {

@@ -57,7 +57,7 @@
 		"release:alpha:dry": "standard-version --release-as minor --prerelease alpha --dry-run",
 		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
-		"test": "npm run lint && npm run types && npm run build && npm run size && npm run e2e",
+		"test": "npm run lint && npm run types && npm run build && npm run e2e && npm run size && npm run e2e",
 		"types": "tsc --noEmit",
 		"e2e": "playwright test",
 		"e2e:ui": "npm run e2e -- --ui"

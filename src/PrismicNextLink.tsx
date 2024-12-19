@@ -1,41 +1,47 @@
-import * as React from "react";
-import * as prismic from "@prismicio/client";
+import { ComponentProps, ReactElement, forwardRef } from "react";
 import Link from "next/link";
+import {
+	AsLinkAttrsConfig,
+	LinkField,
+	LinkResolverFunction,
+	PrismicDocument,
+	asLinkAttrs,
+} from "@prismicio/client";
 
 export type PrismicNextLinkProps = Omit<
-	React.ComponentProps<typeof Link>,
+	ComponentProps<typeof Link>,
 	"field" | "document" | "href" | "rel"
 > & {
-	linkResolver?: prismic.LinkResolverFunction;
-	rel?: string | prismic.AsLinkAttrsConfig["rel"];
+	linkResolver?: LinkResolverFunction;
+	rel?: string | AsLinkAttrsConfig["rel"];
 } & (
 		| {
-				field: prismic.LinkField | null | undefined;
+				field: LinkField | null | undefined;
 				document?: never;
 				href?: never;
 		  }
 		| {
 				field?: never;
-				document: prismic.PrismicDocument | null | undefined;
+				document: PrismicDocument | null | undefined;
 				href?: never;
 		  }
 		| {
 				field?: never;
 				document?: never;
-				href: React.ComponentProps<typeof Link>["href"];
+				href: ComponentProps<typeof Link>["href"];
 		  }
 	);
 
-export const PrismicNextLink = React.forwardRef<
+export const PrismicNextLink = forwardRef<
 	HTMLAnchorElement,
 	PrismicNextLinkProps
->(function PrismicNextLink(props, ref): React.ReactElement | null {
+>(function PrismicNextLink(props, ref): ReactElement | null {
 	const { field, document, linkResolver, children, ...restProps } = props;
 	const {
 		href: computedHref,
 		rel: computedRel,
 		...attrs
-	} = prismic.asLinkAttrs(field ?? document, {
+	} = asLinkAttrs(field ?? document, {
 		linkResolver,
 		rel: typeof restProps.rel === "function" ? restProps.rel : undefined,
 	});

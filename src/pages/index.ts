@@ -23,5 +23,5 @@ export type { SetPreviewDataConfig } from "./setPreviewData.js";
 
 export type { CreateClientConfig } from "./types.js";
 
-export { createLocaleRedirect } from "../removed.js";
-export type { CreateLocaleRedirectConfig } from "../removed.js";
+export { createLocaleRedirect } from "../createLocaleRedirect.js";
+export type { CreateLocaleRedirectConfig } from "../createLocaleRedirect.js";
