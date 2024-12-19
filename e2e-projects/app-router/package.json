@@ -4,8 +4,7 @@
 	"scripts": {
 		"dev": "next dev --port=4321 --turbo",
 		"build": "next build",
-		"start": "next start --port=4321",
-		"slicemachine": "start-slicemachine"
+		"start": "next start --port=4321"
 	},
 	"dependencies": {
 		"@prismicio/client": "^7.13.1",
@@ -15,11 +14,9 @@
 		"react-dom": "19.0.0"
 	},
 	"devDependencies": {
-		"@slicemachine/adapter-next": "^0.3.60",
 		"@types/node": "^22",
 		"@types/react": "^19",
 		"@types/react-dom": "^19",
-		"slice-machine-ui": "^2.11.0",
 		"typescript": "^5"
 	}
 }
