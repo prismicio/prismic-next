@@ -30,8 +30,6 @@ jobs:
         if: github.event_name == 'pull_request' && matrix.os == 'ubuntu-latest' && matrix.node == 22
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-      - run: npm ci --prefix e2e-projects/app-router
-      - run: npm ci --prefix e2e-projects/pages-router
       - run: npm run e2e
         env:
           PLAYWRIGHT_PRISMIC_USERNAME: ${{ secrets.PLAYWRIGHT_PRISMIC_USERNAME }}

@@ -1,4 +1,4 @@
-import { InferGetStaticPropsType } from "next";
+import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { PrismicNextLink } from "@prismicio/next/pages";
 import { isFilled } from "@prismicio/client";
@@ -9,7 +9,7 @@ import { createClient } from "@/prismicio";
 export default function Page({
 	tests,
 	doc,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
 	return (
 		<>
 			<PrismicNextLink
@@ -78,8 +78,14 @@ export default function Page({
 	);
 }
 
-export async function getStaticProps() {
-	const client = createClient();
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+	const repositoryName = req.cookies["repository-name"];
+	assert(
+		repositoryName && typeof repositoryName === "string",
+		"A repository-name cookie is required.",
+	);
+
+	const client = createClient(repositoryName);
 	const { data: tests } = await client.getSingle("link_test");
 	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
 	const doc = await client.getByID(tests.document.id);

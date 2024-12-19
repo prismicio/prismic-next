@@ -1,7 +1,7 @@
 import { test, expect } from "./test";
 
-test.beforeEach(async ({ appRouterPage }) => {
-	await appRouterPage.goto("/PrismicNextImage");
+test.beforeEach(async ({ page }) => {
+	await page.goto("/PrismicNextImage");
 });
 
 test("renders an image field", async ({ page }) => {

@@ -1,47 +1,72 @@
 import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 import assert from "node:assert";
+import { fileURLToPath } from "node:url";
+import { existsSync, writeFileSync } from "node:fs";
 
 dotenv.config({ path: ".env.test.local" });
+
+export const STORAGE_STATE = fileURLToPath(
+	new URL("./tests/.storage-state.json", import.meta.url),
+);
+if (!existsSync(STORAGE_STATE))
+	writeFileSync(STORAGE_STATE, JSON.stringify({}));
 
 // https://playwright.dev/docs/test-configuration
 export default defineConfig({
 	testDir: "./tests",
 	testMatch: "**/*.spec.*",
-	fullyParallel: false,
+	fullyParallel: true,
 	forbidOnly: !!process.env.CI,
 	retries: process.env.CI ? 2 : 0,
-	// Ensure projects run serially to avoid concurrent
-	// Prismic publish actions.
-	workers: 1,
+	workers: process.env.CI ? 1 : undefined,
 	reporter: "html",
 	use: {
 		trace: "on-first-retry",
 	},
 	projects: [
 		{
+			name: "Setup",
+			testMatch: "*.setup.*",
+			teardown: "Teardown",
+			use: {
+				storageState: STORAGE_STATE,
+			},
+		},
+		{
 			name: "App Router",
+			dependencies: ["Setup"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4321",
+				storageState: STORAGE_STATE,
 			},
 		},
 		{
 			name: "Pages Router",
+			dependencies: ["Setup", "App Router"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",
+				storageState: STORAGE_STATE,
+			},
+		},
+		{
+			name: "Teardown",
+			testMatch: "*.teardown.*",
+			use: {
+				storageState: STORAGE_STATE,
 			},
 		},
 	],
 	webServer: [
 		{
-			command: "npm run dev --prefix e2e-projects/app-router",
+			command: "npm run --workspace app-router dev",
 			port: 4321,
 			reuseExistingServer: !process.env.CI,
 		},
 		{
-			command: "npm run dev --prefix e2e-projects/pages-router",
+			command: "npm run --workspace pages-router dev",
 			port: 4322,
 			reuseExistingServer: !process.env.CI,
 		},

@@ -1,4 +1,4 @@
-import { type ReactNode, useEffect } from "react";
+import { type ReactNode, useEffect, ReactElement } from "react";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
@@ -40,7 +40,7 @@ export type PrismicPreviewProps = {
  * This component can be wrapped around your app or added anywhere in your app's
  * tree. It must be rendered on every page.
  */
-export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
+export function PrismicPreview(props: PrismicPreviewProps): ReactElement {
 	const {
 		repositoryName,
 		updatePreviewURL = "/api/preview",
@@ -90,7 +90,7 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 						return;
 					}
 
-					router.replace(router.asPath, undefined, { scroll: false });
+					refresh();
 				})
 				.catch(() => {});
 		}
@@ -115,9 +115,13 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 						return;
 					}
 
-					router.replace(router.asPath, undefined, { scroll: false });
+					refresh();
 				})
 				.catch(() => {});
+		}
+
+		function refresh() {
+			router.replace(router.asPath, undefined, { scroll: false });
 		}
 
 		return () => controller.abort();

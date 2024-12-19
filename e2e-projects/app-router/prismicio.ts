@@ -1,26 +1,15 @@
 import * as prismic from "@prismicio/client";
 import * as prismicNext from "@prismicio/next";
+import { cookies } from "next/headers";
+import assert from "node:assert";
 
-/** The project's Prismic repository name. */
-export const repositoryName = "prismicio-next-test";
+export async function createClient(config: prismic.ClientConfig = {}) {
+	const cookieJar = await cookies();
+	const repositoryName = cookieJar.get("repository-name")?.value;
+	assert(repositoryName, "A repository-name cookie is required.");
 
-/**
- * The project's Prismic Route Resolvers. This list determines a Prismic
- * document's URL.
- */
-const routes: prismic.ClientConfig["routes"] = [
-	{ type: "page", path: "/:uid" },
-];
-
-/**
- * Creates a Prismic client for the project's repository. The client is used to
- * query content from the Prismic API.
- *
- * @param config - Configuration for the Prismic client.
- */
-export const createClient = (config: prismic.ClientConfig = {}) => {
 	const client = prismic.createClient(repositoryName, {
-		routes,
+		routes: [{ type: "page", path: "/:uid" }],
 		fetchOptions: { cache: "no-store" },
 		...config,
 	});
@@ -28,4 +17,4 @@ export const createClient = (config: prismic.ClientConfig = {}) => {
 	prismicNext.enableAutoPreviews({ client });
 
 	return client;
-};
+}

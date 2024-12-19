@@ -2,10 +2,11 @@ import Link from "next/link";
 import { isFilled } from "@prismicio/client";
 import { PrismicNextLink } from "@prismicio/next";
 import assert from "assert";
+
 import { createClient } from "@/prismicio";
 
 export default async function Page() {
-	const client = createClient();
+	const client = await createClient();
 	const { data: tests } = await client.getSingle("link_test");
 	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
 	const doc = await client.getByID(tests.document.id);

@@ -1,11 +1,11 @@
-import { PrismicNextImage } from "@prismicio/next";
 import { isFilled } from "@prismicio/client";
+import { PrismicNextImage } from "@prismicio/next";
 import assert from "assert";
 
 import { createClient } from "@/prismicio";
 
 export default async function Page() {
-	const client = createClient();
+	const client = await createClient();
 	const { data: tests } = await client.getSingle("image_test");
 
 	assert(

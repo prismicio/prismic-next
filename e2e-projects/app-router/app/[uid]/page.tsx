@@ -1,8 +1,6 @@
 import { PrismicPreview } from "@prismicio/next";
-import { NotFoundError } from "@prismicio/client";
-import { notFound } from "next/navigation";
 
-import { createClient, repositoryName } from "@/prismicio";
+import { createClient } from "@/prismicio";
 
 export default async function Page({
 	params,
@@ -11,16 +9,13 @@ export default async function Page({
 }) {
 	const { uid } = await params;
 
-	const client = createClient();
-	const page = await client.getByUID("page", uid).catch((error) => {
-		if (error instanceof NotFoundError) notFound();
-		throw error;
-	});
+	const client = await createClient();
+	const page = await client.getByUID("page", uid);
 
 	return (
 		<>
 			<div data-testid="payload">{page.data.payload}</div>
-			<PrismicPreview repositoryName={repositoryName} />
+			<PrismicPreview repositoryName={client.repositoryName} />
 		</>
 	);
 }
