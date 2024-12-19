@@ -2,12 +2,15 @@ import { defineConfig, devices } from "@playwright/test";
 import dotenv from "dotenv";
 import assert from "node:assert";
 import { fileURLToPath } from "node:url";
+import { existsSync, writeFileSync } from "node:fs";
 
 dotenv.config({ path: ".env.test.local" });
 
 export const STORAGE_STATE = fileURLToPath(
 	new URL("./tests/.storage-state.json", import.meta.url),
 );
+if (!existsSync(STORAGE_STATE))
+	writeFileSync(STORAGE_STATE, JSON.stringify({}));
 
 // https://playwright.dev/docs/test-configuration
 export default defineConfig({
@@ -20,12 +23,14 @@ export default defineConfig({
 	reporter: "html",
 	use: {
 		trace: "on-first-retry",
-		storageState: STORAGE_STATE,
 	},
 	projects: [
 		{
 			name: "Setup",
 			testMatch: "*.setup.*",
+			use: {
+				storageState: STORAGE_STATE,
+			},
 		},
 		{
 			name: "App Router",
@@ -33,6 +38,7 @@ export default defineConfig({
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4321",
+				storageState: STORAGE_STATE,
 			},
 		},
 		{
@@ -41,6 +47,7 @@ export default defineConfig({
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",
+				storageState: STORAGE_STATE,
 			},
 		},
 	],
