@@ -78,20 +78,15 @@ export default function Page({
 	);
 }
 
-export async function getServerSideProps({
-	req,
-	params,
-}: GetServerSidePropsContext<{ uid: string }>) {
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 	const repositoryName = req.cookies["repository-name"];
 	assert(
 		repositoryName && typeof repositoryName === "string",
 		"A repository-name cookie is required.",
 	);
 
-	const client = createClient(repositoryName, {
-		routes: [{ type: "page", path: "/:uid" }],
-	});
-	const { data: tests } = await client.getByUID("link_test", params!.uid);
+	const client = createClient(repositoryName);
+	const { data: tests } = await client.getSingle("link_test");
 	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
 	const doc = await client.getByID(tests.document.id);
 

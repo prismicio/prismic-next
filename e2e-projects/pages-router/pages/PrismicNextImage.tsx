@@ -103,10 +103,7 @@ export default function Page({
 	);
 }
 
-export async function getServerSideProps({
-	req,
-	params,
-}: GetServerSidePropsContext<{ uid: string }>) {
+export async function getServerSideProps({ req }: GetServerSidePropsContext) {
 	const repositoryName = req.cookies["repository-name"];
 	assert(
 		repositoryName && typeof repositoryName === "string",
@@ -114,7 +111,7 @@ export async function getServerSideProps({
 	);
 
 	const client = createClient(repositoryName);
-	const { data: tests } = await client.getByUID("image_test", params!.uid);
+	const { data: tests } = await client.getSingle("image_test");
 
 	assert(
 		isFilled.image(tests.with_alt_text) && tests.with_alt_text.alt !== null,

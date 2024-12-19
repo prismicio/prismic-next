@@ -5,7 +5,10 @@ export const createClient = (
 	repositoryName: string,
 	config: prismicNext.CreateClientConfig = {},
 ) => {
-	const client = prismic.createClient(repositoryName, config);
+	const client = prismic.createClient(repositoryName, {
+		routes: [{ type: "page", path: "/:uid" }],
+		...config,
+	});
 
 	prismicNext.enableAutoPreviews({
 		client,
