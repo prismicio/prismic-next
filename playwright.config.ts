@@ -28,6 +28,7 @@ export default defineConfig({
 		{
 			name: "Setup",
 			testMatch: "*.setup.*",
+			teardown: "Teardown",
 			use: {
 				storageState: STORAGE_STATE,
 			},
@@ -47,6 +48,13 @@ export default defineConfig({
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",
+				storageState: STORAGE_STATE,
+			},
+		},
+		{
+			name: "Teardown",
+			testMatch: "*.teardown.*",
+			use: {
 				storageState: STORAGE_STATE,
 			},
 		},
