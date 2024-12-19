@@ -46,7 +46,7 @@ test("updates previews", async ({ appPage, repo, pageDoc }) => {
 	await appPage.preview(updatedDocument);
 	await expect(appPage.payload).toContainText("foo");
 	await repo.createDocumentDraft(updatedDocument, content({ payload: "bar" }));
-	await expect(appPage.payload).toContainText("bar", { timeout: 15000 });
+	await expect(appPage.payload).toContainText("bar");
 });
 
 test("restores published pageDoc on exit", async ({

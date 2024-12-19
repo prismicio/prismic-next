@@ -19,6 +19,12 @@ type Auth = {
 	password: string;
 };
 
+export type CoreAPIDocument = {
+	id: string;
+	custom_type_id: string;
+	versions: { version_id: string; uid?: string }[];
+};
+
 export class Prismic {
 	urls: PrismicURLs;
 	#auth: AuthenticatedAPI;
@@ -104,7 +110,9 @@ export class Repo {
 		assert(res.ok, `Could not create preview ${name}.`);
 	}
 
-	async getPreviewConfigs(): Promise<WroomPreviewConfig[]> {
+	async getPreviewConfigs(): Promise<
+		{ id: string; label: string; url: string }[]
+	> {
 		const url = new URL("repository/preview_configs", this.urls.core);
 		const res = await this.#auth.get(url.toString());
 		assert(res.ok, `Could not get preview configs.`);
@@ -175,7 +183,7 @@ export class Repo {
 	}
 
 	async getDocumentByUID(type: string, uid: string) {
-		const url = new URL(`documents`, this.urls.core);
+		const url = new URL("documents", this.urls.core);
 		url.searchParams.set("uid", uid);
 		const res = await this.#auth.get(url.toString());
 		assert(res.ok, "Could not fetch documents.");
@@ -183,6 +191,22 @@ export class Repo {
 		const doc = json.results.find((result) => result.custom_type_id === type);
 		assert(doc, `Could not find document with type ${type} and UID ${uid}.`);
 		return doc;
+	}
+
+	async delete() {
+		const res = await this.#unreliableDelete();
+		if (!res.ok) {
+			// sometimes the deletion returns 500 but actually succeeds
+			// we run the query again and check the repo is actually deleted (404)
+			const retry = await this.#unreliableDelete();
+			assert(!retry.ok, `Could not delete repository ${this.domain}`);
+		}
+	}
+
+	async #unreliableDelete() {
+		const url = new URL("app/settings/delete", this.urls.wroom);
+		const data = { confirm: this.domain, password: this.#auth.auth.password };
+		return await this.#auth.postWroom(url.toString(), { data });
 	}
 }
 
@@ -260,14 +284,6 @@ class AuthenticatedAPI {
 		return { authorization: `Bearer ${token}`, ...existingHeaders };
 	}
 }
-
-export type CoreAPIDocument = {
-	id: string;
-	custom_type_id: string;
-	versions: { version_id: string; uid?: string }[];
-};
-
-type WroomPreviewConfig = { id: string; label: string; url: string };
 
 function withSubdomain(subdomain: string, url: URL | string) {
 	const newURL = new URL(url);

@@ -32,34 +32,23 @@ export const test = base.extend<Fixtures>({
 	repo: async ({ page, prismic, baseURL }, use) => {
 		assert(baseURL, "A baseURL must be configured to test Prismic previews.");
 		const cookies = await page.context().cookies();
-		const repositoryName = cookies.find(
-			(cookie) => cookie.name === "repository-name",
-		)?.value;
-		assert(
-			repositoryName,
-			"There is no repository-name cookie. The setup project must run first.",
-		);
-		const repository = prismic.getRepo(repositoryName);
-		const previewConfigs = await repository.getPreviewConfigs();
-		const previewConfig = previewConfigs.find(
-			(config) => new URL(config.url).origin === baseURL,
-		);
-		if (!previewConfig) {
-			const url = new URL("api/preview", baseURL);
-			await repository.createPreview({ name: url.toString(), url });
-		}
-		await use(repository);
+		const repoName = cookies.find((c) => c.name === "repository-name")?.value;
+		assert(repoName, "Missing repository-name cookie. Run the setup project.");
+		const repo = prismic.getRepo(repoName);
+		const url = new URL("api/preview", baseURL);
+		await repo.createPreview({ name: url.toString(), url });
+		await use(repo);
 	},
-	pageDoc: async ({ repo: repository }, use) => {
-		const document = await repository.getDocumentByUID("page", "published");
+	pageDoc: async ({ repo }, use) => {
+		const document = await repo.getDocumentByUID("page", "published");
 		await use(document);
 	},
-	unpublishedPageDoc: async ({ repo: repository }, use) => {
-		const document = await repository.getDocumentByUID("page", "unpublished");
+	unpublishedPageDoc: async ({ repo }, use) => {
+		const document = await repo.getDocumentByUID("page", "unpublished");
 		await use(document);
 	},
-	appPage: async ({ page, repo: repository }, use) => {
-		const appPage = new AppPage(page, repository);
+	appPage: async ({ page, repo }, use) => {
+		const appPage = new AppPage(page, repo);
 		await use(appPage);
 	},
 });
@@ -67,8 +56,6 @@ export const test = base.extend<Fixtures>({
 class AppPage {
 	page: Page;
 	repository: Repo;
-
-	// Locators
 	toolbarScript: Locator;
 	toolbar: Locator;
 	payload: Locator;
@@ -76,8 +63,6 @@ class AppPage {
 	constructor(page: Page, repository: Repo) {
 		this.page = page;
 		this.repository = repository;
-
-		// Locators
 		this.toolbarScript = page.locator('script[src*="prismic.io/prismic.js"]');
 		this.toolbar = page.locator("#prismic-toolbar-v2 .PreviewMenu");
 		this.payload = page.getByTestId("payload");
@@ -86,13 +71,7 @@ class AppPage {
 	async goToDocument(document: CoreAPIDocument, pathPrefix = "") {
 		const client = createClient(
 			new URL("/api/v2", this.repository.urls.cdn).toString(),
-			{
-				routes: [
-					{ type: "page", path: "/:uid" },
-					{ type: "link_test", path: "/PrismicNextLink/:uid" },
-					{ type: "image_test", path: "/PrismicNextImage/:uid" },
-				],
-			},
+			{ routes: [{ type: "page", path: "/:uid" }] },
 		);
 		const apiDocument = await client.getByID(document.id);
 		return await this.page.goto(pathPrefix + apiDocument.url!);
