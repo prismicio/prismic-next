@@ -5,23 +5,25 @@ test.describe.configure({ mode: "serial" });
 
 test("adds the Prismic toolbar script", async ({
 	appPage,
-	pageDocument,
-	repository,
+	pageDoc: pageDocument,
+	repo,
 }) => {
 	await appPage.goToDocument(pageDocument);
 	await expect(appPage.toolbarScript).toHaveCount(1);
-	const repo = await appPage.getToolbarScriptParam("repo");
-	expect(repo).toBe(repository.name);
+	const param = await appPage.getToolbarScriptParam("repo");
+	expect(param).toBe(repo.domain);
 });
 
 test("supports previews on published documents", async ({
 	appPage,
-	pageDocument,
+	repo,
+	pageDoc: pageDocument,
 }) => {
 	await appPage.goToDocument(pageDocument);
 	await expect(appPage.payload).not.toContainText("foo");
-	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
-		content(uid, { payload: "foo" }),
+	const updatedDocument = await repo.createDocumentDraft(
+		pageDocument,
+		content({ payload: "foo" }),
 	);
 	await appPage.preview(updatedDocument);
 	await expect(appPage.payload).toContainText("foo");
@@ -29,34 +31,36 @@ test("supports previews on published documents", async ({
 
 test("supports previews on unpublished documents", async ({
 	appPage,
-	unpublishedPageDocument,
+	repo,
+	unpublishedPageDoc: unpublishedPageDocument,
 }) => {
-	const updatedDocument = await appPage.createNewDraft(
+	const updatedDocument = await repo.createDocumentDraft(
 		unpublishedPageDocument,
-		(uid) => content(uid, { payload: "foo" }),
+		content({ payload: "foo" }),
 	);
 	await appPage.preview(updatedDocument);
 	await expect(appPage.payload).toContainText("foo");
 });
 
-test("updates previews", async ({ appPage, pageDocument }) => {
-	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
-		content(uid, { payload: "foo" }),
+test("updates previews", async ({ appPage, repo, pageDoc: pageDocument }) => {
+	const updatedDocument = await repo.createDocumentDraft(
+		pageDocument,
+		content({ payload: "foo" }),
 	);
 	await appPage.preview(updatedDocument);
 	await expect(appPage.payload).toContainText("foo");
-	await appPage.createNewDraft(updatedDocument, (uid) =>
-		content(uid, { payload: "bar" }),
-	);
+	await repo.createDocumentDraft(updatedDocument, content({ payload: "bar" }));
 	await expect(appPage.payload).toContainText("bar");
 });
 
 test("restores published pageDocument on exit", async ({
 	appPage,
-	pageDocument,
+	repo,
+	pageDoc: pageDocument,
 }) => {
-	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
-		content(uid, { payload: "foo" }),
+	const updatedDocument = await repo.createDocumentDraft(
+		pageDocument,
+		content({ payload: "foo" }),
 	);
 	await appPage.preview(updatedDocument);
 	await appPage.exitPreview();
@@ -64,31 +68,46 @@ test("restores published pageDocument on exit", async ({
 });
 
 // We can't get a real shareable link because we aren't authenticated with a
-// SESSION cookie. Instead, we can simulate what the link does by setting
-// an `io.prismic.previewSession` cookie.
-test("supports sharable links", async ({ appPage, pageDocument }) => {
-	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
-		content(uid, { payload: "foo" }),
+// SESSION cookie. Instead, we can simulate what the link does by starting a new
+// preview session and directly navigating to the document. The app's preview
+// resolver URL is bypassed.
+test("supports sharable links", async ({
+	appPage,
+	repo,
+	pageDoc: pageDocument,
+}) => {
+	const updatedDocument = await repo.createDocumentDraft(
+		pageDocument,
+		content({ payload: "foo" }),
 	);
-	const previewSession = await appPage.getPreviewSession(updatedDocument);
-	await appPage.setPreviewSessionCookie(previewSession.session_id);
+	await repo.createPreviewSession(updatedDocument);
 	await appPage.goToDocument(pageDocument);
 	await expect(appPage.payload).toContainText("foo");
 });
 
-test("supports custom update endpoint", async ({ appPage, pageDocument }) => {
+test("supports custom update endpoint", async ({
+	appPage,
+	repo,
+	pageDoc: pageDocument,
+}) => {
 	await appPage.goToDocument(pageDocument, "/with-custom-preview-endpoints");
 	await expect(appPage.payload).not.toContainText("foo");
-	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
-		content(uid, { payload: "foo" }),
+	const updatedDocument = await repo.createDocumentDraft(
+		pageDocument,
+		content({ payload: "foo" }),
 	);
 	await appPage.preview(updatedDocument);
 	await expect(appPage.payload).toContainText("foo");
 });
 
-test("supports custom exit endpoint", async ({ appPage, pageDocument }) => {
-	const updatedDocument = await appPage.createNewDraft(pageDocument, (uid) =>
-		content(uid, { payload: "foo" }),
+test("supports custom exit endpoint", async ({
+	appPage,
+	repo,
+	pageDoc: pageDocument,
+}) => {
+	const updatedDocument = await repo.createDocumentDraft(
+		pageDocument,
+		content({ payload: "foo" }),
 	);
 	await appPage.preview(updatedDocument);
 	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints");

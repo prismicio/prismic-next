@@ -1,5 +1,3 @@
-import { randomUUID } from "node:crypto";
-
 export const model = {
 	format: "page",
 	id: "page",
@@ -25,14 +23,11 @@ export const model = {
 	},
 } as const;
 
-export function content(
-	uid: string = randomUUID(),
-	args: { payload?: string } = {},
-) {
-	const { payload } = args;
+export function content(args: { payload?: string; uid?: string } = {}) {
+	const { payload, uid } = args;
 
 	return {
-		uid,
+		...(uid ? { uid } : {}),
 		uid_TYPE: "UID",
 		payload: payload ?? uid,
 		payload_TYPE: "Text",
