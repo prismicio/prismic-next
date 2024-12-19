@@ -9,7 +9,7 @@ import reactHooks from "eslint-plugin-react-hooks";
 
 export default tseslint.config(
 	{
-		ignores: ["dist/"],
+		ignores: ["dist/", "playwright-report/", "**/.next/"],
 	},
 	eslint.configs.recommended,
 	tseslint.configs.recommended,
