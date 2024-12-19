@@ -1,4 +1,4 @@
-import { APIRequestContext, APIResponse } from "playwright/test";
+import { APIRequestContext, APIResponse, request } from "playwright/test";
 import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { randomUUID } from "node:crypto";
 import assert from "node:assert";
@@ -190,6 +190,7 @@ class AuthenticatedAPI {
 	urls: PrismicURLs;
 	auth: Auth;
 	#request: APIRequestContext;
+	#wroomRequest: Promise<APIRequestContext>;
 	#cachedToken?: string;
 
 	constructor(config: {
@@ -200,6 +201,7 @@ class AuthenticatedAPI {
 		this.urls = config.urls;
 		this.auth = config.auth;
 		this.#request = config.request;
+		this.#wroomRequest = request.newContext();
 	}
 
 	async get(...args: Parameters<APIRequestContext["get"]>) {
@@ -225,7 +227,8 @@ class AuthenticatedAPI {
 	async postWroom(
 		...args: Parameters<APIRequestContext["post"]>
 	): Promise<APIResponse> {
-		const { cookies } = await this.#request.storageState();
+		const request = await this.#wroomRequest;
+		const { cookies } = await request.storageState();
 		const xsrf = cookies.find((cookie) => cookie.name === "X_XSRF")?.value;
 		if (!xsrf) {
 			await this.#logInWroom();
@@ -234,12 +237,13 @@ class AuthenticatedAPI {
 
 		const url = new URL(args[0]);
 		url.searchParams.set("_", xsrf);
-		return await this.#request.post(url.toString(), args[1]);
+		return await request.post(url.toString(), args[1]);
 	}
 
 	async #logInWroom() {
+		const request = await this.#wroomRequest;
 		const url = new URL("/authentication/signin", this.urls.wroom).toString();
-		const res = await this.#request.post(url, { data: this.auth });
+		const res = await request.post(url, { data: this.auth });
 		assert(res.ok, "Could not log in to Prismic. Check your credentials.");
 	}
 

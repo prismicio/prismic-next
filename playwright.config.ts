@@ -43,7 +43,7 @@ export default defineConfig({
 		},
 		{
 			name: "Pages Router",
-			dependencies: ["Setup"],
+			dependencies: ["Setup", "App Router"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",

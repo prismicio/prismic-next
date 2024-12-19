@@ -19,7 +19,6 @@ type Fixtures = {
 
 export const test = base.extend<Fixtures>({
 	prismic: async ({ page }, use) => {
-		await page.context().clearCookies({ name: "X_XSRF" });
 		const prismic = new Prismic({
 			baseURL: "https://prismic.io",
 			auth: {
