@@ -232,7 +232,6 @@ class AuthenticatedAPI {
 			return await this.postWroom(...args);
 		}
 
-		console.log({ xsrf });
 		const url = new URL(args[0]);
 		url.searchParams.set("_", xsrf);
 		return await this.#request.post(url.toString(), args[1]);
