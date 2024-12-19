@@ -61,12 +61,12 @@ export default defineConfig({
 	],
 	webServer: [
 		{
-			command: "npm run dev --prefix e2e-projects/app-router",
+			command: "npm run --workspace app-router dev",
 			port: 4321,
 			reuseExistingServer: !process.env.CI,
 		},
 		{
-			command: "npm run dev --prefix e2e-projects/pages-router",
+			command: "npm run --workspace pages-router dev",
 			port: 4322,
 			reuseExistingServer: !process.env.CI,
 		},

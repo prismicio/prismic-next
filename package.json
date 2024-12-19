@@ -1,4 +1,8 @@
 {
+	"workspaces": [
+		".",
+		"e2e-projects/*"
+	],
 	"name": "@prismicio/next",
 	"version": "1.7.1",
 	"description": "Helpers to integrate Prismic into Next.js apps",
@@ -56,8 +60,7 @@
 		"test": "npm run lint && npm run types && npm run build && npm run size && npm run e2e",
 		"types": "tsc --noEmit",
 		"e2e": "playwright test",
-		"e2e:ui": "npm run e2e -- --ui",
-		"e2e:install": "npm install --prefix e2e-projects/app-router && npm install --prefix e2e-projects/pages-router"
+		"e2e:ui": "npm run e2e -- --ui"
 	},
 	"dependencies": {
 		"esm-env": "^1.2.1",
