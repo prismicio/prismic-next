@@ -27,7 +27,7 @@ export default defineConfig({
 	projects: [
 		{
 			name: "Setup",
-			testMatch: "*.setup.*",
+			testMatch: "setup.ts",
 			teardown: "Teardown",
 			use: {
 				storageState: STORAGE_STATE,
@@ -53,7 +53,7 @@ export default defineConfig({
 		},
 		{
 			name: "Teardown",
-			testMatch: "*.teardown.*",
+			testMatch: "teardown.ts",
 			use: {
 				storageState: STORAGE_STATE,
 			},
