@@ -5,8 +5,6 @@ import assert from "assert";
 
 import { CoreAPIDocument, Prismic, Repo } from "./client";
 
-export { expect } from "@playwright/test";
-
 type Fixtures = {
 	prismic: Prismic;
 	repo: Repo;

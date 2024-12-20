@@ -1,6 +1,6 @@
-import { STORAGE_STATE } from "../playwright.config";
+import { STORAGE_STATE } from "../../playwright.config";
 import { test as setup } from "./test";
-import * as data from "./data";
+import * as content from "./content";
 
 setup("create repo", async ({ page, prismic }) => {
 	const cookies = await page.context().cookies();
@@ -24,42 +24,42 @@ setup("create repo", async ({ page, prismic }) => {
 	]);
 	await page.context().storageState({ path: STORAGE_STATE });
 
-	await repository.addCustomType(data.page.model);
+	await repository.addCustomType(content.page.model);
 	const pageDocument = await repository.createDocument({
-		custom_type_id: data.page.model.id,
-		title: data.page.model.label,
+		custom_type_id: content.page.model.id,
+		title: content.page.model.label,
 		tags: [],
 		integration_field_ids: [],
-		data: data.page.content({ uid: "published" }),
+		data: content.page.content({ uid: "published" }),
 	});
 	await repository.publishDocument(pageDocument.id);
 	await repository.createDocument({
-		custom_type_id: data.page.model.id,
-		title: data.page.model.label,
+		custom_type_id: content.page.model.id,
+		title: content.page.model.label,
 		tags: [],
 		integration_field_ids: [],
-		data: data.page.content({ uid: "unpublished" }),
+		data: content.page.content({ uid: "unpublished" }),
 	});
 
-	await repository.addCustomType(data.link.model);
+	await repository.addCustomType(content.link.model);
 	const linkDocument = await repository.createDocument({
-		custom_type_id: data.link.model.id,
-		title: data.link.model.label,
+		custom_type_id: content.link.model.id,
+		title: content.link.model.label,
 		tags: [],
 		integration_field_ids: [],
-		data: data.link.content({
+		data: content.link.content({
 			documentLinkID: pageDocument.id,
 		}),
 	});
 	await repository.publishDocument(linkDocument.id);
 
-	await repository.addCustomType(data.image.model);
+	await repository.addCustomType(content.image.model);
 	const imageDocument = await repository.createDocument({
-		custom_type_id: data.image.model.id,
-		title: data.image.model.label,
+		custom_type_id: content.image.model.id,
+		title: content.image.model.label,
 		tags: [],
 		integration_field_ids: [],
-		data: data.image.content(),
+		data: content.image.content(),
 	});
 	await repository.publishDocument(imageDocument.id);
 });

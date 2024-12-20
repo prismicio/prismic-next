@@ -3,22 +3,9 @@ import { CustomType } from "@prismicio/types-internal/lib/customtypes";
 import { randomUUID } from "node:crypto";
 import assert from "node:assert";
 
-type PrismicURLs = {
-	wroom: URL;
-	auth: URL;
-	customtypes: URL;
-};
-
-type RepoURLs = PrismicURLs & {
-	cdn: URL;
-	core: URL;
-};
-
-type Auth = {
-	email: string;
-	password: string;
-};
-
+type PrismicURLs = { wroom: URL; auth: URL; customtypes: URL };
+type RepoURLs = PrismicURLs & { cdn: URL; core: URL };
+type Auth = { email: string; password: string };
 export type CoreAPIDocument = {
 	id: string;
 	custom_type_id: string;

@@ -1,4 +1,4 @@
-import { STORAGE_STATE } from "../playwright.config";
+import { STORAGE_STATE } from "../../playwright.config";
 import { test as teardown } from "./test";
 
 teardown("delete repo", async ({ page, prismic }) => {

@@ -1,4 +1,4 @@
-import { test, expect } from "./test";
+import { test, expect } from "./infra";
 
 test.beforeEach(async ({ page }) => {
 	await page.goto("/PrismicNextLink");

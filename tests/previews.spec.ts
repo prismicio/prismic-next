@@ -1,5 +1,5 @@
-import { test, expect } from "./test";
-import { content } from "./data/page";
+import { test, expect } from "./infra";
+import { content } from "./infra/content/page";
 
 test.describe.configure({ mode: "serial" });
 

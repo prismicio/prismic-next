@@ -7,7 +7,7 @@ import { existsSync, writeFileSync } from "node:fs";
 dotenv.config({ path: ".env.test.local" });
 
 export const STORAGE_STATE = fileURLToPath(
-	new URL("./tests/.storage-state.json", import.meta.url),
+	new URL("./tests/infra/.storage-state.json", import.meta.url),
 );
 if (!existsSync(STORAGE_STATE))
 	writeFileSync(STORAGE_STATE, JSON.stringify({}));
