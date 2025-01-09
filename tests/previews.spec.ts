@@ -28,10 +28,10 @@ test("supports previews on published documents", async ({
 test("supports previews on unpublished documents", async ({
 	appPage,
 	repo,
-	unpublishedPageDoc: unpublishedPageDocument,
+	unpublishedPageDoc,
 }) => {
 	const updatedDocument = await repo.createDocumentDraft(
-		unpublishedPageDocument,
+		unpublishedPageDoc,
 		content({ payload: "foo" }),
 	);
 	await appPage.preview(updatedDocument);
@@ -45,6 +45,7 @@ test("updates previews", async ({ appPage, repo, pageDoc }) => {
 	);
 	await appPage.preview(updatedDocument);
 	await expect(appPage.payload).toContainText("foo");
+	await expect(appPage.toolbar).toHaveCount(1);
 	await repo.createDocumentDraft(updatedDocument, content({ payload: "bar" }));
 	await expect(appPage.payload).toContainText("bar");
 });

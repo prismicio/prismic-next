@@ -95,7 +95,8 @@ export function PrismicPreview(props: PrismicPreviewProps): ReactElement {
 				.catch(() => {});
 		}
 
-		function onUpdate() {
+		function onUpdate(event: Event) {
+			event.preventDefault();
 			start();
 		}
 
