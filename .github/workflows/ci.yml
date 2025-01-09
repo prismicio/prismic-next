@@ -21,8 +21,6 @@ jobs:
           node-version: ${{ matrix.node }}
           registry-url: "https://registry.npmjs.org/"
       - run: npm ci
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
       - run: npx playwright install --with-deps
       - run: npm run lint
       - run: npm run build
