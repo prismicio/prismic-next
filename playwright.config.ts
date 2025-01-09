@@ -26,16 +26,16 @@ export default defineConfig({
 	},
 	projects: [
 		{
-			name: "Setup",
+			name: "setup",
 			testMatch: "setup.ts",
-			teardown: "Teardown",
+			teardown: "teardown",
 			use: {
 				storageState: STORAGE_STATE,
 			},
 		},
 		{
-			name: "App Router",
-			dependencies: ["Setup"],
+			name: "15-app-router",
+			dependencies: ["setup"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4321",
@@ -43,8 +43,8 @@ export default defineConfig({
 			},
 		},
 		{
-			name: "Pages Router",
-			dependencies: ["Setup", "App Router"],
+			name: "15-pages-router",
+			dependencies: ["setup"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",
@@ -52,7 +52,25 @@ export default defineConfig({
 			},
 		},
 		{
-			name: "Teardown",
+			name: "14-app-router",
+			dependencies: ["setup"],
+			use: {
+				...devices["Desktop Chrome"],
+				baseURL: "http://localhost:4323",
+				storageState: STORAGE_STATE,
+			},
+		},
+		{
+			name: "14-pages-router",
+			dependencies: ["setup"],
+			use: {
+				...devices["Desktop Chrome"],
+				baseURL: "http://localhost:4324",
+				storageState: STORAGE_STATE,
+			},
+		},
+		{
+			name: "teardown",
 			testMatch: "teardown.ts",
 			use: {
 				storageState: STORAGE_STATE,
@@ -61,13 +79,23 @@ export default defineConfig({
 	],
 	webServer: [
 		{
-			command: "npm run --workspace app-router dev",
+			command: "npm run --workspace 15-app-router dev",
 			port: 4321,
 			reuseExistingServer: !process.env.CI,
 		},
 		{
-			command: "npm run --workspace pages-router dev",
+			command: "npm run --workspace 15-pages-router dev",
 			port: 4322,
+			reuseExistingServer: !process.env.CI,
+		},
+		{
+			command: "npm run --workspace 14-app-router dev",
+			port: 4323,
+			reuseExistingServer: !process.env.CI,
+		},
+		{
+			command: "npm run --workspace 14-pages-router dev",
+			port: 4324,
 			reuseExistingServer: !process.env.CI,
 		},
 	],

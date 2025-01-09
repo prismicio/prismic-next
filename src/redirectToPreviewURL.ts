@@ -1,5 +1,4 @@
 import { redirect } from "next/navigation";
-import { cookies, draftMode } from "next/headers";
 import {
 	cookie as prismicCookie,
 	type Client,
@@ -44,6 +43,11 @@ export async function redirectToPreviewURL(
 	config: RedirectToPreviewURLConfig,
 ): Promise<never> {
 	const { client, request, linkResolver, defaultURL = "/" } = config;
+
+	// Need this to avoid the following Next.js build-time error:
+	// You're importing a component that needs next/headers. That only works
+	// in a Server Component which is not supported in the pages/ directory.
+	const { cookies, draftMode } = await import("next/headers");
 
 	const documentID =
 		request.nextUrl.searchParams.get("documentId") ?? undefined;

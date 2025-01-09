@@ -1,8 +1,8 @@
 {
-	"name": "app-router",
+	"name": "15-app-router",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --port=4321 --turbo",
+		"dev": "next dev --port=4321",
 		"build": "next build",
 		"start": "next start --port=4321"
 	},

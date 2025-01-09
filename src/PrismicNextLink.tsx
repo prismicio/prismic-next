@@ -1,4 +1,4 @@
-import { ComponentProps, ReactElement, forwardRef } from "react";
+import { ComponentProps, forwardRef } from "react";
 import Link from "next/link";
 import {
 	AsLinkAttrsConfig,
@@ -35,7 +35,7 @@ export type PrismicNextLinkProps = Omit<
 export const PrismicNextLink = forwardRef<
 	HTMLAnchorElement,
 	PrismicNextLinkProps
->(function PrismicNextLink(props, ref): ReactElement | null {
+>(function PrismicNextLink(props, ref) {
 	const { field, document, linkResolver, children, ...restProps } = props;
 	const {
 		href: computedHref,

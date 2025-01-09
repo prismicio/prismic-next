@@ -1,5 +1,4 @@
-import type { ReactElement, ReactNode } from "react";
-import { draftMode } from "next/headers";
+import type { ReactNode, JSX } from "react";
 import Script from "next/script";
 import { getToolbarSrc } from "@prismicio/client";
 
@@ -44,8 +43,13 @@ export type PrismicPreviewProps = {
  */
 export async function PrismicPreview(
 	props: PrismicPreviewProps,
-): Promise<ReactElement> {
+): Promise<JSX.Element> {
 	const { repositoryName, children, ...otherProps } = props;
+
+	// Need this to avoid the following Next.js build-time error:
+	// You're importing a component that needs next/headers. That only works
+	// in a Server Component which is not supported in the pages/ directory.
+	const { draftMode } = await import("next/headers");
 
 	const toolbarSrc = getToolbarSrc(repositoryName);
 	const isDraftMode = (await draftMode()).isEnabled;

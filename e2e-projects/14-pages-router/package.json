@@ -1,0 +1,22 @@
+{
+	"name": "14-pages-router",
+	"private": true,
+	"scripts": {
+		"dev": "next dev --port=4324",
+		"build": "next build",
+		"start": "next start --port=4324"
+	},
+	"dependencies": {
+		"@prismicio/client": "^7.13.1",
+		"@prismicio/next": "*",
+		"next": "^14",
+		"react": "^18",
+		"react-dom": "^18"
+	},
+	"devDependencies": {
+		"@types/node": "^22",
+		"@types/react": "^18",
+		"@types/react-dom": "^18",
+		"typescript": "^5"
+	}
+}

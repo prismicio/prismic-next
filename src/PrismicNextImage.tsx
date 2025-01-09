@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactElement } from "react";
+import { JSX } from "react";
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import { ImageFieldImage, isFilled } from "@prismicio/client";
@@ -91,7 +91,7 @@ export const PrismicNextImage = ({
 	fallback = null,
 	loader = imgixLoader,
 	...restProps
-}: PrismicNextImageProps): ReactElement => {
+}: PrismicNextImageProps): JSX.Element => {
 	if (DEV) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
