@@ -34,7 +34,7 @@ export default defineConfig({
 			},
 		},
 		{
-			name: "15-app-router",
+			name: "app-router",
 			dependencies: ["setup"],
 			use: {
 				...devices["Desktop Chrome"],
@@ -43,29 +43,11 @@ export default defineConfig({
 			},
 		},
 		{
-			name: "15-pages-router",
-			dependencies: ["setup"],
+			name: "pages-router",
+			dependencies: ["setup", "app-router"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",
-				storageState: STORAGE_STATE,
-			},
-		},
-		{
-			name: "14-app-router",
-			dependencies: ["setup"],
-			use: {
-				...devices["Desktop Chrome"],
-				baseURL: "http://localhost:4323",
-				storageState: STORAGE_STATE,
-			},
-		},
-		{
-			name: "14-pages-router",
-			dependencies: ["setup"],
-			use: {
-				...devices["Desktop Chrome"],
-				baseURL: "http://localhost:4324",
 				storageState: STORAGE_STATE,
 			},
 		},
@@ -79,23 +61,13 @@ export default defineConfig({
 	],
 	webServer: [
 		{
-			command: "npm run --workspace 15-app-router dev",
+			command: "npm run --workspace app-router dev",
 			port: 4321,
 			reuseExistingServer: !process.env.CI,
 		},
 		{
-			command: "npm run --workspace 15-pages-router dev",
+			command: "npm run --workspace pages-router dev",
 			port: 4322,
-			reuseExistingServer: !process.env.CI,
-		},
-		{
-			command: "npm run --workspace 14-app-router dev",
-			port: 4323,
-			reuseExistingServer: !process.env.CI,
-		},
-		{
-			command: "npm run --workspace 14-pages-router dev",
-			port: 4324,
 			reuseExistingServer: !process.env.CI,
 		},
 	],
