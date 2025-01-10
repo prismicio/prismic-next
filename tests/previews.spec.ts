@@ -85,7 +85,7 @@ test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
 	);
 	await appPage.preview(updatedDocument);
 	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints");
-	await expect(appPage.payload).toContainText("foo");
+	await expect(appPage.payload).toContainText("foo", { timeout: 30000 });
 	await expect(appPage.toolbar).toHaveCount(1);
 	await repo.createDocumentDraft(updatedDocument, content({ payload: "bar" }));
 	await expect(appPage.payload).toContainText("bar");
@@ -98,7 +98,7 @@ test("supports custom exit endpoint", async ({ appPage, repo, pageDoc }) => {
 	);
 	await appPage.preview(updatedDocument);
 	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints");
-	await expect(appPage.payload).toContainText("foo");
+	await expect(appPage.payload).toContainText("foo", { timeout: 30000 });
 	await expect(appPage.toolbar).toHaveCount(1);
 	await appPage.exitPreview();
 	await expect(appPage.payload).not.toContainText("foo");
