@@ -101,14 +101,16 @@ export function PrismicPreview(props: PrismicPreviewProps): JSX.Element {
 		}
 
 		function start() {
-			// We check for `res.redirected` rather than `res.ok`
-			// since the update preview endpoint may redirect to a
-			// 404 page. As long as it redirects, we know the
-			// endpoint exists and at least attempted to set preview
-			// data.
-			fetch(router.basePath + updatePreviewURL, { signal: controller.signal })
+			// We check `opaqueredirect` because we don't care if
+			// the redirect was successful or not. As long as it
+			// redirects, we know the endpoint exists and at least
+			// attempted to set preview data.
+			fetch(router.basePath + updatePreviewURL, {
+				redirect: "manual",
+				signal: controller.signal,
+			})
 				.then((res) => {
-					if (!res.redirected) {
+					if (res.type !== "opaqueredirect") {
 						console.error(
 							`[<PrismicPreview>] Failed to start or update the preview using "${updatePreviewURL}". Does it exist?`,
 						);

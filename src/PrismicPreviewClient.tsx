@@ -43,15 +43,17 @@ export function PrismicPreviewClient(props: PrismicPreviewClientProps): null {
 		if (hasCookieForRepository && !isDraftMode) {
 			console.log("starting preview link");
 
-			// We check for `res.redirected` rather than `res.ok`
-			// since the update preview endpoint may redirect to a
-			// 404 page. As long as it redirects, we know the
-			// endpoint exists and at least attempted to set preview
-			// data.
+			// We check `opaqueredirect` because we don't care if
+			// the redirect was successful or not. As long as it
+			// redirects, we know the endpoint exists and draft mode
+			// is active.
 			globalThis
-				.fetch(updatePreviewURL, { signal: controller.signal })
+				.fetch(updatePreviewURL, {
+					redirect: "manual",
+					signal: controller.signal,
+				})
 				.then((res) => {
-					if (!res.redirected) {
+					if (res.type !== "opaqueredirect") {
 						console.error(
 							`[<PrismicPreview>] Failed to start the preview using "${updatePreviewURL}". Does it exist?`,
 						);

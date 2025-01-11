@@ -83,7 +83,7 @@ test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
 		pageDoc,
 		content({ payload: "foo" }),
 	);
-	await appPage.preview(updatedDocument);
+	await repo.createPreviewSession(updatedDocument);
 	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints");
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 });
 	await expect(appPage.toolbar).toHaveCount(1);
@@ -96,7 +96,7 @@ test("supports custom exit endpoint", async ({ appPage, repo, pageDoc }) => {
 		pageDoc,
 		content({ payload: "foo" }),
 	);
-	await appPage.preview(updatedDocument);
+	await repo.createPreviewSession(updatedDocument);
 	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints");
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 });
 	await expect(appPage.toolbar).toHaveCount(1);
