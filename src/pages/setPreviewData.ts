@@ -19,11 +19,7 @@ export type SetPreviewDataConfig = {
 	res: NextApiResponseLike;
 };
 
-/**
- * **Only use this function in the Pages Directory (/pages).**
- *
- * Set Prismic preview data for Next.js's Preview Mode.
- */
+/** Set Prismic preview data for Next.js's Preview Mode. */
 export function setPreviewData({ req, res }: SetPreviewDataConfig): void {
 	const ref = req.query.token || req.cookies[cookie.preview];
 

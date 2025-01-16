@@ -3,8 +3,6 @@ import type { NextApiRequestLike, NextApiResponseLike } from "./types.js";
 /** Configuration for `exitPreview()`. */
 export type ExitPreviewAPIRouteConfig = {
 	/**
-	 * **Only use this parameter in the Pages Directory (/pages).**
-	 *
 	 * The `req` object from a Next.js API route.
 	 *
 	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>

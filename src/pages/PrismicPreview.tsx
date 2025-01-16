@@ -12,16 +12,12 @@ export type PrismicPreviewProps = {
 	repositoryName: string;
 
 	/**
-	 * **Only used in the Pages Directory (/pages).**
-	 *
 	 * The URL of your app's Prismic preview endpoint (default: `/api/preview`).
 	 * This URL will be fetched on preview update events.
 	 */
 	updatePreviewURL?: string;
 
 	/**
-	 * **Only used in the Pages Directory (/pages).**
-	 *
 	 * The URL of your app's exit preview endpoint (default: `/api/exit-preview`).
 	 * This URL will be fetched on preview exit events.
 	 */
