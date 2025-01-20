@@ -68,7 +68,8 @@ export function PrismicPreviewClient(props: PrismicPreviewClientProps): null {
 				});
 		}
 
-		function onUpdate() {
+		function onUpdate(event: Event) {
+			event.preventDefault();
 			refresh();
 		}
 
