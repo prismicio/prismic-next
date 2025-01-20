@@ -98,8 +98,8 @@
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^7",
-		"next": "^13.4.5 || ^14 || ^15.0.0-rc.0",
-		"react": "^18 || ^19.0.0-rc.0"
+		"next": "^13.4.5 || ^14 || ^15",
+		"react": "^18 || ^19"
 	},
 	"engines": {
 		"node": ">=18"
