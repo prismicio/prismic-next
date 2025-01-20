@@ -1,5 +1,3 @@
-"use client";
-
 import { JSX } from "react";
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
