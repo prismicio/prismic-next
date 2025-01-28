@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.2](https://github.com/prismicio/prismic-next/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2025-01-28)
+
+
+### Bug Fixes
+
+* treat `PrismicNextImage` as a server component ([9acfdc2](https://github.com/prismicio/prismic-next/commit/9acfdc216587bcb7b01faf866db4571367d25b6d))
+* use `FC` over `JSX` to support React 18 ([4c438e1](https://github.com/prismicio/prismic-next/commit/4c438e130f3a5e6748e0da599a40e1d250e933d7))
+
+
+### Chore
+
+* clean up peer dependency versions ([2ad5f4f](https://github.com/prismicio/prismic-next/commit/2ad5f4f8bff64bfcedc712bfd7c46a4cdf5f5087))
+
 ## [2.0.0-alpha.1](https://github.com/prismicio/prismic-next/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2025-01-20)
 
 
