@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
 import { cookie as prismicCookie } from "@prismicio/client";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +11,7 @@ type PrismicPreviewClientProps = {
 	exitPreviewURL?: string;
 };
 
-export function PrismicPreviewClient(props: PrismicPreviewClientProps): null {
+export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 	const {
 		repositoryName,
 		isDraftMode,
@@ -97,7 +97,7 @@ export function PrismicPreviewClient(props: PrismicPreviewClientProps): null {
 	}, [repositoryName, isDraftMode, updatePreviewURL, exitPreviewURL, refresh]);
 
 	return null;
-}
+};
 
 /**
  * Returns the value of a cookie from a given cookie store.

@@ -1,6 +1,6 @@
 "use client";
 
-import { JSX } from "react";
+import { FC } from "react";
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import { ImageFieldImage, isFilled } from "@prismicio/client";
@@ -80,7 +80,7 @@ export type PrismicNextImageProps = Omit<
  *
  * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
  */
-export const PrismicNextImage = ({
+export const PrismicNextImage: FC<PrismicNextImageProps> = ({
 	field,
 	imgixParams = {},
 	alt,
@@ -91,7 +91,7 @@ export const PrismicNextImage = ({
 	fallback = null,
 	loader = imgixLoader,
 	...restProps
-}: PrismicNextImageProps): JSX.Element => {
+}) => {
 	if (DEV) {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(

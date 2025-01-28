@@ -1,4 +1,4 @@
-import type { ReactNode, JSX } from "react";
+import type { FC, ReactNode } from "react";
 import Script from "next/script";
 import { getToolbarSrc } from "@prismicio/client";
 
@@ -37,9 +37,7 @@ export type PrismicPreviewProps = {
  * This component can be wrapped around your app or added anywhere in your app's
  * tree. It must be rendered on every page.
  */
-export async function PrismicPreview(
-	props: PrismicPreviewProps,
-): Promise<JSX.Element> {
+export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
 	const { repositoryName, children, ...otherProps } = props;
 
 	// Need this to avoid the following Next.js build-time error:
@@ -61,4 +59,4 @@ export async function PrismicPreview(
 			<Script src={toolbarSrc} strategy="lazyOnload" />
 		</>
 	);
-}
+};
