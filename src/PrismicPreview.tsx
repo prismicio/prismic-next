@@ -51,7 +51,7 @@ export function PrismicPreview({
 	repositoryName,
 	children,
 	...props
-}: PrismicPreviewProps): JSX.Element | Promise<JSX.Element> {
+}: PrismicPreviewProps): React.JSX.Element | Promise<React.JSX.Element> {
 	const toolbarSrc = prismic.getToolbarSrc(repositoryName);
 	let isDraftMode = false;
 
