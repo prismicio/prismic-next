@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/prismicio/prismic-next/compare/v1.7.2...v2.0.0) (2025-01-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* v2 (#100)
+
+### Features
+
+* v2 ([#100](https://github.com/prismicio/prismic-next/issues/100)) ([dc39291](https://github.com/prismicio/prismic-next/commit/dc39291a51f40caef12c86c80722f34e9b0d3c04)), closes [#102](https://github.com/prismicio/prismic-next/issues/102)
+
 ### [1.7.2](https://github.com/prismicio/prismic-next/compare/v1.7.1...v1.7.2) (2025-01-29)
 
 
