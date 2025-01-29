@@ -2,61 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [2.0.0-alpha.2](https://github.com/prismicio/prismic-next/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2025-01-28)
+### [1.7.2](https://github.com/prismicio/prismic-next/compare/v1.7.1...v1.7.2) (2025-01-29)
 
 
 ### Bug Fixes
 
-* treat `PrismicNextImage` as a server component ([9acfdc2](https://github.com/prismicio/prismic-next/commit/9acfdc216587bcb7b01faf866db4571367d25b6d))
-* use `FC` over `JSX` to support React 18 ([4c438e1](https://github.com/prismicio/prismic-next/commit/4c438e130f3a5e6748e0da599a40e1d250e933d7))
-
-
-### Chore
-
-* clean up peer dependency versions ([2ad5f4f](https://github.com/prismicio/prismic-next/commit/2ad5f4f8bff64bfcedc712bfd7c46a4cdf5f5087))
-
-## [2.0.0-alpha.1](https://github.com/prismicio/prismic-next/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2025-01-20)
-
-
-### Bug Fixes
-
-* don't hard-refresh the page on preview updates ([f14bdf7](https://github.com/prismicio/prismic-next/commit/f14bdf7811e8c5679bae913b615302b9ba630359))
-
-## [2.0.0-alpha.0](https://github.com/prismicio/prismic-next/compare/v1.7.1...v2.0.0-alpha.0) (2025-01-20)
-
-
-### Features
-
-* base setup ([5c7d5f4](https://github.com/prismicio/prismic-next/commit/5c7d5f42a9ee35c9446ed2ca1d3cacd8e4cf31a4))
-* cleanup ([d28b2b0](https://github.com/prismicio/prismic-next/commit/d28b2b09fb5164d3b5857e79c1051a37772192d3))
-* init v2 ([1d99426](https://github.com/prismicio/prismic-next/commit/1d994260561d043b9ab4276a81d60a1fb91bb520))
-* reconfigure `package.json` and `vite.config.ts` ([4ae7500](https://github.com/prismicio/prismic-next/commit/4ae7500f56a1926be263f97c10686568f7263179))
-
-
-### Bug Fixes
-
-* preview reloading with pages router ([59b4ab3](https://github.com/prismicio/prismic-next/commit/59b4ab30a144741a95f9a8f8a15cd8e7247c8faf))
-* remove PR template ([60a669f](https://github.com/prismicio/prismic-next/commit/60a669f7c69f5610958b8ca9e68dcb579ee390ce))
-* use `redirect: "manual"` ([1d02c7e](https://github.com/prismicio/prismic-next/commit/1d02c7e58fc1bd6591136f69e0e422984438d493))
-
-
-### Chore
-
-* fix eslint setup ([e682cac](https://github.com/prismicio/prismic-next/commit/e682cac7ed3d1c048770b3d2d5ded60707d19730))
-* release alpha as major ([0fd6ee5](https://github.com/prismicio/prismic-next/commit/0fd6ee55705bae6002079373b3976a7a152f79a3))
-* remove unused asset ([e268fea](https://github.com/prismicio/prismic-next/commit/e268fea2ff5da598d72988dcf2c1924a31f69953))
-* remove unused vitest deps ([8233404](https://github.com/prismicio/prismic-next/commit/8233404507cbf1ef567fd1b88e7d62557898f3ed))
-* stuff ([d4d727e](https://github.com/prismicio/prismic-next/commit/d4d727e97c74cb592de75218662ecbae3c64b380))
-* update `package-lock.json` ([e977d25](https://github.com/prismicio/prismic-next/commit/e977d25912ec4b6e3355b7b0517d678828cd596b))
-* update infra ([9642f90](https://github.com/prismicio/prismic-next/commit/9642f909f71e5dab688e6c39388295cc820c35f2))
-* use exact dev version ([568b377](https://github.com/prismicio/prismic-next/commit/568b3776459f8022249356b3e134650293bbd0d4))
-
-
-### Documentation
-
-* add missing TSDoc ([973cba9](https://github.com/prismicio/prismic-next/commit/973cba930b1c41cea0cb0f05a4543a23f779e641))
-* remove irrelevant TSDocs ([9bb5f32](https://github.com/prismicio/prismic-next/commit/9bb5f326bbd5332d064f74c9c10224db9fe90d5d))
-* reword message ([5b9497f](https://github.com/prismicio/prismic-next/commit/5b9497f7b9748860e01fa21a5e85b1a9455f9db8))
+* use React 18 and 19 compatible types ([#104](https://github.com/prismicio/prismic-next/issues/104)) ([18b6be0](https://github.com/prismicio/prismic-next/commit/18b6be01b206ce400fbe8a8c0a0b21e867a7d534))
 
 ### [1.7.1](https://github.com/prismicio/prismic-next/compare/v1.7.0...v1.7.1) (2024-10-28)
 
