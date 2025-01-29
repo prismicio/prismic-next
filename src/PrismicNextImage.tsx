@@ -1,6 +1,11 @@
 "use client";
 
-import { FC } from "react";
+import {
+	forwardRef,
+	ForwardRefExoticComponent,
+	PropsWithoutRef,
+	RefAttributes,
+} from "react";
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import { ImageFieldImage, isFilled } from "@prismicio/client";
@@ -80,37 +85,47 @@ export type PrismicNextImageProps = Omit<
  *
  * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
  */
-export const PrismicNextImage: FC<PrismicNextImageProps> = ({
-	field,
-	imgixParams = {},
-	alt,
-	fallbackAlt,
-	fill,
-	width,
-	height,
-	fallback = null,
-	loader = imgixLoader,
-	...restProps
-}) => {
-	if (DEV) {
-		if (typeof alt === "string" && alt !== "") {
-			console.warn(
-				`[PrismicNextImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
-					"alt-must-be-an-empty-string",
-				)}`,
-			);
+// The type annotation is necessary to avoid a type reference issue.
+export const PrismicNextImage: ForwardRefExoticComponent<
+	PropsWithoutRef<PrismicNextImageProps> & RefAttributes<HTMLImageElement>
+> = forwardRef<HTMLImageElement, PrismicNextImageProps>(
+	function PrismicNextImage(
+		{
+			field,
+			imgixParams = {},
+			alt,
+			fallbackAlt,
+			fill,
+			width,
+			height,
+			fallback = null,
+			loader = imgixLoader,
+			...restProps
+		},
+		ref,
+	) {
+		if (DEV) {
+			if (typeof alt === "string" && alt !== "") {
+				console.warn(
+					`[PrismicNextImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
+						"alt-must-be-an-empty-string",
+					)}`,
+				);
+			}
+
+			if (typeof fallbackAlt === "string" && fallbackAlt !== "") {
+				console.warn(
+					`[PrismicNextImage] The "fallbackAlt" prop can only be used to declare an image as decorative by passing an empty string (fallbackAlt="") but was provided a non-empty string. You can resolve this warning by removing the "fallbackAlt" prop or changing it to fallbackAlt="". For more details, see ${devMsg(
+						"alt-must-be-an-empty-string",
+					)}`,
+				);
+			}
 		}
 
-		if (typeof fallbackAlt === "string" && fallbackAlt !== "") {
-			console.warn(
-				`[PrismicNextImage] The "fallbackAlt" prop can only be used to declare an image as decorative by passing an empty string (fallbackAlt="") but was provided a non-empty string. You can resolve this warning by removing the "fallbackAlt" prop or changing it to fallbackAlt="". For more details, see ${devMsg(
-					"alt-must-be-an-empty-string",
-				)}`,
-			);
+		if (!isFilled.imageThumbnail(field)) {
+			return <>{fallback}</>;
 		}
-	}
 
-	if (isFilled.imageThumbnail(field)) {
 		const resolvedImgixParams = imgixParams;
 		for (const x in imgixParams) {
 			if (resolvedImgixParams[x as keyof typeof resolvedImgixParams] === null) {
@@ -136,7 +151,6 @@ export const PrismicNextImage: FC<PrismicNextImageProps> = ({
 
 		// A non-null assertion is required since we can't statically
 		// know if an alt attribute is available.
-
 		const resolvedAlt = (alt ?? (field.alt || fallbackAlt))!;
 
 		if (DEV && typeof resolvedAlt !== "string") {
@@ -146,16 +160,9 @@ export const PrismicNextImage: FC<PrismicNextImageProps> = ({
 			);
 		}
 
-		// TODO: Remove once https://github.com/vercel/next.js/issues/52216 is resolved.
-		// `next/image` seems to be affected by a default + named export bundling bug.
-		let ResolvedImage = Image;
-		if ("default" in ResolvedImage) {
-			ResolvedImage = (ResolvedImage as unknown as { default: typeof Image })
-				.default;
-		}
-
 		return (
-			<ResolvedImage
+			<Image
+				ref={ref}
 				src={src}
 				width={fill ? undefined : resolvedWidth}
 				height={fill ? undefined : resolvedHeight}
@@ -165,7 +172,5 @@ export const PrismicNextImage: FC<PrismicNextImageProps> = ({
 				{...restProps}
 			/>
 		);
-	} else {
-		return <>{fallback}</>;
-	}
-};
+	},
+);

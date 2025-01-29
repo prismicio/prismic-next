@@ -165,3 +165,14 @@ test("supports imgix parameters when using the default loader", async ({
 		"/_next/image?url=https%3A%2F%2Fimages.prismic.io%2Fprismicio-next-test%2FZ1evSZbqstJ98PkD_image.jpg%3Fauto%3Dformat%252Ccompress%26sat%3D-100&w=1920&q=75",
 	);
 });
+
+test.describe("ref", () => {
+	test.beforeEach(async ({ page }) => {
+		await page.goto("/PrismicNextImage/client");
+	});
+
+	test("forwards ref", async ({ page }) => {
+		const link = page.getByTestId("ref");
+		await expect(link).toContainText("tagname: IMG");
+	});
+});
