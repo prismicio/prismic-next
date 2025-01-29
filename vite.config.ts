@@ -1,25 +1,35 @@
-import { defineConfig, Plugin } from "vite";
-import sdk from "vite-plugin-sdk";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import preserveDirectives from "rollup-plugin-preserve-directives";
+import typescript from "@rollup/plugin-typescript";
+import preserveDirectives from "rollup-preserve-directives";
+
+import { dependencies, peerDependencies } from "./package.json";
 
 export default defineConfig({
-	plugins: [
-		sdk({
-			internalDependencies: ["@prismicio/client"],
-		}),
-		react(),
-	],
+	plugins: [react()],
 	build: {
+		lib: {
+			entry: {
+				index: "./src/index.ts",
+				pages: "./src/pages/index.ts",
+			},
+			formats: ["es"],
+		},
+		minify: false,
+		sourcemap: true,
 		rollupOptions: {
-			plugins: [preserveDirectives() as Plugin],
+			output: {
+				preserveModules: true,
+				preserveModulesRoot: "./src",
+			},
+			external: [
+				...Object.keys(dependencies),
+				...Object.keys(peerDependencies),
+			].map((name) => new RegExp(`^${name}(?:/.*)?$`)),
+			plugins: [typescript({ rootDir: "./src" }), preserveDirectives()],
 		},
 	},
-	test: {
-		coverage: {
-			provider: "v8",
-			reporter: ["lcovonly", "text"],
-		},
-		setupFiles: ["./test/__setup__"],
+	define: {
+		"process.env": JSON.stringify({}),
 	},
 });

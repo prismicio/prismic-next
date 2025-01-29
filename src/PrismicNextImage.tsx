@@ -1,12 +1,19 @@
 "use client";
 
+import {
+	forwardRef,
+	ForwardRefExoticComponent,
+	PropsWithoutRef,
+	RefAttributes,
+} from "react";
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
-import * as prismic from "@prismicio/client";
+import { ImageFieldImage, isFilled } from "@prismicio/client";
+import { DEV } from "esm-env";
 
-import { devMsg } from "./lib/devMsg";
+import { devMsg } from "./lib/devMsg.js";
 
-import { imgixLoader } from "./imgixLoader";
+import { imgixLoader } from "./imgixLoader.js";
 
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
@@ -22,11 +29,12 @@ const castInt = (input: string | number | undefined): number | undefined => {
 	}
 };
 
-export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
-	/**
-	 * The Prismic Image field or thumbnail to render.
-	 */
-	field: prismic.ImageFieldImage | null | undefined;
+export type PrismicNextImageProps = Omit<
+	ImageProps,
+	"src" | "alt" | "loader"
+> & {
+	/** The Prismic Image field or thumbnail to render. */
+	field: ImageFieldImage | null | undefined;
 
 	/**
 	 * An object of Imgix URL API parameters to transform the image.
@@ -57,6 +65,8 @@ export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
 	 * be rendered.
 	 */
 	fallback?: React.ReactNode;
+
+	loader?: ImageProps["loader"] | null;
 };
 
 /**
@@ -75,36 +85,47 @@ export type PrismicNextImageProps = Omit<ImageProps, "src" | "alt"> & {
  *
  * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
  */
-export const PrismicNextImage = ({
-	field,
-	imgixParams = {},
-	alt,
-	fallbackAlt,
-	fill,
-	width,
-	height,
-	fallback = null,
-	...restProps
-}: PrismicNextImageProps): React.JSX.Element => {
-	if (process.env.NODE_ENV !== "production") {
-		if (typeof alt === "string" && alt !== "") {
-			console.warn(
-				`[PrismicNextImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
-					"alt-must-be-an-empty-string",
-				)}`,
-			);
+// The type annotation is necessary to avoid a type reference issue.
+export const PrismicNextImage: ForwardRefExoticComponent<
+	PropsWithoutRef<PrismicNextImageProps> & RefAttributes<HTMLImageElement>
+> = forwardRef<HTMLImageElement, PrismicNextImageProps>(
+	function PrismicNextImage(
+		{
+			field,
+			imgixParams = {},
+			alt,
+			fallbackAlt,
+			fill,
+			width,
+			height,
+			fallback = null,
+			loader = imgixLoader,
+			...restProps
+		},
+		ref,
+	) {
+		if (DEV) {
+			if (typeof alt === "string" && alt !== "") {
+				console.warn(
+					`[PrismicNextImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
+						"alt-must-be-an-empty-string",
+					)}`,
+				);
+			}
+
+			if (typeof fallbackAlt === "string" && fallbackAlt !== "") {
+				console.warn(
+					`[PrismicNextImage] The "fallbackAlt" prop can only be used to declare an image as decorative by passing an empty string (fallbackAlt="") but was provided a non-empty string. You can resolve this warning by removing the "fallbackAlt" prop or changing it to fallbackAlt="". For more details, see ${devMsg(
+						"alt-must-be-an-empty-string",
+					)}`,
+				);
+			}
 		}
 
-		if (typeof fallbackAlt === "string" && fallbackAlt !== "") {
-			console.warn(
-				`[PrismicNextImage] The "fallbackAlt" prop can only be used to declare an image as decorative by passing an empty string (fallbackAlt="") but was provided a non-empty string. You can resolve this warning by removing the "fallbackAlt" prop or changing it to fallbackAlt="". For more details, see ${devMsg(
-					"alt-must-be-an-empty-string",
-				)}`,
-			);
+		if (!isFilled.imageThumbnail(field)) {
+			return <>{fallback}</>;
 		}
-	}
 
-	if (prismic.isFilled.imageThumbnail(field)) {
 		const resolvedImgixParams = imgixParams;
 		for (const x in imgixParams) {
 			if (resolvedImgixParams[x as keyof typeof resolvedImgixParams] === null) {
@@ -130,39 +151,26 @@ export const PrismicNextImage = ({
 
 		// A non-null assertion is required since we can't statically
 		// know if an alt attribute is available.
-		// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 		const resolvedAlt = (alt ?? (field.alt || fallbackAlt))!;
 
-		if (
-			process.env.NODE_ENV !== "production" &&
-			typeof resolvedAlt !== "string"
-		) {
+		if (DEV && typeof resolvedAlt !== "string") {
 			console.error(
 				`[PrismicNextImage] The following image is missing an "alt" property. Please add Alternative Text to the image in Prismic. To mark the image as decorative instead, add one of \`alt=""\` or \`fallbackAlt=""\`.`,
 				src,
 			);
 		}
 
-		// TODO: Remove once https://github.com/vercel/next.js/issues/52216 is resolved.
-		// `next/image` seems to be affected by a default + named export bundling bug.
-		let ResolvedImage = Image;
-		if ("default" in ResolvedImage) {
-			ResolvedImage = (ResolvedImage as unknown as { default: typeof Image })
-				.default;
-		}
-
 		return (
-			<ResolvedImage
+			<Image
+				ref={ref}
 				src={src}
 				width={fill ? undefined : resolvedWidth}
 				height={fill ? undefined : resolvedHeight}
 				alt={resolvedAlt}
 				fill={fill}
-				loader={imgixLoader}
+				loader={loader === null ? undefined : loader}
 				{...restProps}
 			/>
 		);
-	} else {
-		return <>{fallback}</>;
-	}
-};
+	},
+);
