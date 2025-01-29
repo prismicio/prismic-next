@@ -85,7 +85,7 @@ export const PrismicNextImage = ({
 	height,
 	fallback = null,
 	...restProps
-}: PrismicNextImageProps): JSX.Element => {
+}: PrismicNextImageProps): React.JSX.Element => {
 	if (process.env.NODE_ENV !== "production") {
 		if (typeof alt === "string" && alt !== "") {
 			console.warn(
