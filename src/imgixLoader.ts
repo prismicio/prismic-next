@@ -1,4 +1,4 @@
-import { ImageLoaderProps } from "next/image";
+import { ImageLoaderProps } from "next/image.js";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 
 /**

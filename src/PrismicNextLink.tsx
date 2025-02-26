@@ -1,5 +1,5 @@
 import { ComponentProps, forwardRef } from "react";
-import Link from "next/link";
+import Link from "next/link.js";
 import {
 	AsLinkAttrsConfig,
 	LinkField,

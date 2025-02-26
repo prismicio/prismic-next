@@ -6,7 +6,7 @@ import {
 	PropsWithoutRef,
 	RefAttributes,
 } from "react";
-import Image, { ImageProps } from "next/image";
+import Image, { ImageProps } from "next/image.js";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import { ImageFieldImage, isFilled } from "@prismicio/client";
 import { DEV } from "esm-env";

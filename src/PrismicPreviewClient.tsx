@@ -2,7 +2,7 @@
 
 import { FC, useEffect } from "react";
 import { cookie as prismicCookie } from "@prismicio/client";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation.js";
 
 type PrismicPreviewClientProps = {
 	repositoryName: string;
