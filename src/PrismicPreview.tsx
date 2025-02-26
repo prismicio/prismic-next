@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react";
 import Script from "next/script";
 import { getToolbarSrc } from "@prismicio/client";
 
-import { PrismicPreviewClient } from "./PrismicPreviewClient.js";
+import { PrismicPreviewClient } from "./PrismicPreviewClient";
 
 /** Props for `<PrismicPreview>`. */
 export type PrismicPreviewProps = {
@@ -43,7 +43,7 @@ export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
 	// Need this to avoid the following Next.js build-time error:
 	// You're importing a component that needs next/headers. That only works
 	// in a Server Component which is not supported in the pages/ directory.
-	const { draftMode } = await import("next/headers.js");
+	const { draftMode } = await import("next/headers");
 
 	const toolbarSrc = getToolbarSrc(repositoryName);
 	const isDraftMode = (await draftMode()).isEnabled;

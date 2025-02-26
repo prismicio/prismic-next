@@ -1,4 +1,4 @@
-import type { NextApiRequestLike, NextApiResponseLike } from "./types.js";
+import type { NextApiRequestLike, NextApiResponseLike } from "./types";
 
 /** Configuration for `exitPreview()`. */
 export type ExitPreviewAPIRouteConfig = {

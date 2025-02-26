@@ -1,7 +1,7 @@
 import type { PreviewData } from "next";
 import type { Client } from "@prismicio/client";
 
-import type { NextApiRequestLike } from "./types.js";
+import type { NextApiRequestLike } from "./types";
 
 /**
  * Configuration for `enableAutoPreviews`.

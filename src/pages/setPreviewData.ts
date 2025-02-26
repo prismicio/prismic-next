@@ -1,6 +1,6 @@
 import { cookie } from "@prismicio/client";
 
-import type { NextApiRequestLike, NextApiResponseLike } from "./types.js";
+import type { NextApiRequestLike, NextApiResponseLike } from "./types";
 
 /** Configuration for `setPreviewData`. */
 export type SetPreviewDataConfig = {

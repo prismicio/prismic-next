@@ -11,9 +11,9 @@ import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import { ImageFieldImage, isFilled } from "@prismicio/client";
 import { DEV } from "esm-env";
 
-import { devMsg } from "./lib/devMsg.js";
+import { devMsg } from "./lib/devMsg";
 
-import { imgixLoader } from "./imgixLoader.js";
+import { imgixLoader } from "./imgixLoader";
 
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {

@@ -1,6 +1,6 @@
 import type { LinkResolverFunction, Client } from "@prismicio/client";
 
-import type { NextApiRequestLike, NextApiResponseLike } from "./types.js";
+import type { NextApiRequestLike, NextApiResponseLike } from "./types";
 
 export type RedirectToPreviewURLConfig = {
 	/** The Prismic client configured for the preview session's repository. */

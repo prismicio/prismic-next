@@ -24,11 +24,11 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
+			"default": "./dist/index.mjs"
 		},
 		"./pages": {
 			"types": "./dist/pages/index.d.ts",
-			"default": "./dist/pages.js"
+			"default": "./dist/pages.mjs"
 		},
 		"./package.json": "./package.json"
 	},

@@ -13,6 +13,7 @@ export default defineConfig({
 				index: "./src/index.ts",
 				pages: "./src/pages/index.ts",
 			},
+			fileName: () => "[name].mjs",
 			formats: ["es"],
 		},
 		minify: false,
@@ -28,8 +29,5 @@ export default defineConfig({
 			].map((name) => new RegExp(`^${name}(?:/.*)?$`)),
 			plugins: [typescript({ rootDir: "./src" }), preserveDirectives()],
 		},
-	},
-	define: {
-		"process.env": JSON.stringify({}),
 	},
 });
