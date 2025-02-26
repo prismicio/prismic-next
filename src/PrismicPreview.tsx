@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from "react";
-import Script from "next/script.js";
+import Script from "next/script";
 import { getToolbarSrc } from "@prismicio/client";
 
 import { PrismicPreviewClient } from "./PrismicPreviewClient.js";
