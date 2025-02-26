@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation.js";
+import { redirect } from "next/navigation";
 import {
 	cookie as prismicCookie,
 	type Client,
