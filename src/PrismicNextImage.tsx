@@ -9,9 +9,9 @@ import {
 import Image, { ImageProps } from "next/image";
 import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import { ImageFieldImage, isFilled } from "@prismicio/client";
-import { DEV } from "esm-env";
 
 import { devMsg } from "./lib/devMsg";
+import { resolveCJS } from "./lib/resolveCJS";
 
 import { imgixLoader } from "./imgixLoader";
 
@@ -104,7 +104,7 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 		},
 		ref,
 	) {
-		if (DEV) {
+		if (process.env.NODE_ENV === "development") {
 			if (typeof alt === "string" && alt !== "") {
 				console.warn(
 					`[PrismicNextImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
@@ -153,15 +153,20 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 		// know if an alt attribute is available.
 		const resolvedAlt = (alt ?? (field.alt || fallbackAlt))!;
 
-		if (DEV && typeof resolvedAlt !== "string") {
+		if (
+			process.env.NODE_ENV === "development" &&
+			typeof resolvedAlt !== "string"
+		) {
 			console.error(
 				`[PrismicNextImage] The following image is missing an "alt" property. Please add Alternative Text to the image in Prismic. To mark the image as decorative instead, add one of \`alt=""\` or \`fallbackAlt=""\`.`,
 				src,
 			);
 		}
 
+		const ResolvedImage = resolveCJS(Image);
+
 		return (
-			<Image
+			<ResolvedImage
 				ref={ref}
 				src={src}
 				width={fill ? undefined : resolvedWidth}

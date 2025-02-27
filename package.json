@@ -24,11 +24,11 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"default": "./dist/index.mjs"
+			"default": "./dist/index.cjs"
 		},
 		"./pages": {
 			"types": "./dist/pages/index.d.ts",
-			"default": "./dist/pages.mjs"
+			"default": "./dist/pages.cjs"
 		},
 		"./package.json": "./package.json"
 	},
@@ -63,7 +63,6 @@
 		"e2e:ui": "npm run e2e -- --ui"
 	},
 	"dependencies": {
-		"esm-env": "^1.2.1",
 		"imgix-url-builder": "^0.0.5"
 	},
 	"devDependencies": {
