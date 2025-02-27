@@ -13,7 +13,6 @@ export default defineConfig({
 				index: "./src/index.ts",
 				pages: "./src/pages/index.ts",
 			},
-			fileName: (format) => (format === "es" ? "[name].mjs" : "[name].cjs"),
 			formats: ["cjs"],
 		},
 		minify: false,
