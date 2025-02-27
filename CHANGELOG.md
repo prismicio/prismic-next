@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1-alpha.1](https://github.com/prismicio/prismic-next/compare/v2.0.1-alpha.0...v2.0.1-alpha.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* give up on ESM ([ca0a6b5](https://github.com/prismicio/prismic-next/commit/ca0a6b5a5b0d872311bc497ed936bfea69f71022))
+
 ### [2.0.1-alpha.0](https://github.com/prismicio/prismic-next/compare/v2.0.0...v2.0.1-alpha.0) (2025-02-26)
 
 
