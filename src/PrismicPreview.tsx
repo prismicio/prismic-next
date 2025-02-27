@@ -2,7 +2,7 @@ import type { FC, ReactNode } from "react";
 import Script from "next/script";
 import { getToolbarSrc } from "@prismicio/client";
 
-import { resolveCJS } from "./lib/resolveCJS";
+import { resolveDefaultExport } from "./lib/resolveDefaultExport";
 import { PrismicPreviewClient } from "./PrismicPreviewClient";
 
 /** Props for `<PrismicPreview>`. */
@@ -49,7 +49,7 @@ export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
 	const toolbarSrc = getToolbarSrc(repositoryName);
 	const isDraftMode = (await draftMode()).isEnabled;
 
-	const ResolvedScript = resolveCJS(Script);
+	const ResolvedScript = resolveDefaultExport(Script);
 
 	return (
 		<>

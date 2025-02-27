@@ -8,7 +8,7 @@ import {
 	asLinkAttrs,
 } from "@prismicio/client";
 
-import { resolveCJS } from "./lib/resolveCJS";
+import { resolveDefaultExport } from "./lib/resolveDefaultExport";
 
 export type PrismicNextLinkProps = Omit<
 	ComponentProps<typeof Link>,
@@ -55,7 +55,7 @@ export const PrismicNextLink = forwardRef<
 		rel = restProps.rel;
 	}
 
-	const ResolvedLink = resolveCJS(Link);
+	const ResolvedLink = resolveDefaultExport(Link);
 
 	return (
 		<ResolvedLink ref={ref} {...attrs} {...restProps} href={href} rel={rel}>

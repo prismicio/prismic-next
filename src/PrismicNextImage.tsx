@@ -11,7 +11,7 @@ import { buildURL, ImgixURLParams } from "imgix-url-builder";
 import { ImageFieldImage, isFilled } from "@prismicio/client";
 
 import { devMsg } from "./lib/devMsg";
-import { resolveCJS } from "./lib/resolveCJS";
+import { resolveDefaultExport } from "./lib/resolveDefaultExport";
 
 import { imgixLoader } from "./imgixLoader";
 
@@ -163,7 +163,7 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 			);
 		}
 
-		const ResolvedImage = resolveCJS(Image);
+		const ResolvedImage = resolveDefaultExport(Image);
 
 		return (
 			<ResolvedImage
