@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1](https://github.com/prismicio/prismic-next/compare/v2.0.0...v2.0.1) (2025-03-20)
+
+
+### Bug Fixes
+
+* `Cannot find module` ESM error ([#106](https://github.com/prismicio/prismic-next/issues/106)) ([784e61d](https://github.com/prismicio/prismic-next/commit/784e61d48c9a92a853ef9d7b1ad7245aaa68e57f))
+
+
+### Documentation
+
+* add missing period ([bbb217d](https://github.com/prismicio/prismic-next/commit/bbb217de637f062eb1b5f484e464894b1f0a648a))
+* update README ([86541a3](https://github.com/prismicio/prismic-next/commit/86541a347051342a13768905e9d33fa01671ddf9))
+
 ### [2.0.1-alpha.1](https://github.com/prismicio/prismic-next/compare/v2.0.1-alpha.0...v2.0.1-alpha.1) (2025-02-27)
 
 
