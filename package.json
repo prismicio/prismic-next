@@ -4,7 +4,7 @@
 		"e2e-projects/*"
 	],
 	"name": "@prismicio/next",
-	"version": "2.0.0",
+	"version": "2.0.1-alpha.1",
 	"description": "Helpers to integrate Prismic into Next.js apps",
 	"keywords": [
 		"typescript",
@@ -24,11 +24,11 @@
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
+			"default": "./dist/index.cjs"
 		},
 		"./pages": {
 			"types": "./dist/pages/index.d.ts",
-			"default": "./dist/pages.js"
+			"default": "./dist/pages.cjs"
 		},
 		"./package.json": "./package.json"
 	},
@@ -53,8 +53,8 @@
 		"lint": "eslint",
 		"prepare": "npm run build",
 		"release": "npm run build && npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
-		"release:alpha": "npm run build && npm run test && standard-version --release-as major --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
-		"release:alpha:dry": "standard-version --release-as major --prerelease alpha --dry-run",
+		"release:alpha": "npm run build && npm run test && standard-version --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
+		"release:alpha:dry": "standard-version --prerelease alpha --dry-run",
 		"release:dry": "standard-version --dry-run",
 		"size": "size-limit",
 		"test": "npm run lint && npm run types && npm run build && npm run e2e && npm run size && npm run e2e",
@@ -63,7 +63,6 @@
 		"e2e:ui": "npm run e2e -- --ui"
 	},
 	"dependencies": {
-		"esm-env": "^1.2.1",
 		"imgix-url-builder": "^0.0.5"
 	},
 	"devDependencies": {

@@ -1,4 +1,4 @@
-import { devMsg } from "./lib/devMsg.js";
+import { devMsg } from "./lib/devMsg";
 
 /**
  * @deprecated `createLocaleRedirect()` has been removed due to performance

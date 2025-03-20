@@ -8,6 +8,8 @@ import {
 	asLinkAttrs,
 } from "@prismicio/client";
 
+import { resolveDefaultExport } from "./lib/resolveDefaultExport";
+
 export type PrismicNextLinkProps = Omit<
 	ComponentProps<typeof Link>,
 	"field" | "document" | "href" | "rel"
@@ -53,9 +55,11 @@ export const PrismicNextLink = forwardRef<
 		rel = restProps.rel;
 	}
 
+	const ResolvedLink = resolveDefaultExport(Link);
+
 	return (
-		<Link ref={ref} {...attrs} {...restProps} href={href} rel={rel}>
+		<ResolvedLink ref={ref} {...attrs} {...restProps} href={href} rel={rel}>
 			{"children" in props ? children : field?.text}
-		</Link>
+		</ResolvedLink>
 	);
 });

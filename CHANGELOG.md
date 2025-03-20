@@ -2,6 +2,34 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1-alpha.1](https://github.com/prismicio/prismic-next/compare/v2.0.1-alpha.0...v2.0.1-alpha.1) (2025-02-27)
+
+
+### Bug Fixes
+
+* give up on ESM ([ca0a6b5](https://github.com/prismicio/prismic-next/commit/ca0a6b5a5b0d872311bc497ed936bfea69f71022))
+
+### [2.0.1-alpha.0](https://github.com/prismicio/prismic-next/compare/v2.0.0...v2.0.1-alpha.0) (2025-02-26)
+
+
+### Bug Fixes
+
+* remove more .js ([13136e2](https://github.com/prismicio/prismic-next/commit/13136e2764f42eddc11353b5e53e9f48e946b38b))
+* restrict `next/*.js` to only components ([25d06ab](https://github.com/prismicio/prismic-next/commit/25d06ab29a802f883f9f3cc1ac747259794bcaa4))
+* use `.js` extension on `next/*` modules ([3eba7d7](https://github.com/prismicio/prismic-next/commit/3eba7d7aa572578bbf2570e58227cace45653fbe))
+* use `.mjs` ([8c23bee](https://github.com/prismicio/prismic-next/commit/8c23bee39d41c7f12537130cb70e9489b2c58f2f))
+
+
+### Documentation
+
+* add missing period ([bbb217d](https://github.com/prismicio/prismic-next/commit/bbb217de637f062eb1b5f484e464894b1f0a648a))
+* update README ([86541a3](https://github.com/prismicio/prismic-next/commit/86541a347051342a13768905e9d33fa01671ddf9))
+
+
+### Chore
+
+* update `release:alpha` scripts ([fa6b515](https://github.com/prismicio/prismic-next/commit/fa6b515e943fe5bd09bda688d49d8cbc435f5b9a))
+
 ## [2.0.0](https://github.com/prismicio/prismic-next/compare/v1.7.2...v2.0.0) (2025-01-29)
 
 

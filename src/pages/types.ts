@@ -1,6 +1,6 @@
 import type { ClientConfig } from "@prismicio/client";
 
-import { EnableAutoPreviewsConfig } from "./enableAutoPreviews.js";
+import { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
 
 /**
  * Configuration for creating a Prismic client with automatic preview support in
