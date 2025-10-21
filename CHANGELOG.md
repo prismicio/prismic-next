@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.2](https://github.com/prismicio/prismic-next/compare/v2.0.1...v2.0.2) (2025-10-21)
+
+
+### Bug Fixes
+
+* support Next.js 16 beta ([#110](https://github.com/prismicio/prismic-next/issues/110)) ([5f91b4c](https://github.com/prismicio/prismic-next/commit/5f91b4cba610edb1689450e2125f317eb102888e))
+
+
+### Documentation
+
+* update contributing guide ([#108](https://github.com/prismicio/prismic-next/issues/108)) ([926884c](https://github.com/prismicio/prismic-next/commit/926884cff629b907f9592fc49d2a53409a3eafcd))
+
 ### [2.0.1](https://github.com/prismicio/prismic-next/compare/v2.0.0...v2.0.1) (2025-03-20)
 
 
