@@ -30,13 +30,34 @@ export type PrismicPreviewProps = {
 };
 
 /**
- * React component that sets up Prismic Previews using the Prismic Toolbar. When
- * the Prismic Toolbar send events to the browser, such as on preview updates
- * and exiting, this component will automatically refresh the page with the
- * changes.
+ * Sets up Prismic Previews with the Prismic Toolbar in a Next.js App Router application.
  *
- * This component can be wrapped around your app or added anywhere in your app's
- * tree. It must be rendered on every page.
+ * @param props - Props for the component, including your Prismic
+ *   `repositoryName`.
+ *
+ * @returns A component that loads the Prismic Toolbar and handles preview
+ *   updates.
+ *
+ * @example
+ *
+ * ```tsx
+ * // src/app/layout.tsx
+ * import { PrismicPreview } from "@prismicio/next";
+ *
+ * export default function RootLayout({ children }) {
+ *   return (
+ *     <html>
+ *       <body>
+ *         <PrismicPreview repositoryName="your-repo-name">
+ *           {children}
+ *         </PrismicPreview>
+ *       </body>
+ *     </html>
+ *   );
+ * }
+ * ```
+ *
+ * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
  */
 export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
 	const { repositoryName, children, ...otherProps } = props;

@@ -39,6 +39,30 @@ export type RedirectToPreviewURLConfig = {
 	defaultURL?: string;
 };
 
+/**
+ * Redirects to a preview URL for a Prismic document in a Next.js App Router Route Handler.
+ *
+ * @param config - Configuration object containing the Prismic client, request,
+ *   and optional link resolver.
+ *
+ * @returns This function never returns as it always redirects.
+ *
+ * @example
+ *
+ * ```typescript
+ * // src/app/api/preview/route.ts
+ * import { redirectToPreviewURL } from "@prismicio/next";
+ * import { createClient } from "@/prismicio";
+ *
+ * export async function GET(request: Request) {
+ *   const client = createClient();
+ *
+ *   return await redirectToPreviewURL({ client, request });
+ * }
+ * ```
+ *
+ * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
+ */
 export async function redirectToPreviewURL(
 	config: RedirectToPreviewURLConfig,
 ): Promise<never> {

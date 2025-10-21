@@ -70,20 +70,32 @@ export type PrismicNextImageProps = Omit<
 };
 
 /**
- * React component that renders an image from a Prismic Image field or one of
- * its thumbnails using `next/image`. It will automatically set the `alt`
- * attribute using the Image field's `alt` property.
+ * Renders an optimized image from a Prismic Image field using Next.js `<Image>`.
  *
- * It uses an Imgix URL-based loader by default. A custom loader can be provided
- * with the `loader` prop. If you would like to use the Next.js Image
- * Optimization API instead, set `loader={undefined}`.
+ * @param props - Props for the component, including the Prismic Image `field`
+ *   and optional `imgixParams` for image transformations.
  *
- * @param props - Props for the component.
+ * @returns An optimized Next.js Image component with automatic `alt` text from
+ *   the Prismic field.
  *
- * @returns A responsive image component using `next/image` for the given Image
- *   field.
+ * @example
  *
- * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
+ * ```tsx
+ * import { PrismicNextImage } from "@prismicio/next";
+ *
+ * export function HeroSection({ page }: { page: PageDocument }) {
+ *   return (
+ *     <PrismicNextImage
+ *       field={page.data.hero_image}
+ *       imgixParams={{ q: 90 }}
+ *       priority
+ *     />
+ *   );
+ * }
+ * ```
+ *
+ * @see Next.js Image component: https://nextjs.org/docs/app/api-reference/components/image
+ * @see Imgix URL parameters: https://docs.imgix.com/apis/rendering
  */
 // The type annotation is necessary to avoid a type reference issue.
 export const PrismicNextImage: ForwardRefExoticComponent<

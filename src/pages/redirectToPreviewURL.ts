@@ -26,7 +26,7 @@ export type RedirectToPreviewURLConfig = {
 	/**
 	 * A Link Resolver used to resolve the previewed document's URL.
 	 *
-	 * @see To learn more about Link Resolver: {@link https://prismic.io/docs/core-concepts/link-resolver-route-resolver}
+	 * @see Link Resolver documentation: https://prismic.io/docs/route-resolver
 	 */
 	linkResolver?: LinkResolverFunction;
 
@@ -51,6 +51,28 @@ export type RedirectToPreviewURLConfig = {
 	basePath?: string;
 };
 
+/**
+ * Redirects to a preview URL for a Prismic document in a Next.js Pages Router API route.
+ *
+ * @param config - Configuration object containing the Prismic client, request,
+ *   response, and optional link resolver.
+ *
+ * @example
+ *
+ * ```typescript
+ * // src/pages/api/preview.ts
+ * import { redirectToPreviewURL } from "@prismicio/next/pages";
+ * import { createClient } from "@/prismicio";
+ *
+ * export default async function handler(req, res) {
+ *   const client = createClient({ req });
+ *
+ *   await redirectToPreviewURL({ client, req, res });
+ * }
+ * ```
+ *
+ * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
+ */
 export async function redirectToPreviewURL(
 	config: RedirectToPreviewURLConfig,
 ): Promise<void> {
