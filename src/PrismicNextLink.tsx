@@ -27,9 +27,7 @@ export type PrismicNextLinkProps = Omit<
 	 */
 	linkResolver?: LinkResolverFunction;
 
-	/**
-	 * The `rel` attribute for the link, or a function to compute it dynamically.
-	 */
+	/** The `rel` attribute for the link, or a function to compute it dynamically. */
 	rel?: string | AsLinkAttrsConfig["rel"];
 } & (
 		| {
@@ -55,28 +53,32 @@ export type PrismicNextLinkProps = Omit<
 /**
  * Renders a Next.js `<Link>` component from a Prismic Link field or document.
  *
- * @param props - Props for the component, including either `field`, `document`,
- *   or `href`.
- *
- * @returns A Next.js Link component configured with the Prismic content's URL.
- *
  * @example
  *
  * ```tsx
  * import { PrismicNextLink } from "@prismicio/next";
  *
- * export function Header({ navigation }: { navigation: NavigationDocument }) {
- *   return (
- *     <nav>
- *       {navigation.data.links.map((item) => (
- *         <PrismicNextLink key={item.link.id} field={item.link}>
- *           {item.label}
- *         </PrismicNextLink>
- *       ))}
- *     </nav>
- *   );
+ * export function Header({
+ * 	navigation,
+ * }: {
+ * 	navigation: NavigationDocument;
+ * }) {
+ * 	return (
+ * 		<nav>
+ * 			{navigation.data.links.map((item) => (
+ * 				<PrismicNextLink key={item.link.id} field={item.link}>
+ * 					{item.label}
+ * 				</PrismicNextLink>
+ * 			))}
+ * 		</nav>
+ * 	);
  * }
  * ```
+ *
+ * @param props - Props for the component, including either `field`, `document`,
+ *   or `href`.
+ *
+ * @returns A Next.js Link component configured with the Prismic content's URL.
  *
  * @see Prismic Link fields: https://prismic.io/docs/link-content-relationship
  */

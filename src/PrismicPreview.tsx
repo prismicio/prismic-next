@@ -30,13 +30,8 @@ export type PrismicPreviewProps = {
 };
 
 /**
- * Sets up Prismic Previews with the Prismic Toolbar in a Next.js App Router application.
- *
- * @param props - Props for the component, including your Prismic
- *   `repositoryName`.
- *
- * @returns A component that loads the Prismic Toolbar and handles preview
- *   updates.
+ * Sets up Prismic Previews with the Prismic Toolbar in a Next.js App Router
+ * application.
  *
  * @example
  *
@@ -45,17 +40,23 @@ export type PrismicPreviewProps = {
  * import { PrismicPreview } from "@prismicio/next";
  *
  * export default function RootLayout({ children }) {
- *   return (
- *     <html>
- *       <body>
- *         <PrismicPreview repositoryName="your-repo-name">
- *           {children}
- *         </PrismicPreview>
- *       </body>
- *     </html>
- *   );
+ * 	return (
+ * 		<html>
+ * 			<body>
+ * 				<PrismicPreview repositoryName="your-repo-name">
+ * 					{children}
+ * 				</PrismicPreview>
+ * 			</body>
+ * 		</html>
+ * 	);
  * }
  * ```
+ *
+ * @param props - Props for the component, including your Prismic
+ *   `repositoryName`.
+ *
+ * @returns A component that loads the Prismic Toolbar and handles preview
+ *   updates.
  *
  * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
  */

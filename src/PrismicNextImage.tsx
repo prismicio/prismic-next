@@ -70,13 +70,8 @@ export type PrismicNextImageProps = Omit<
 };
 
 /**
- * Renders an optimized image from a Prismic Image field using Next.js `<Image>`.
- *
- * @param props - Props for the component, including the Prismic Image `field`
- *   and optional `imgixParams` for image transformations.
- *
- * @returns An optimized Next.js Image component with automatic `alt` text from
- *   the Prismic field.
+ * Renders an optimized image from a Prismic Image field using Next.js
+ * `<Image>`.
  *
  * @example
  *
@@ -84,15 +79,21 @@ export type PrismicNextImageProps = Omit<
  * import { PrismicNextImage } from "@prismicio/next";
  *
  * export function HeroSection({ page }: { page: PageDocument }) {
- *   return (
- *     <PrismicNextImage
- *       field={page.data.hero_image}
- *       imgixParams={{ q: 90 }}
- *       priority
- *     />
- *   );
+ * 	return (
+ * 		<PrismicNextImage
+ * 			field={page.data.hero_image}
+ * 			imgixParams={{ q: 90 }}
+ * 			priority
+ * 		/>
+ * 	);
  * }
  * ```
+ *
+ * @param props - Props for the component, including the Prismic Image `field`
+ *   and optional `imgixParams` for image transformations.
+ *
+ * @returns An optimized Next.js Image component with automatic `alt` text from
+ *   the Prismic field.
  *
  * @see Next.js Image component: https://nextjs.org/docs/app/api-reference/components/image
  * @see Imgix URL parameters: https://docs.imgix.com/apis/rendering

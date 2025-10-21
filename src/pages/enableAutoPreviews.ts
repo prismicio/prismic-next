@@ -9,9 +9,7 @@ import type { NextApiRequestLike } from "./types";
  * @typeParam TPreviewData - Next.js preview data object.
  */
 export type EnableAutoPreviewsConfig = {
-	/**
-	 * Prismic client with which automatic previews will be enabled.
-	 */
+	/** Prismic client with which automatic previews will be enabled. */
 	// `Pick` is used to use the smallest possible subset of
 	// `prismic.Client`. Doing this reduces the surface area for breaking
 	// type changes.
@@ -32,10 +30,8 @@ export type EnableAutoPreviewsConfig = {
 };
 
 /**
- * Configures a Prismic client to automatically query draft content during a preview session in Next.js Pages Router.
- *
- * @param config - Configuration object containing the Prismic client and either
- *   `previewData` or `req`.
+ * Configures a Prismic client to automatically query draft content during a
+ * preview session in Next.js Pages Router.
  *
  * @example
  *
@@ -45,15 +41,18 @@ export type EnableAutoPreviewsConfig = {
  * import { enableAutoPreviews } from "@prismicio/next/pages";
  *
  * export async function getStaticProps({ previewData }) {
- *   const client = createClient({ previewData });
+ * 	const client = createClient({ previewData });
  *
- *   enableAutoPreviews({ client, previewData });
+ * 	enableAutoPreviews({ client, previewData });
  *
- *   const page = await client.getSingle("homepage");
+ * 	const page = await client.getSingle("homepage");
  *
- *   return { props: { page } };
+ * 	return { props: { page } };
  * }
  * ```
+ *
+ * @param config - Configuration object containing the Prismic client and either
+ *   `previewData` or `req`.
  *
  * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
  */

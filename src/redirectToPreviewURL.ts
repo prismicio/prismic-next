@@ -40,12 +40,8 @@ export type RedirectToPreviewURLConfig = {
 };
 
 /**
- * Redirects to a preview URL for a Prismic document in a Next.js App Router Route Handler.
- *
- * @param config - Configuration object containing the Prismic client, request,
- *   and optional link resolver.
- *
- * @returns This function never returns as it always redirects.
+ * Redirects to a preview URL for a Prismic document in a Next.js App Router
+ * Route Handler.
  *
  * @example
  *
@@ -55,11 +51,16 @@ export type RedirectToPreviewURLConfig = {
  * import { createClient } from "@/prismicio";
  *
  * export async function GET(request: Request) {
- *   const client = createClient();
+ * 	const client = createClient();
  *
- *   return await redirectToPreviewURL({ client, request });
+ * 	return await redirectToPreviewURL({ client, request });
  * }
  * ```
+ *
+ * @param config - Configuration object containing the Prismic client, request,
+ *   and optional link resolver.
+ *
+ * @returns This function never returns as it always redirects.
  *
  * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
  */

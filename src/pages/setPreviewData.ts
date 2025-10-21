@@ -2,9 +2,7 @@ import { cookie } from "@prismicio/client";
 
 import type { NextApiRequestLike, NextApiResponseLike } from "./types";
 
-/**
- * Configuration for `setPreviewData()`.
- */
+/** Configuration for `setPreviewData()`. */
 export type SetPreviewDataConfig = {
 	/**
 	 * The `req` object from a Next.js API route.
@@ -22,26 +20,30 @@ export type SetPreviewDataConfig = {
 };
 
 /**
- * Sets Prismic preview data for Next.js Preview Mode in a Pages Router API route.
- *
- * @param config - Configuration object containing the request and response
- *   objects.
+ * Sets Prismic preview data for Next.js Preview Mode in a Pages Router API
+ * route.
  *
  * @example
  *
  * ```typescript
  * // src/pages/api/preview.ts
- * import { setPreviewData, redirectToPreviewURL } from "@prismicio/next/pages";
+ * import {
+ * 	setPreviewData,
+ * 	redirectToPreviewURL,
+ * } from "@prismicio/next/pages";
  * import { createClient } from "@/prismicio";
  *
  * export default async function handler(req, res) {
- *   const client = createClient({ req });
+ * 	const client = createClient({ req });
  *
- *   setPreviewData({ req, res });
+ * 	setPreviewData({ req, res });
  *
- *   await redirectToPreviewURL({ client, req, res });
+ * 	await redirectToPreviewURL({ client, req, res });
  * }
  * ```
+ *
+ * @param config - Configuration object containing the request and response
+ *   objects.
  *
  * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
  */
