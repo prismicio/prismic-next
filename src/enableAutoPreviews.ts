@@ -1,6 +1,6 @@
 import { type Client, cookie as prismicCookie } from "@prismicio/client";
 
-/** Configuration for `enableAutoPreviews`. */
+/** Configuration for `enableAutoPreviews()`. */
 export type EnableAutoPreviewsConfig = {
 	/** Prismic client with which automatic previews will be enabled. */
 	// `Pick` is used to use the smallest possible subset of
@@ -11,9 +11,26 @@ export type EnableAutoPreviewsConfig = {
 
 /**
  * Configures a Prismic client to automatically query draft content during a
- * preview session.
+ * preview session in Next.js App Router.
  *
- * @param config - Configuration for the function.
+ * @example
+ *
+ * ```typescript
+ * import * as prismic from "@prismicio/client";
+ * import { enableAutoPreviews } from "@prismicio/next";
+ *
+ * export function createClient() {
+ * 	const client = prismic.createClient("your-repo-name");
+ *
+ * 	enableAutoPreviews({ client });
+ *
+ * 	return client;
+ * }
+ * ```
+ *
+ * @param config - Configuration object containing the Prismic client.
+ *
+ * @see Prismic preview setup: https://prismic.io/docs/previews-nextjs
  */
 export function enableAutoPreviews(config: EnableAutoPreviewsConfig): void {
 	// We use a function value so the cookie is checked on every
