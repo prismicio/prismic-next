@@ -19,7 +19,10 @@
 	},
 	"license": "Apache-2.0",
 	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
-	"sideEffects": false,
+	"sideEffects": [
+		"./dist/index.cjs",
+		"./dist/pages.cjs"
+	],
 	"type": "module",
 	"exports": {
 		".": {
@@ -69,6 +72,7 @@
 		"@eslint/js": "^9.17.0",
 		"@playwright/test": "^1.49.1",
 		"@prismicio/client": "^7.12.0",
+		"@prismicio/react": "pr-235",
 		"@prismicio/types-internal": "^3.3.0",
 		"@rollup/plugin-typescript": "^12.1.2",
 		"@size-limit/preset-small-lib": "^11.1.6",

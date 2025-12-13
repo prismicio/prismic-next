@@ -1,3 +1,5 @@
+import "../setGlobalConfig";
+
 export { PrismicNextLink } from "../PrismicNextLink";
 export { type PrismicNextLinkProps } from "../PrismicNextLink";
 

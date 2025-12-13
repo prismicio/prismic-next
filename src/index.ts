@@ -1,3 +1,5 @@
+import "./setGlobalConfig";
+
 export { exitPreview } from "./exitPreview";
 
 export { PrismicPreview } from "./PrismicPreview";
