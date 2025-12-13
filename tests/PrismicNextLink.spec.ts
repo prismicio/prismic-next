@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 test.describe("web links", () => {
 	test("renders an internal web link", async ({ page }) => {
 		const link = page.getByTestId("internal-web");
-		await expect(link).toHaveAttribute("href", "/example");
+		await expect(link).toHaveAttribute("href", "/foo");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});
@@ -115,7 +115,7 @@ test.describe("href", () => {
 
 	test("renders an internal href", async ({ page }) => {
 		const link = page.getByTestId("internal-href-prop");
-		await expect(link).toHaveAttribute("href", "/example");
+		await expect(link).toHaveAttribute("href", "/foo");
 		await expect(link).not.toHaveAttribute("rel");
 		await expect(link).not.toHaveAttribute("target");
 	});

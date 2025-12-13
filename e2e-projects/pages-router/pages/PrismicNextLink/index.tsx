@@ -65,7 +65,7 @@ export default function Page({
 				data-testid="external-href-prop"
 				href="https://example.com"
 			/>
-			<PrismicNextLink data-testid="internal-href-prop" href="/example" />
+			<PrismicNextLink data-testid="internal-href-prop" href="/foo" />
 			{/* @ts-expect-error - We are purposely providing an invalid `href` value. */}
 			<PrismicNextLink data-testid="falsy-href-prop" href={undefined} />
 			<Link data-testid="default-link-falsy-href" href="" />
