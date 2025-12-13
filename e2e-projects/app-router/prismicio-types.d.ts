@@ -4,103 +4,122 @@ import type * as prismic from "@prismicio/client";
 
 type Simplify<T> = { [KeyType in keyof T]: T[KeyType] };
 
-
 type PickContentRelationshipFieldData<
-	TRelationship extends prismic.CustomTypeModelFetchCustomTypeLevel1 | prismic.CustomTypeModelFetchCustomTypeLevel2 | prismic.CustomTypeModelFetchGroupLevel1 | prismic.CustomTypeModelFetchGroupLevel2,
-	TData extends Record<string, prismic.AnyRegularField | prismic.GroupField | prismic.NestedGroupField | prismic.SliceZone>,
-	TLang extends string
-> = |
+	TRelationship extends
+		| prismic.CustomTypeModelFetchCustomTypeLevel1
+		| prismic.CustomTypeModelFetchCustomTypeLevel2
+		| prismic.CustomTypeModelFetchGroupLevel1
+		| prismic.CustomTypeModelFetchGroupLevel2,
+	TData extends Record<
+		string,
+		| prismic.AnyRegularField
+		| prismic.GroupField
+		| prismic.NestedGroupField
+		| prismic.SliceZone
+	>,
+	TLang extends string,
+> =
 	// Content relationship fields
 	{
 		[TSubRelationship in Extract<
-			TRelationship["fields"][number], prismic.CustomTypeModelFetchContentRelationshipLevel1
-		> as TSubRelationship["id"]]:
-			ContentRelationshipFieldWithData<TSubRelationship["customtypes"], TLang>;
-	} &
-	// Group
+			TRelationship["fields"][number],
+			prismic.CustomTypeModelFetchContentRelationshipLevel1
+		> as TSubRelationship["id"]]: ContentRelationshipFieldWithData<
+			TSubRelationship["customtypes"],
+			TLang
+		>;
+	} & // Group
 	{
 		[TGroup in Extract<
-			TRelationship["fields"][number], prismic.CustomTypeModelFetchGroupLevel1 | prismic.CustomTypeModelFetchGroupLevel2
-		> as TGroup["id"]]:
-			TData[TGroup["id"]] extends prismic.GroupField<infer TGroupData>
-				? prismic.GroupField<PickContentRelationshipFieldData<TGroup, TGroupData, TLang>>
-				: never
-	} &
-	// Other fields
+			TRelationship["fields"][number],
+			| prismic.CustomTypeModelFetchGroupLevel1
+			| prismic.CustomTypeModelFetchGroupLevel2
+		> as TGroup["id"]]: TData[TGroup["id"]] extends prismic.GroupField<
+			infer TGroupData
+		>
+			? prismic.GroupField<
+					PickContentRelationshipFieldData<TGroup, TGroupData, TLang>
+				>
+			: never;
+	} & // Other fields
 	{
-		[TFieldKey in Extract<TRelationship["fields"][number], string>]:
-			TFieldKey extends keyof TData ? TData[TFieldKey] : never;
+		[TFieldKey in Extract<
+			TRelationship["fields"][number],
+			string
+		>]: TFieldKey extends keyof TData ? TData[TFieldKey] : never;
 	};
 
 type ContentRelationshipFieldWithData<
-	TCustomType extends readonly (prismic.CustomTypeModelFetchCustomTypeLevel1 | string)[] | readonly (prismic.CustomTypeModelFetchCustomTypeLevel2 | string)[],
-	TLang extends string = string
+	TCustomType extends
+		| readonly (prismic.CustomTypeModelFetchCustomTypeLevel1 | string)[]
+		| readonly (prismic.CustomTypeModelFetchCustomTypeLevel2 | string)[],
+	TLang extends string = string,
 > = {
-	[ID in Exclude<TCustomType[number], string>["id"]]:
-		prismic.ContentRelationshipField<
-			ID,
-			TLang,
-			PickContentRelationshipFieldData<
-				Extract<TCustomType[number], { id: ID }>,
-				Extract<prismic.Content.AllDocumentTypes, { type: ID }>["data"],
-				TLang
-			>
+	[ID in Exclude<
+		TCustomType[number],
+		string
+	>["id"]]: prismic.ContentRelationshipField<
+		ID,
+		TLang,
+		PickContentRelationshipFieldData<
+			Extract<TCustomType[number], { id: ID }>,
+			Extract<prismic.Content.AllDocumentTypes, { type: ID }>["data"],
+			TLang
 		>
+	>;
 }[Exclude<TCustomType[number], string>["id"]];
 
-/**
- * Content for Image Test documents
- */
+/** Content for Image Test documents */
 interface ImageTestDocumentData {
 	/**
-	 * Empty field in *Image Test*
+	 * Empty field in _Image Test_
 	 *
 	 * - **Field Type**: Image
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: image_test.empty
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/image
 	 */
 	empty: prismic.ImageField<never>;
-	
+
 	/**
-	 * Filled field in *Image Test*
+	 * Filled field in _Image Test_
 	 *
 	 * - **Field Type**: Image
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: image_test.filled
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/image
 	 */
 	filled: prismic.ImageField<never>;
-	
+
 	/**
-	 * With Alt Text field in *Image Test*
+	 * With Alt Text field in _Image Test_
 	 *
 	 * - **Field Type**: Image
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: image_test.with_alt_text
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/image
 	 */
 	with_alt_text: prismic.ImageField<never>;
-	
+
 	/**
-	 * Without Alt Text field in *Image Test*
+	 * Without Alt Text field in _Image Test_
 	 *
 	 * - **Field Type**: Image
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: image_test.without_alt_text
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/image
 	 */
 	without_alt_text: prismic.ImageField<never>;
-	
+
 	/**
-	 * With Crop field in *Image Test*
+	 * With Crop field in _Image Test_
 	 *
 	 * - **Field Type**: Image
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: image_test.with_crop
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/image
@@ -117,88 +136,121 @@ interface ImageTestDocumentData {
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type ImageTestDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<ImageTestDocumentData>, "image_test", Lang>;
+export type ImageTestDocument<Lang extends string = string> =
+	prismic.PrismicDocumentWithoutUID<
+		Simplify<ImageTestDocumentData>,
+		"image_test",
+		Lang
+	>;
 
-/**
- * Content for Link Test documents
- */
+/** Content for Link Test documents */
 interface LinkTestDocumentData {
 	/**
-	 * Empty field in *Link Test*
+	 * Empty field in _Link Test_
 	 *
 	 * - **Field Type**: Link
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: link_test.empty
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
 	empty: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
-	
+
 	/**
-	 * Internal Web field in *Link Test*
+	 * Internal Web field in _Link Test_
 	 *
 	 * - **Field Type**: Link
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: link_test.internal_web
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
-	internal_web: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
-	
+	internal_web: prismic.LinkField<
+		string,
+		string,
+		unknown,
+		prismic.FieldState,
+		never
+	>;
+
 	/**
-	 * External Web field in *Link Test*
+	 * External Web field in _Link Test_
 	 *
 	 * - **Field Type**: Link
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: link_test.external_web
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
-	external_web: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
-	
+	external_web: prismic.LinkField<
+		string,
+		string,
+		unknown,
+		prismic.FieldState,
+		never
+	>;
+
 	/**
-	 * External Web With Target field in *Link Test*
+	 * External Web With Target field in _Link Test_
 	 *
 	 * - **Field Type**: Link
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: link_test.external_web_with_target
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
-	external_web_with_target: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
-	
+	external_web_with_target: prismic.LinkField<
+		string,
+		string,
+		unknown,
+		prismic.FieldState,
+		never
+	>;
+
 	/**
-	 * Document field in *Link Test*
+	 * Document field in _Link Test_
 	 *
 	 * - **Field Type**: Link
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: link_test.document
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
-	document: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
-	
+	document: prismic.LinkField<
+		string,
+		string,
+		unknown,
+		prismic.FieldState,
+		never
+	>;
+
 	/**
-	 * Media field in *Link Test*
+	 * Media field in _Link Test_
 	 *
 	 * - **Field Type**: Link
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: link_test.media
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
 	media: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
-	
+
 	/**
-	 * With Text field in *Link Test*
+	 * With Text field in _Link Test_
 	 *
 	 * - **Field Type**: Link
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: link_test.with_text
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/link
 	 */
-	with_text: prismic.LinkField<string, string, unknown, prismic.FieldState, never>;
+	with_text: prismic.LinkField<
+		string,
+		string,
+		unknown,
+		prismic.FieldState,
+		never
+	>;
 }
 
 /**
@@ -210,17 +262,20 @@ interface LinkTestDocumentData {
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type LinkTestDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<LinkTestDocumentData>, "link_test", Lang>;
+export type LinkTestDocument<Lang extends string = string> =
+	prismic.PrismicDocumentWithoutUID<
+		Simplify<LinkTestDocumentData>,
+		"link_test",
+		Lang
+	>;
 
-/**
- * Content for Page documents
- */
+/** Content for Page documents */
 interface PageDocumentData {
 	/**
-	 * Payload field in *Page*
+	 * Payload field in _Page_
 	 *
 	 * - **Field Type**: Text
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: page.payload
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/text
@@ -237,28 +292,27 @@ interface PageDocumentData {
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type PageDocument<Lang extends string = string> = prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
+export type PageDocument<Lang extends string = string> =
+	prismic.PrismicDocumentWithUID<Simplify<PageDocumentData>, "page", Lang>;
 
-/**
- * Content for Rich Text Test documents
- */
+/** Content for Rich Text Test documents */
 interface RichTextTestDocumentData {
 	/**
-	 * Hyperlink Internal field in *Rich Text Test*
+	 * Hyperlink Internal field in _Rich Text Test_
 	 *
 	 * - **Field Type**: Rich Text
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: rich_text_test.hyperlink_internal
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
 	 */
 	hyperlink_internal: prismic.RichTextField;
-	
+
 	/**
-	 * Hyperlink External field in *Rich Text Test*
+	 * Hyperlink External field in _Rich Text Test_
 	 *
 	 * - **Field Type**: Rich Text
-	 * - **Placeholder**: *None*
+	 * - **Placeholder**: _None_
 	 * - **API ID Path**: rich_text_test.hyperlink_external
 	 * - **Tab**: Main
 	 * - **Documentation**: https://prismic.io/docs/fields/rich-text
@@ -275,23 +329,38 @@ interface RichTextTestDocumentData {
  *
  * @typeParam Lang - Language API ID of the document.
  */
-export type RichTextTestDocument<Lang extends string = string> = prismic.PrismicDocumentWithoutUID<Simplify<RichTextTestDocumentData>, "rich_text_test", Lang>;
+export type RichTextTestDocument<Lang extends string = string> =
+	prismic.PrismicDocumentWithoutUID<
+		Simplify<RichTextTestDocumentData>,
+		"rich_text_test",
+		Lang
+	>;
 
-export type AllDocumentTypes = ImageTestDocument | LinkTestDocument | PageDocument | RichTextTestDocument;
+export type AllDocumentTypes =
+	| ImageTestDocument
+	| LinkTestDocument
+	| PageDocument
+	| RichTextTestDocument;
 
 declare module "@prismicio/client" {
 	interface CreateClient {
-		(repositoryNameOrEndpoint: string, options?: prismic.ClientConfig): prismic.Client<AllDocumentTypes>;
+		(
+			repositoryNameOrEndpoint: string,
+			options?: prismic.ClientConfig,
+		): prismic.Client<AllDocumentTypes>;
 	}
-	
+
 	interface CreateWriteClient {
-		(repositoryNameOrEndpoint: string, options: prismic.WriteClientConfig): prismic.WriteClient<AllDocumentTypes>;
+		(
+			repositoryNameOrEndpoint: string,
+			options: prismic.WriteClientConfig,
+		): prismic.WriteClient<AllDocumentTypes>;
 	}
-	
+
 	interface CreateMigration {
 		(): prismic.Migration<AllDocumentTypes>;
 	}
-	
+
 	namespace Content {
 		export type {
 			ImageTestDocument,
@@ -302,7 +371,7 @@ declare module "@prismicio/client" {
 			PageDocumentData,
 			RichTextTestDocument,
 			RichTextTestDocumentData,
-			AllDocumentTypes
-		}
+			AllDocumentTypes,
+		};
 	}
 }
