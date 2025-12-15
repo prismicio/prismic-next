@@ -1,20 +1,9 @@
-import { defineConfig, Plugin } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import typescript from "@rollup/plugin-typescript";
 import preserveDirectives from "rollup-preserve-directives";
 
 import { dependencies, peerDependencies } from "./package.json";
-
-function preserveSideEffects(moduleIds: string[]): Plugin {
-	return {
-		name: "preserve-side-effects",
-		transform(_code, id) {
-			if (moduleIds.some((moduleId) => id.includes(moduleId))) {
-				return { moduleSideEffects: true };
-			}
-		},
-	};
-}
 
 export default defineConfig({
 	plugins: [react()],
@@ -38,7 +27,13 @@ export default defineConfig({
 				...Object.keys(peerDependencies),
 			].map((name) => new RegExp(`^${name}(?:/.*)?$`)),
 			plugins: [
-				preserveSideEffects(["setGlobalConfig"]),
+				{
+					name: "preserve-side-effects",
+					transform(_code, id) {
+						if (id.includes("setGlobalConfig"))
+							return { moduleSideEffects: true };
+					},
+				},
 				typescript({ rootDir: "./src" }),
 				preserveDirectives(),
 			],
