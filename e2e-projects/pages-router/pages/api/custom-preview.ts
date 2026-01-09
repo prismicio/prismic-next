@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import { setPreviewData, redirectToPreviewURL } from "@prismicio/next/pages";
 import assert from "node:assert";
 

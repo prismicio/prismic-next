@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ImageField } from "@prismicio/client";
+import type { ImageField } from "@prismicio/client";
 import { PrismicNextImage } from "@prismicio/next";
 
 export function ClientTest(props: { field: ImageField }) {

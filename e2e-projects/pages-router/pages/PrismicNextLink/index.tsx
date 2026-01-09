@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { PrismicNextLink } from "@prismicio/next/pages";
 import { isFilled } from "@prismicio/client";

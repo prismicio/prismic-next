@@ -1,4 +1,4 @@
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { PrismicPreview } from "@prismicio/next/pages";
 import assert from "node:assert";
 

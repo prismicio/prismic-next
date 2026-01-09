@@ -1,5 +1,5 @@
 import { isFilled } from "@prismicio/client";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { PrismicNextRichText } from "@prismicio/next/pages";
 import assert from "assert";
 

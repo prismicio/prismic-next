@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
 import { PrismicNextImage } from "@prismicio/next/pages";
 import { isFilled } from "@prismicio/client";
 import assert from "assert";

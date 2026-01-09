@@ -1,9 +1,10 @@
-/* eslint react-hooks/rules-of-hooks: 0 */
-import { Locator, Page, test as base, expect } from "@playwright/test";
+/* oxlint-disable rules-of-hooks */
+import type { CoreAPIDocument, Repo } from "./client";
+import { Prismic } from "./client";
+import type { Locator, Page } from "@playwright/test";
+import { test as base, expect } from "@playwright/test";
 import { createClient } from "@prismicio/client";
 import assert from "assert";
-
-import { CoreAPIDocument, Prismic, Repo } from "./client";
 
 type Fixtures = {
 	prismic: Prismic;

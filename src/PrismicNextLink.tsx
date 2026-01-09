@@ -1,10 +1,12 @@
-import { ComponentProps, forwardRef } from "react";
+import type { ComponentProps} from "react";
+import { forwardRef } from "react";
 import Link from "next/link";
-import {
+import type {
 	AsLinkAttrsConfig,
 	LinkField,
 	LinkResolverFunction,
-	PrismicDocument,
+	PrismicDocument} from "@prismicio/client";
+import {
 	asLinkAttrs,
 } from "@prismicio/client";
 
