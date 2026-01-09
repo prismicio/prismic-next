@@ -69,6 +69,7 @@
 		"@eslint/js": "^9.17.0",
 		"@playwright/test": "^1.49.1",
 		"@prismicio/client": "^7.12.0",
+		"@prismicio/react": "^3.2.2",
 		"@prismicio/types-internal": "^3.3.0",
 		"@rollup/plugin-typescript": "^12.1.2",
 		"@size-limit/preset-small-lib": "^11.1.6",
@@ -97,8 +98,14 @@
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^7",
+		"@prismicio/react": "^3",
 		"next": "^13.4.5 || ^14 || ^15 || ^16",
 		"react": "^18 || ^19"
+	},
+	"peerDependenciesMeta": {
+		"@prismicio/react": {
+			"optional": true
+		}
 	},
 	"engines": {
 		"node": ">=18"
