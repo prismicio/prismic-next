@@ -1,10 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
-import dotenv from "dotenv";
 import assert from "node:assert";
 import { fileURLToPath } from "node:url";
 import { existsSync, writeFileSync } from "node:fs";
 
-dotenv.config({ path: ".env.test.local" });
+try {
+	process.loadEnvFile(".env.test.local");
+} catch {}
 
 export const STORAGE_STATE = fileURLToPath(
 	new URL("./tests/infra/.storage-state.json", import.meta.url),
