@@ -1,3 +1,4 @@
+import type { JSX } from "react";
 import Link from "next/link";
 import { isFilled } from "@prismicio/client";
 import { PrismicNextLink } from "@prismicio/next";
@@ -5,7 +6,7 @@ import assert from "assert";
 
 import { createClient } from "@/prismicio";
 
-export default async function Page() {
+export default async function Page(): Promise<JSX.Element> {
 	const client = await createClient();
 	const { data: tests } = await client.getSingle("link_test");
 	assert(isFilled.contentRelationship(tests.document) && tests.document.url);

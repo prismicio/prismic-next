@@ -3,7 +3,7 @@ import { redirectToPreviewURL } from "@prismicio/next";
 
 import { createClient } from "@/prismicio";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<never> {
 	const client = await createClient({
 		routes: [{ type: "page", path: "/:uid" }],
 	});

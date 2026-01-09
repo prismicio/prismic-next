@@ -23,7 +23,9 @@ export const model = {
 	},
 } as const;
 
-export function content(args: { payload?: string; uid?: string } = {}) {
+export function content(
+	args: { payload?: string; uid?: string } = {},
+): Record<string, unknown> {
 	const { payload, uid } = args;
 
 	return {

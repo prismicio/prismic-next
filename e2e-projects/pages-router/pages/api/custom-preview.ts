@@ -7,7 +7,7 @@ import { createClient } from "@/prismicio";
 export default async function handler(
 	req: NextApiRequest,
 	res: NextApiResponse,
-) {
+): Promise<void> {
 	const repositoryName = req.cookies["repository-name"];
 	assert(
 		repositoryName && typeof repositoryName === "string",

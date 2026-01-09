@@ -1,4 +1,5 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type { JSX } from "react";
+import type { GetServerSidePropsContext, GetServerSidePropsResult, InferGetServerSidePropsType } from "next";
 import { PrismicPreview } from "@prismicio/next/pages";
 import assert from "node:assert";
 
@@ -7,7 +8,7 @@ import { createClient } from "@/prismicio";
 export default function Page({
 	repositoryName,
 	page,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
 	return (
 		<>
 			<div data-testid="payload">{page.data.payload}</div>
@@ -24,7 +25,7 @@ export async function getServerSideProps({
 	req,
 	params,
 	previewData,
-}: GetServerSidePropsContext<{ uid: string }>) {
+}: GetServerSidePropsContext<{ uid: string }>): Promise<GetServerSidePropsResult<{ repositoryName: string; page: Awaited<ReturnType<ReturnType<typeof createClient>["getByUID"]>> }>> {
 	const repositoryName = req.cookies["repository-name"];
 	assert(
 		repositoryName && typeof repositoryName === "string",

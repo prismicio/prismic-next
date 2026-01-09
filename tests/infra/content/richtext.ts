@@ -44,7 +44,7 @@ export const model = {
 	},
 } as const;
 
-export function content() {
+export function content(): Record<string, unknown> {
 	return {
 		uid: "richtext-test",
 		empty: [],

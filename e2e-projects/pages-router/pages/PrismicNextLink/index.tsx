@@ -1,4 +1,5 @@
-import type { GetServerSidePropsContext, InferGetServerSidePropsType } from "next";
+import type { JSX } from "react";
+import type { GetServerSidePropsContext, GetServerSidePropsResult, InferGetServerSidePropsType } from "next";
 import Link from "next/link";
 import { PrismicNextLink } from "@prismicio/next/pages";
 import { isFilled } from "@prismicio/client";
@@ -9,7 +10,7 @@ import { createClient } from "@/prismicio";
 export default function Page({
 	tests,
 	doc,
-}: InferGetServerSidePropsType<typeof getServerSideProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
 	return (
 		<>
 			<PrismicNextLink
@@ -78,7 +79,7 @@ export default function Page({
 	);
 }
 
-export async function getServerSideProps({ req }: GetServerSidePropsContext) {
+export async function getServerSideProps({ req }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<{ tests: Awaited<ReturnType<ReturnType<typeof createClient>["getSingle"]>>["data"]; doc: Awaited<ReturnType<ReturnType<typeof createClient>["getByID"]>> }>> {
 	const repositoryName = req.cookies["repository-name"];
 	assert(
 		repositoryName && typeof repositoryName === "string",
