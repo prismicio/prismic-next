@@ -1,8 +1,9 @@
 "use client";
 
-import { FC, useEffect } from "react";
 import { cookie as prismicCookie } from "@prismicio/client";
 import { useRouter } from "next/navigation";
+import type { FC } from "react";
+import { useEffect } from "react";
 
 type PrismicPreviewClientProps = {
 	repositoryName: string;
@@ -41,8 +42,6 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 		// share links do not go to the `updatePreviewURL` like a normal
 		// preview.
 		if (hasCookieForRepository && !isDraftMode) {
-			console.log("starting preview link");
-
 			// We check `opaqueredirect` because we don't care if
 			// the redirect was successful or not. As long as it
 			// redirects, we know the endpoint exists and draft mode

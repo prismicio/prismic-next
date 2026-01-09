@@ -1,5 +1,9 @@
-import { APIRequestContext, APIResponse, request } from "playwright/test";
-import { CustomType } from "@prismicio/types-internal/lib/customtypes";
+import {
+	type APIRequestContext,
+	type APIResponse,
+	request,
+} from "playwright/test";
+import type { CustomTypeModel } from "@prismicio/client";
 import { randomUUID } from "node:crypto";
 import assert from "node:assert";
 
@@ -30,7 +34,10 @@ export class Prismic {
 		this.#auth = new AuthenticatedAPI({ urls: this.urls, auth, request });
 	}
 
-	async createRepository(args: { defaultLocale: string; prefix?: string }) {
+	async createRepository(args: {
+		defaultLocale: string;
+		prefix?: string;
+	}): Promise<Repo> {
 		const { defaultLocale, prefix = "e2e-tests" } = args;
 		const suffix = randomUUID().replace("-", "").slice(0, 16);
 		const data = {
@@ -50,7 +57,7 @@ export class Prismic {
 		return repo;
 	}
 
-	getRepo(domain: string) {
+	getRepo(domain: string): Repo {
 		return new Repo({ domain, urls: this.urls, auth: this.#auth });
 	}
 }
@@ -76,7 +83,7 @@ export class Repo {
 		this.#auth = auth;
 	}
 
-	async setDefaultLocale(locale: string) {
+	async setDefaultLocale(locale: string): Promise<void> {
 		const url = new URL(
 			`app/settings/multilanguages/${locale}/createMasterLang`,
 			this.urls.wroom,
@@ -85,7 +92,7 @@ export class Repo {
 		assert(res.ok, `Could not default locale to ${locale}.`);
 	}
 
-	async createPreview(args: { name: string; url: URL }) {
+	async createPreview(args: { name: string; url: URL }): Promise<void> {
 		const { name, url: previewURL } = args;
 		const url = new URL("previews/new", this.urls.wroom);
 		const data = {
@@ -121,7 +128,7 @@ export class Repo {
 		return await res.json();
 	}
 
-	async addCustomType(customType: CustomType) {
+	async addCustomType(customType: CustomTypeModel): Promise<void> {
 		const url = new URL("customtypes/insert", this.urls.customtypes);
 		const res = await this.#auth.post(url.toString(), {
 			data: customType,
@@ -146,7 +153,7 @@ export class Repo {
 		return await res.json();
 	}
 
-	async publishDocument(id: string) {
+	async publishDocument(id: string): Promise<void> {
 		const url = new URL(`documents/${id}/draft`, this.urls.core);
 		const data = { status: "published" };
 		const res = await this.#auth.patch(url.toString(), { data });
@@ -169,7 +176,7 @@ export class Repo {
 		return res.json();
 	}
 
-	async getDocumentByUID(type: string, uid: string) {
+	async getDocumentByUID(type: string, uid: string): Promise<CoreAPIDocument> {
 		const url = new URL("documents", this.urls.core);
 		url.searchParams.set("uid", uid);
 		const res = await this.#auth.get(url.toString());
@@ -180,7 +187,7 @@ export class Repo {
 		return doc;
 	}
 
-	async delete() {
+	async delete(): Promise<void> {
 		const res = await this.#unreliableDelete();
 		if (!res.ok) {
 			// sometimes the deletion returns 500 but actually succeeds

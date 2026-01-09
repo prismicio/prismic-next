@@ -4,7 +4,7 @@ import * as prismicNext from "@prismicio/next/pages";
 export const createClient = (
 	repositoryName: string,
 	config: prismicNext.CreateClientConfig = {},
-) => {
+): prismic.Client => {
 	const client = prismic.createClient(repositoryName, {
 		routes: [{ type: "page", path: "/:uid" }],
 		...config,

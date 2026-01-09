@@ -1,14 +1,18 @@
 "use client";
 
-import {
-	forwardRef,
+import type {
 	ForwardRefExoticComponent,
 	PropsWithoutRef,
-	RefAttributes,
+	RefAttributes} from "react";
+import {
+	forwardRef
 } from "react";
-import Image, { ImageProps } from "next/image";
-import { buildURL, ImgixURLParams } from "imgix-url-builder";
-import { ImageFieldImage, isFilled } from "@prismicio/client";
+import type { ImageProps } from "next/image";
+import Image from "next/image";
+import type { ImgixURLParams } from "imgix-url-builder";
+import { buildURL } from "imgix-url-builder";
+import type { ImageFieldImage} from "@prismicio/client";
+import { isFilled } from "@prismicio/client";
 
 import { devMsg } from "./lib/devMsg";
 import { resolveDefaultExport } from "./lib/resolveDefaultExport";

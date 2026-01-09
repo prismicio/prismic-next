@@ -1,9 +1,9 @@
-import { NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { redirectToPreviewURL } from "@prismicio/next";
 
 import { createClient } from "@/prismicio";
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<never> {
 	const client = await createClient({
 		routes: [{ type: "page", path: "/:uid" }],
 	});

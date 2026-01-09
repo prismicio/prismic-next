@@ -1,4 +1,5 @@
-import { type ReactNode, useEffect, FC } from "react";
+import type { FC } from "react";
+import { type ReactNode, useEffect } from "react";
 import { useRouter } from "next/router";
 import Script from "next/script";
 import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";

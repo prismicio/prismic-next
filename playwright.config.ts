@@ -1,10 +1,11 @@
 import { defineConfig, devices } from "@playwright/test";
-import dotenv from "dotenv";
 import assert from "node:assert";
 import { fileURLToPath } from "node:url";
 import { existsSync, writeFileSync } from "node:fs";
 
-dotenv.config({ path: ".env.test.local" });
+try {
+	process.loadEnvFile(".env.test.local");
+} catch {}
 
 export const STORAGE_STATE = fileURLToPath(
 	new URL("./tests/infra/.storage-state.json", import.meta.url),
@@ -78,17 +79,17 @@ declare global {
 	namespace NodeJS {
 		interface ProcessEnv {
 			CI: boolean;
-			PLAYWRIGHT_PRISMIC_EMAIL: string;
-			PLAYWRIGHT_PRISMIC_PASSWORD: string;
+			E2E_PRISMIC_EMAIL: string;
+			E2E_PRISMIC_PASSWORD: string;
 		}
 	}
 }
 
 assert.ok(
-	process.env.PLAYWRIGHT_PRISMIC_EMAIL,
-	"Missing PLAYWRIGHT_PRISMIC_EMAIL env variable.",
+	process.env.E2E_PRISMIC_EMAIL,
+	"Missing E2E_PRISMIC_EMAIL env variable.",
 );
 assert.ok(
-	process.env.PLAYWRIGHT_PRISMIC_PASSWORD,
-	"Missing PLAYWRIGHT_PRISMIC_PASSWORD env variable.",
+	process.env.E2E_PRISMIC_PASSWORD,
+	"Missing E2E_PRISMIC_PASSWORD env variable.",
 );

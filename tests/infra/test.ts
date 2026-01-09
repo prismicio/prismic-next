@@ -1,9 +1,10 @@
-/* eslint react-hooks/rules-of-hooks: 0 */
-import { Locator, Page, test as base, expect } from "@playwright/test";
+/* oxlint-disable rules-of-hooks */
+import type { CoreAPIDocument, Repo } from "./client";
+import { Prismic } from "./client";
+import type { Locator, Page } from "@playwright/test";
+import { test as base, expect } from "@playwright/test";
 import { createClient } from "@prismicio/client";
 import assert from "assert";
-
-import { CoreAPIDocument, Prismic, Repo } from "./client";
 
 type Fixtures = {
 	prismic: Prismic;
@@ -20,8 +21,8 @@ export const test = base.extend<Fixtures>({
 		const prismic = new Prismic({
 			baseURL: "https://prismic.io",
 			auth: {
-				email: process.env.PLAYWRIGHT_PRISMIC_EMAIL,
-				password: process.env.PLAYWRIGHT_PRISMIC_PASSWORD,
+				email: process.env.E2E_PRISMIC_EMAIL,
+				password: process.env.E2E_PRISMIC_PASSWORD,
 			},
 			request: page.request,
 		});

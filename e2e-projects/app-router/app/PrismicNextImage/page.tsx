@@ -1,10 +1,11 @@
+import type { JSX } from "react";
 import { isFilled } from "@prismicio/client";
 import { PrismicNextImage } from "@prismicio/next";
 import assert from "assert";
 
 import { createClient } from "@/prismicio";
 
-export default async function Page() {
+export default async function Page(): Promise<JSX.Element> {
 	const client = await createClient();
 	const { data: tests } = await client.getSingle("image_test");
 

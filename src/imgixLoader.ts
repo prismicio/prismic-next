@@ -1,5 +1,6 @@
-import { ImageLoaderProps } from "next/image";
-import { buildURL, ImgixURLParams } from "imgix-url-builder";
+import type { ImageLoaderProps } from "next/image";
+import type { ImgixURLParams } from "imgix-url-builder";
+import { buildURL } from "imgix-url-builder";
 
 /**
  * A `next/image` loader for Imgix, which Prismic uses, with an optional

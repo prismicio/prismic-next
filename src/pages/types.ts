@@ -1,6 +1,5 @@
+import type { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
 import type { ClientConfig } from "@prismicio/client";
-
-import { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
 
 /**
  * Configuration for creating a Prismic client with automatic preview support in
@@ -30,7 +29,7 @@ export type NextApiResponseLike = {
 	redirect(url: string): NextApiResponseLike;
 	clearPreviewData(): NextApiResponseLike;
 	setHeader(name: string, value: string | string[]): NextApiResponseLike;
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line no-explicit-any explicit-module-boundary-types
 	json(body: any): void;
 	setPreviewData(data: object | string): NextApiResponseLike;
 };
