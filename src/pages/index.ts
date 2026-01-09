@@ -4,6 +4,9 @@ export { type PrismicNextLinkProps } from "../PrismicNextLink";
 export { PrismicNextImage } from "../PrismicNextImage";
 export { type PrismicNextImageProps } from "../PrismicNextImage";
 
+export { PrismicNextRichText } from "../PrismicNextRichText";
+export { type PrismicNextRichTextProps } from "../PrismicNextRichText";
+
 export { imgixLoader } from "../imgixLoader";
 
 export { PrismicPreview } from "./PrismicPreview";
