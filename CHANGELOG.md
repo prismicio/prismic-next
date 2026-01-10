@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.1](https://github.com/prismicio/prismic-next/compare/v2.1.0...v2.1.1) (2026-01-10)
+
+
+### Bug Fixes
+
+* revert PrismicNextRichText feature ([b86f0c5](https://github.com/prismicio/prismic-next/commit/b86f0c529a3d71e2e0ec4ba36630ea93cc84caa1))
+
 ## [2.1.0](https://github.com/prismicio/prismic-next/compare/v2.0.2...v2.1.0) (2026-01-09)
 
 
