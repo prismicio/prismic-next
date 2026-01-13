@@ -32,9 +32,6 @@
 			],
 			"pages": [
 				"./dist/pages/index.d.ts"
-			],
-			"react-server": [
-				"./dist/react-server/index.d.ts"
 			]
 		}
 	},
