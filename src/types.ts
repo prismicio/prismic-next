@@ -28,3 +28,12 @@ export type NextRequestLike = {
 		};
 	};
 };
+
+/**
+ * Parameters provided to the Slice Simulator page.
+ */
+export type SliceSimulatorParams = {
+	searchParams: Promise<{
+		state?: string;
+	}>;
+};

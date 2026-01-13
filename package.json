@@ -20,7 +20,6 @@
 	"exports": {
 		".": "./dist/index.cjs",
 		"./pages": "./dist/pages.cjs",
-		"./react-server": "./dist/react-server.cjs",
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",

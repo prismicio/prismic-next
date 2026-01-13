@@ -4,6 +4,12 @@ export { type PrismicNextLinkProps } from "../PrismicNextLink";
 export { PrismicNextImage } from "../PrismicNextImage";
 export { type PrismicNextImageProps } from "../PrismicNextImage";
 
+export { SliceSimulator } from "./SliceSimulator";
+export type {
+	SliceSimulatorProps,
+	SliceSimulatorSliceZoneProps,
+} from "./SliceSimulator";
+
 export { imgixLoader } from "../imgixLoader";
 
 export { PrismicPreview } from "./PrismicPreview";

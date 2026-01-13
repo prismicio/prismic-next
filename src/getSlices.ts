@@ -1,5 +1,3 @@
-// This `getSlices` is only accessible from Server Components.
-
 import { getDefaultSlices } from "@prismicio/simulator/kit";
 import type { StateEvents, StateEventType } from "@prismicio/simulator/kit";
 import { decompressFromEncodedURIComponent } from "lz-string";

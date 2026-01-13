@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from "react";
+import type { SliceSimulatorProps } from "./SliceSimulator";
 import {
 	disableEventHandler,
 	getDefaultProps,
@@ -6,7 +6,7 @@ import {
 	simulatorClass,
 	simulatorRootClass,
 } from "@prismicio/simulator/kit";
-import type { SliceSimulatorProps } from "./SliceSimulator";
+import type { FC, ReactNode } from "react";
 
 type SliceSimulatorWrapperProps = {
 	children: ReactNode;
@@ -36,7 +36,7 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 				zIndex:
 					typeof zIndex === "undefined"
 						? defaultProps.zIndex
-						: zIndex ?? undefined,
+						: (zIndex ?? undefined),
 				position: "fixed",
 				top: 0,
 				left: 0,
@@ -46,7 +46,7 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 				background:
 					typeof background === "undefined"
 						? defaultProps.background
-						: background ?? undefined,
+						: (background ?? undefined),
 			}}
 		>
 			{message ? (

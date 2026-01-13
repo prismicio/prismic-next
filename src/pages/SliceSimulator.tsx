@@ -1,8 +1,4 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import type { ComponentType, FC } from "react";
-
+import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
 import {
 	SimulatorManager,
 	StateEventType,
@@ -13,8 +9,8 @@ import type {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
 	SliceSimulatorState,
 } from "@prismicio/simulator/kit";
-
-import { SliceSimulatorWrapper } from "./SliceSimulatorWrapper";
+import { useEffect, useState } from "react";
+import type { ComponentType, FC } from "react";
 
 const simulatorManager = new SimulatorManager();
 

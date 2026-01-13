@@ -1,11 +1,7 @@
-// This `<SliceSimulator>` is only accessible from Server Components.
-
 "use client";
 
-import { useEffect, useState } from "react";
-import type { FC } from "react";
-
-import { useRouter } from "next/navigation";
+import { SliceSimulatorWrapper } from "./SliceSimulatorWrapper";
+import { getSlices } from "./getSlices";
 import {
 	SimulatorManager,
 	StateEventType,
@@ -13,9 +9,9 @@ import {
 } from "@prismicio/simulator/kit";
 import type { SliceSimulatorProps as BaseSliceSimulatorProps } from "@prismicio/simulator/kit";
 import { compressToEncodedURIComponent } from "lz-string";
-
-import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
-import { getSlices } from "./getSlices";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 
 const STATE_PARAMS_KEY = "state";
 
@@ -70,7 +66,7 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 
 			simulatorManager.state.off(StateEventType.Message, "simulator-message");
 		};
-	// oxlint-disable-next-line exhaustive-deps
+		// oxlint-disable-next-line exhaustive-deps
 	}, []);
 
 	return (

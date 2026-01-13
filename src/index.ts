@@ -15,16 +15,14 @@ export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL";
 export { PrismicNextImage } from "./PrismicNextImage";
 export type { PrismicNextImageProps } from "./PrismicNextImage";
 
-export { SliceSimulator, getSlices } from "./simulator";
-export type {
-	SliceSimulatorProps,
-	SliceSimulatorSliceZoneProps,
-	SliceSimulatorParams,
-} from "./simulator";
+export { SliceSimulator } from "./SliceSimulator";
+export type { SliceSimulatorProps } from "./SliceSimulator";
+
+export { getSlices } from "./getSlices";
 
 export { imgixLoader } from "./imgixLoader";
 
-export type { CreateClientConfig } from "./types";
+export type { CreateClientConfig, SliceSimulatorParams } from "./types";
 
 export { createLocaleRedirect } from "./createLocaleRedirect";
 export type { CreateLocaleRedirectConfig } from "./createLocaleRedirect";
