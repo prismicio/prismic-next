@@ -8,11 +8,9 @@ import type { StateEvents, StateEventType } from "@prismicio/simulator/kit";
  * Component.
  */
 export const getSlices = (
+	// oxlint-disable-next-line no-unused-vars
 	state: string | null | undefined,
 ): StateEvents[StateEventType.Slices] => {
-	// Prevent tsserver + eslint warnings about unused vars.
-	state;
-
 	throw new Error(
 		"getSlices is designed only for Server Components. Convert your simulator page to a Server Component or remove the function from your Client Component.",
 	);

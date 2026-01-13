@@ -70,6 +70,7 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 
 			simulatorManager.state.off(StateEventType.Message, "simulator-message");
 		};
+	// oxlint-disable-next-line exhaustive-deps
 	}, []);
 
 	return (
