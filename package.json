@@ -20,6 +20,7 @@
 	"exports": {
 		".": "./dist/index.cjs",
 		"./pages": "./dist/pages.cjs",
+		"./react-server": "./dist/react-server.cjs",
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
@@ -32,6 +33,9 @@
 			],
 			"pages": [
 				"./dist/pages/index.d.ts"
+			],
+			"react-server": [
+				"./dist/react-server/index.d.ts"
 			]
 		}
 	},
@@ -55,7 +59,9 @@
 		"types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"imgix-url-builder": "^0.0.5"
+		"@prismicio/simulator": "^0.1.4",
+		"imgix-url-builder": "^0.0.5",
+		"lz-string": "^1.5.0"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.49.1",

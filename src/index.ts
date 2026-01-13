@@ -15,6 +15,13 @@ export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL";
 export { PrismicNextImage } from "./PrismicNextImage";
 export type { PrismicNextImageProps } from "./PrismicNextImage";
 
+export { SliceSimulator, getSlices } from "./simulator";
+export type {
+	SliceSimulatorProps,
+	SliceSimulatorSliceZoneProps,
+	SliceSimulatorParams,
+} from "./simulator";
+
 export { imgixLoader } from "./imgixLoader";
 
 export type { CreateClientConfig } from "./types";
