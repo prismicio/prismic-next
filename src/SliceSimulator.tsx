@@ -11,17 +11,30 @@ import type { SliceSimulatorProps as BaseSliceSimulatorProps } from "@prismicio/
 import { compressToEncodedURIComponent } from "lz-string";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { FC } from "react";
+import type { FC, ReactNode } from "react";
 
 const STATE_PARAMS_KEY = "state";
 
 const simulatorManager = new SimulatorManager();
 
-export type SliceSimulatorProps = Omit<BaseSliceSimulatorProps, "state"> & {
-	children: React.ReactNode;
+/**
+ * Parameters provided to the Slice Simulator page.
+ */
+export type SliceSimulatorParams = {
+	searchParams: Promise<{
+		state?: string;
+	}>;
+};
+
+export type SliceSimulatorProps = BaseSliceSimulatorProps & {
+	children: ReactNode;
 	className?: string;
 };
 
+/**
+ * Simulate slices in isolation. The slice simulator enables live slice
+ * development in Slice Machine and live previews in the Page Builder.
+ */
 export const SliceSimulator: FC<SliceSimulatorProps> = ({
 	children,
 	background,
@@ -66,8 +79,7 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 
 			simulatorManager.state.off(StateEventType.Message, "simulator-message");
 		};
-		// oxlint-disable-next-line exhaustive-deps
-	}, []);
+	}, [router]);
 
 	return (
 		<SliceSimulatorWrapper

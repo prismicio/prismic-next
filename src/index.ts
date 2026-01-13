@@ -16,13 +16,16 @@ export { PrismicNextImage } from "./PrismicNextImage";
 export type { PrismicNextImageProps } from "./PrismicNextImage";
 
 export { SliceSimulator } from "./SliceSimulator";
-export type { SliceSimulatorProps } from "./SliceSimulator";
+export type {
+	SliceSimulatorProps,
+	SliceSimulatorParams,
+} from "./SliceSimulator";
 
 export { getSlices } from "./getSlices";
 
 export { imgixLoader } from "./imgixLoader";
 
-export type { CreateClientConfig, SliceSimulatorParams } from "./types";
+export type { CreateClientConfig } from "./types";
 
 export { createLocaleRedirect } from "./createLocaleRedirect";
 export type { CreateLocaleRedirectConfig } from "./createLocaleRedirect";
