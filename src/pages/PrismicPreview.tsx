@@ -1,8 +1,8 @@
-import type { FC } from "react";
-import { type ReactNode, useEffect } from "react";
+import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
 import { useRouter } from "next/router";
 import Script from "next/script";
-import { getToolbarSrc, cookie as prismicCookie } from "@prismicio/client";
+import type { FC } from "react";
+import { type ReactNode, useEffect } from "react";
 
 /** Props for `<PrismicPreview>`. */
 export type PrismicPreviewProps = {
