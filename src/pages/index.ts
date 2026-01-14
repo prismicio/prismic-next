@@ -1,8 +1,13 @@
-export { PrismicNextLink } from "../PrismicNextLink";
-export { type PrismicNextLinkProps } from "../PrismicNextLink";
+// New names
+export { PrismicImage } from "../PrismicImage";
+export type { PrismicImageProps } from "../PrismicImage";
 
-export { PrismicNextImage } from "../PrismicNextImage";
-export { type PrismicNextImageProps } from "../PrismicNextImage";
+export { PrismicLink } from "../PrismicLink";
+export type { PrismicLinkProps } from "../PrismicLink";
+
+// Deprecated aliases
+export { PrismicNextImage, PrismicNextLink } from "../deprecated";
+export type { PrismicNextImageProps, PrismicNextLinkProps } from "../deprecated";
 
 export { SliceSimulator } from "./SliceSimulator";
 export type {
@@ -31,3 +36,25 @@ export type { CreateClientConfig } from "./types";
 
 export { createLocaleRedirect } from "../createLocaleRedirect";
 export type { CreateLocaleRedirectConfig } from "../createLocaleRedirect";
+
+// Re-exports from @prismicio/react
+export { PrismicText } from "@prismicio/react";
+export type { PrismicTextProps } from "@prismicio/react";
+
+export { SliceZone, TODOSliceComponent } from "@prismicio/react";
+export type {
+	SliceComponentProps,
+	SliceComponentType,
+	SliceLike,
+	SliceLikeGraphQL,
+	SliceLikeRestV2,
+	SliceZoneLike,
+	SliceZoneProps,
+} from "@prismicio/react";
+
+// Next.js-specific PrismicRichText and PrismicTable
+export { PrismicRichText, defaultComponents } from "../PrismicRichText";
+export type { PrismicRichTextProps, RichTextComponents } from "../PrismicRichText";
+
+export { PrismicTable } from "../PrismicTable";
+export type { PrismicTableProps, TableComponents } from "../PrismicTable";

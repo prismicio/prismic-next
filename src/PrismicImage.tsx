@@ -33,7 +33,7 @@ const castInt = (input: string | number | undefined): number | undefined => {
 	}
 };
 
-export type PrismicNextImageProps = Omit<
+export type PrismicImageProps = Omit<
 	ImageProps,
 	"src" | "alt" | "loader"
 > & {
@@ -90,10 +90,10 @@ export type PrismicNextImageProps = Omit<
  * @see To learn more about `next/image`, see: https://nextjs.org/docs/api-reference/next/image
  */
 // The type annotation is necessary to avoid a type reference issue.
-export const PrismicNextImage: ForwardRefExoticComponent<
-	PropsWithoutRef<PrismicNextImageProps> & RefAttributes<HTMLImageElement>
-> = forwardRef<HTMLImageElement, PrismicNextImageProps>(
-	function PrismicNextImage(
+export const PrismicImage: ForwardRefExoticComponent<
+	PropsWithoutRef<PrismicImageProps> & RefAttributes<HTMLImageElement>
+> = forwardRef<HTMLImageElement, PrismicImageProps>(
+	function PrismicImage(
 		{
 			field,
 			imgixParams = {},
@@ -111,7 +111,7 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 		if (process.env.NODE_ENV === "development") {
 			if (typeof alt === "string" && alt !== "") {
 				console.warn(
-					`[PrismicNextImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
+					`[PrismicImage] The "alt" prop can only be used to declare an image as decorative by passing an empty string (alt="") but was provided a non-empty string. You can resolve this warning by removing the "alt" prop or changing it to alt="". For more details, see ${devMsg(
 						"alt-must-be-an-empty-string",
 					)}`,
 				);
@@ -119,7 +119,7 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 
 			if (typeof fallbackAlt === "string" && fallbackAlt !== "") {
 				console.warn(
-					`[PrismicNextImage] The "fallbackAlt" prop can only be used to declare an image as decorative by passing an empty string (fallbackAlt="") but was provided a non-empty string. You can resolve this warning by removing the "fallbackAlt" prop or changing it to fallbackAlt="". For more details, see ${devMsg(
+					`[PrismicImage] The "fallbackAlt" prop can only be used to declare an image as decorative by passing an empty string (fallbackAlt="") but was provided a non-empty string. You can resolve this warning by removing the "fallbackAlt" prop or changing it to fallbackAlt="". For more details, see ${devMsg(
 						"alt-must-be-an-empty-string",
 					)}`,
 				);
@@ -162,7 +162,7 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 			typeof resolvedAlt !== "string"
 		) {
 			console.error(
-				`[PrismicNextImage] The following image is missing an "alt" property. Please add Alternative Text to the image in Prismic. To mark the image as decorative instead, add one of \`alt=""\` or \`fallbackAlt=""\`.`,
+				`[PrismicImage] The following image is missing an "alt" property. Please add Alternative Text to the image in Prismic. To mark the image as decorative instead, add one of \`alt=""\` or \`fallbackAlt=""\`.`,
 				src,
 			);
 		}

@@ -12,7 +12,7 @@ import {
 
 import { resolveDefaultExport } from "./lib/resolveDefaultExport";
 
-export type PrismicNextLinkProps = Omit<
+export type PrismicLinkProps = Omit<
 	ComponentProps<typeof Link>,
 	"field" | "document" | "href" | "rel"
 > & {
@@ -36,10 +36,10 @@ export type PrismicNextLinkProps = Omit<
 		  }
 	);
 
-export const PrismicNextLink = forwardRef<
+export const PrismicLink = forwardRef<
 	HTMLAnchorElement,
-	PrismicNextLinkProps
->(function PrismicNextLink(props, ref) {
+	PrismicLinkProps
+>(function PrismicLink(props, ref) {
 	const { field, document, linkResolver, children, ...restProps } = props;
 	const {
 		href: computedHref,
