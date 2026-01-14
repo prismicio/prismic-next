@@ -22,6 +22,7 @@
 		"./pages": "./dist/pages.js",
 		"./package.json": "./package.json"
 	},
+	"types": "./dist/index.d.ts",
 	"files": [
 		"dist",
 		"src"
@@ -72,6 +73,5 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	},
-	"types": "./dist/index.d.ts"
+	}
 }
