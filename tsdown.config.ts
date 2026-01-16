@@ -5,7 +5,7 @@ export default defineConfig({
 		index: "./src/index.ts",
 		pages: "./src/pages/index.ts",
 	},
-	format: "cjs",
+	format: "esm",
 	platform: "neutral",
 	unbundle: true,
 	sourcemap: true,
