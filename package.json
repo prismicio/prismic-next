@@ -18,11 +18,23 @@
 	"sideEffects": false,
 	"type": "module",
 	"exports": {
-		".": "./dist/index.js",
-		"./pages": "./dist/pages.js",
+		".": "./dist/index.cjs",
+		"./pages": "./dist/pages.cjs",
 		"./package.json": "./package.json"
 	},
-	"types": "./dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.cts",
+	"typesVersions": {
+		"*": {
+			"*": [
+				"./dist/index.d.ts"
+			],
+			"pages": [
+				"./dist/pages/index.d.ts"
+			]
+		}
+	},
 	"files": [
 		"dist",
 		"src"
