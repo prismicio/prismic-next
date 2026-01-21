@@ -1,8 +1,14 @@
-export { PrismicNextLink } from "../PrismicNextLink";
-export { type PrismicNextLinkProps } from "../PrismicNextLink";
+export { PrismicImage, PrismicNextImage } from "../PrismicImage";
+export type { PrismicImageProps, PrismicNextImageProps } from "../PrismicImage";
 
-export { PrismicNextImage } from "../PrismicNextImage";
-export { type PrismicNextImageProps } from "../PrismicNextImage";
+export { PrismicLink, PrismicNextLink } from "../PrismicLink";
+export type { PrismicLinkProps, PrismicNextLinkProps } from "../PrismicLink";
+
+export { PrismicRichText } from "../PrismicRichText";
+export type { PrismicRichTextProps } from "../PrismicRichText";
+
+export { PrismicTable } from "../PrismicTable";
+export type { PrismicTableProps } from "@prismicio/react";
 
 export { SliceSimulator } from "./SliceSimulator";
 export type {
@@ -31,3 +37,13 @@ export type { CreateClientConfig } from "./types";
 
 export { createLocaleRedirect } from "../createLocaleRedirect";
 export type { CreateLocaleRedirectConfig } from "../createLocaleRedirect";
+
+// Re-exports from @prismicio/react
+export { PrismicText, SliceZone, TODOSliceComponent } from "@prismicio/react";
+export type {
+	SliceComponentProps,
+	SliceComponentType,
+	SliceZoneProps,
+	RichTextComponents,
+	PrismicTextProps,
+} from "@prismicio/react";
