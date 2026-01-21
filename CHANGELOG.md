@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.1](https://github.com/prismicio/prismic-next/compare/v2.2.0...v2.2.1) (2026-01-21)
+
+
+### Bug Fixes
+
+* ensure correct type resolution ([#128](https://github.com/prismicio/prismic-next/issues/128)) ([514dada](https://github.com/prismicio/prismic-next/commit/514dada15f610b04a773cc39b25605f52942ceba))
+
 ## [2.2.0](https://github.com/prismicio/prismic-next/compare/v2.1.1...v2.2.0) (2026-01-14)
 
 
