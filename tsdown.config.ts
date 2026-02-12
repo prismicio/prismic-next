@@ -9,5 +9,5 @@ export default defineConfig({
 	platform: "neutral",
 	unbundle: true,
 	sourcemap: true,
-	exports: true,
+	exports: false,
 });

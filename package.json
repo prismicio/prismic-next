@@ -19,18 +19,17 @@
 	"type": "module",
 	"exports": {
 		".": {
-			"require": "./dist/index.cjs",
-			"import": "./dist/index.js"
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.cjs"
 		},
 		"./pages": {
-			"require": "./dist/pages.cjs",
-			"import": "./dist/pages.js"
+			"types": "./dist/pages.d.ts",
+			"default": "./dist/pages.cjs"
 		},
 		"./package.json": "./package.json"
 	},
 	"main": "./dist/index.cjs",
-	"module": "./dist/index.js",
-	"types": "./dist/index.d.cts",
+	"types": "./dist/index.d.ts",
 	"files": [
 		"dist",
 		"src"
