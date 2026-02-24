@@ -27,46 +27,40 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 }) => {
 	const defaultProps = getDefaultProps();
 
-	const outerProps = {
-		className: [simulatorClass, className].filter(Boolean).join(" "),
-		style: {
-			zIndex:
-				typeof zIndex === "undefined"
-					? defaultProps.zIndex
-					: (zIndex ?? undefined),
-			position: "fixed" as const,
-			top: 0,
-			left: 0,
-			width: "100%",
-			height: "100vh",
-			overflow: "auto",
-			background:
-				typeof background === "undefined"
-					? defaultProps.background
-					: (background ?? undefined),
-		},
-	};
-
-	if (message) {
-		return (
-			<div {...outerProps}>
-				<article dangerouslySetInnerHTML={{ __html: message }} />
-			</div>
-		);
-	}
-
 	return (
-		<div {...outerProps}>
-			<div
-				id="root"
-				className={simulatorRootClass}
-				onClickCapture={onClickHandler as unknown as React.MouseEventHandler}
-				onSubmitCapture={
-					disableEventHandler as unknown as React.FormEventHandler
-				}
-			>
-				{children}
-			</div>
+		<div
+			className={[simulatorClass, className].filter(Boolean).join(" ")}
+			style={{
+				zIndex:
+					typeof zIndex === "undefined"
+						? defaultProps.zIndex
+						: (zIndex ?? undefined),
+				position: "fixed",
+				top: 0,
+				left: 0,
+				width: "100%",
+				height: "100vh",
+				overflow: "auto",
+				background:
+					typeof background === "undefined"
+						? defaultProps.background
+						: (background ?? undefined),
+			}}
+		>
+			{message ? (
+				<article dangerouslySetInnerHTML={{ __html: message }} />
+			) : (
+				<div
+					id="root"
+					className={simulatorRootClass}
+					onClickCapture={onClickHandler as unknown as React.MouseEventHandler}
+					onSubmitCapture={
+						disableEventHandler as unknown as React.FormEventHandler
+					}
+				>
+					{children}
+				</div>
+			)}
 		</div>
 	);
 };
