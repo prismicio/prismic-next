@@ -40,7 +40,7 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 	zIndex,
 	className,
 }) => {
-	const [message, setMessage] = useState(getDefaultMessage());
+	const [message, setMessage] = useState(() => getDefaultMessage());
 	const router = useRouter();
 	const routerRef = useRef(router);
 	routerRef.current = router;
