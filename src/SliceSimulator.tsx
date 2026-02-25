@@ -1,7 +1,6 @@
 "use client";
 
 import { SliceSimulatorWrapper } from "./SliceSimulatorWrapper";
-import { getSlices } from "./getSlices";
 import {
 	SimulatorManager,
 	StateEventType,
@@ -10,7 +9,7 @@ import {
 import type { SliceSimulatorProps as BaseSliceSimulatorProps } from "@prismicio/simulator/kit";
 import { compressToEncodedURIComponent } from "lz-string";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { FC, ReactNode } from "react";
 
 const STATE_PARAMS_KEY = "state";
@@ -43,12 +42,8 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 }) => {
 	const [message, setMessage] = useState(() => getDefaultMessage());
 	const router = useRouter();
-
-	const state =
-		typeof window !== "undefined"
-			? new URL(window.location.href).searchParams.get(STATE_PARAMS_KEY)
-			: undefined;
-	const hasSlices = getSlices(state).length > 0;
+	const routerRef = useRef(router);
+	routerRef.current = router;
 
 	useEffect(() => {
 		simulatorManager.state.on(
@@ -62,7 +57,7 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 
 				window.history.replaceState(null, "", url);
 				// Wait until the next tick to prevent URL state race conditions.
-				setTimeout(() => router.refresh(), 0);
+				setTimeout(() => routerRef.current.refresh(), 0);
 			},
 			"simulator-slices",
 		);
@@ -79,12 +74,11 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 
 			simulatorManager.state.off(StateEventType.Message, "simulator-message");
 		};
-	}, [router]);
+	}, []);
 
 	return (
 		<SliceSimulatorWrapper
 			message={message}
-			hasSlices={hasSlices}
 			background={background}
 			zIndex={zIndex}
 			className={className}

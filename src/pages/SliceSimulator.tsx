@@ -82,7 +82,6 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 	return (
 		<SliceSimulatorWrapper
 			message={message}
-			hasSlices={slices.length > 0}
 			background={background}
 			zIndex={zIndex}
 			className={className}

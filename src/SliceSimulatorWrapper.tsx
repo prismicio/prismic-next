@@ -12,7 +12,6 @@ type SliceSimulatorWrapperProps = SliceSimulatorProps & {
 	children: ReactNode;
 	className?: string;
 	message?: string;
-	hasSlices: boolean;
 };
 
 /**
@@ -25,7 +24,6 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 	zIndex,
 	background,
 	message,
-	hasSlices,
 }) => {
 	const defaultProps = getDefaultProps();
 
@@ -51,7 +49,7 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 		>
 			{message ? (
 				<article dangerouslySetInnerHTML={{ __html: message }} />
-			) : hasSlices ? (
+			) : (
 				<div
 					id="root"
 					className={simulatorRootClass}
@@ -62,7 +60,7 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 				>
 					{children}
 				</div>
-			) : null}
+			)}
 		</div>
 	);
 };
