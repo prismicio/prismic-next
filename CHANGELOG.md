@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.2](https://github.com/prismicio/prismic-next/compare/v2.2.1...v2.2.2) (2026-02-25)
+
+
+### Bug Fixes
+
+* serve CJS runtime with ESM type declarations ([#130](https://github.com/prismicio/prismic-next/issues/130)) ([8865306](https://github.com/prismicio/prismic-next/commit/8865306276bf1089547a74fae987c282a22b5760))
+
 ## [2.2.1](https://github.com/prismicio/prismic-next/compare/v2.2.0...v2.2.1) (2026-01-21)
 
 
