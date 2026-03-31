@@ -8,6 +8,16 @@ export default defineConfig({
 	format: ["esm", "cjs"],
 	platform: "neutral",
 	unbundle: true,
+	plugins: [
+		{
+			name: "next-navigation-specifier",
+			resolveId(id) {
+				if (id === "next/navigation") {
+					return { id: "next/navigation", external: true };
+				}
+			},
+		},
+	],
 	sourcemap: true,
 	exports: false,
 });
