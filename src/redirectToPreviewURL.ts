@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation";
 import {
 	cookie as prismicCookie,
 	type Client,
@@ -41,7 +40,7 @@ export type RedirectToPreviewURLConfig = {
 
 export async function redirectToPreviewURL(
 	config: RedirectToPreviewURLConfig,
-): Promise<never> {
+): Promise<Response> {
 	const { client, request, linkResolver, defaultURL = "/" } = config;
 
 	// Need this to avoid the following Next.js build-time error:
@@ -71,5 +70,5 @@ export async function redirectToPreviewURL(
 
 	(await draftMode()).enable();
 
-	redirect(previewURL);
+	return Response.redirect(new URL(previewURL, request.url), 307);
 }
