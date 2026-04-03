@@ -16,6 +16,8 @@ type Fixtures = {
 	appPage: AppPage;
 };
 
+const PREVIEW_TOOLBAR_TIMEOUT = 30_000;
+
 export const test = base.extend<Fixtures>({
 	prismic: async ({ page }, use) => {
 		const prismic = new Prismic({
@@ -81,10 +83,19 @@ class AppPage {
 		await this.page.goto(previewSession.preview_url);
 	}
 
+	async waitForToolbar() {
+		await expect(this.toolbar).toHaveCount(1, {
+			timeout: PREVIEW_TOOLBAR_TIMEOUT,
+		});
+	}
+
 	async exitPreview() {
+		await this.waitForToolbar();
 		const closeButton = this.toolbar.locator("img.Icon.x");
 		await closeButton.click();
-		await expect(this.toolbar).toHaveCount(0);
+		await expect(this.toolbar).toHaveCount(0, {
+			timeout: PREVIEW_TOOLBAR_TIMEOUT,
+		});
 	}
 
 	async getToolbarScriptParam(name: string) {

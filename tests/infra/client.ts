@@ -16,6 +16,9 @@ export type CoreAPIDocument = {
 	versions: { version_id: string; uid?: string }[];
 };
 
+const DOCUMENT_VERSION_POLL_INTERVAL = 500;
+const DOCUMENT_VERSION_POLL_TIMEOUT = 10_000;
+
 export class Prismic {
 	urls: PrismicURLs;
 	#auth: AuthenticatedAPI;
@@ -117,13 +120,14 @@ export class Repo {
 	async createPreviewSession(
 		document: CoreAPIDocument,
 	): Promise<{ preview_url: string; session_id: string }> {
+		const stableDocument = await this.#waitForPreviewVersion(document);
 		const configs = await this.getPreviewConfigs();
 		const config = configs[0];
 		assert(config, "At least one preview must be configured.");
 		const url = new URL("previews/session/draft", this.urls.core);
 		url.searchParams.set("previewId", config.id);
-		url.searchParams.set("documentId", document.id);
-		url.searchParams.set("versionId", document.versions[0].version_id);
+		url.searchParams.set("documentId", stableDocument.id);
+		url.searchParams.set("versionId", stableDocument.versions[0].version_id);
 		const res = await this.#auth.get(url.toString());
 		return await res.json();
 	}
@@ -173,7 +177,7 @@ export class Repo {
 			tags: [],
 		};
 		const res = await this.#auth.put(url.toString(), { data });
-		return res.json();
+		return await res.json();
 	}
 
 	async getDocumentByUID(type: string, uid: string): Promise<CoreAPIDocument> {
@@ -201,6 +205,41 @@ export class Repo {
 		const url = new URL("app/settings/delete", this.urls.wroom);
 		const data = { confirm: this.domain, password: this.#auth.auth.password };
 		return await this.#auth.postWroom(url.toString(), { data });
+	}
+
+	async #waitForPreviewVersion(
+		document: CoreAPIDocument,
+	): Promise<CoreAPIDocument> {
+		const deadline = Date.now() + DOCUMENT_VERSION_POLL_TIMEOUT;
+		let currentDocument = document;
+		const uid = document.versions[0]?.uid;
+
+		assert(
+			uid,
+			`Document ${document.id} is missing a UID, so its preview version cannot be polled.`,
+		);
+
+		while (Date.now() < deadline) {
+			if (currentDocument.versions[0]?.version_id) {
+				return currentDocument;
+			}
+
+			currentDocument = await this.getDocumentByUID(document.custom_type_id, uid);
+			if (currentDocument.versions[0]?.version_id) {
+				return currentDocument;
+			}
+
+			await new Promise((resolve) =>
+				setTimeout(resolve, DOCUMENT_VERSION_POLL_INTERVAL),
+			);
+		}
+
+		assert(
+			currentDocument.versions[0]?.version_id,
+			`Timed out waiting for document ${document.id} to expose a draft version.`,
+		);
+
+		return currentDocument;
 	}
 }
 
