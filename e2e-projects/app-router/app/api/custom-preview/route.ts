@@ -1,12 +1,12 @@
-import type { NextRequest } from "next/server";
-import { redirectToPreviewURL } from "@prismicio/next";
+import { redirectToPreviewURL } from "@prismicio/next"
+import type { NextRequest } from "next/server"
 
-import { createClient } from "@/prismicio";
+import { createClient } from "@/prismicio"
 
 export async function GET(request: NextRequest): Promise<never> {
 	const client = await createClient({
 		routes: [{ type: "page", path: "/:uid" }],
-	});
+	})
 
-	return await redirectToPreviewURL({ client, request });
+	return await redirectToPreviewURL({ client, request })
 }

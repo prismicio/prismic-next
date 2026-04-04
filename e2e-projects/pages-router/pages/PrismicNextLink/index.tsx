@@ -1,11 +1,16 @@
-import type { JSX } from "react";
-import type { GetServerSidePropsContext, GetServerSidePropsResult, InferGetServerSidePropsType } from "next";
-import Link from "next/link";
-import { PrismicNextLink } from "@prismicio/next/pages";
-import { isFilled } from "@prismicio/client";
-import assert from "assert";
+import assert from "assert"
 
-import { createClient } from "@/prismicio";
+import { isFilled } from "@prismicio/client"
+import { PrismicNextLink } from "@prismicio/next/pages"
+import type {
+	GetServerSidePropsContext,
+	GetServerSidePropsResult,
+	InferGetServerSidePropsType,
+} from "next"
+import Link from "next/link"
+import type { JSX } from "react"
+
+import { createClient } from "@/prismicio"
 
 export default function Page({
 	tests,
@@ -13,10 +18,7 @@ export default function Page({
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
 	return (
 		<>
-			<PrismicNextLink
-				data-testid="document-link-with-route-resolver"
-				field={tests.document}
-			/>
+			<PrismicNextLink data-testid="document-link-with-route-resolver" field={tests.document} />
 			<PrismicNextLink
 				data-testid="document-link-with-link-resolver"
 				field={tests.document}
@@ -25,10 +27,7 @@ export default function Page({
 
 			<PrismicNextLink data-testid="media-link" field={tests.media} />
 
-			<PrismicNextLink
-				data-testid="document-prop-with-route-resolver"
-				document={doc}
-			/>
+			<PrismicNextLink data-testid="document-prop-with-route-resolver" document={doc} />
 			<PrismicNextLink
 				data-testid="document-prop-with-link-resolver"
 				document={doc}
@@ -62,10 +61,7 @@ export default function Page({
 				rel={(payload) => JSON.stringify(payload)}
 			/>
 
-			<PrismicNextLink
-				data-testid="external-href-prop"
-				href="https://example.com"
-			/>
+			<PrismicNextLink data-testid="external-href-prop" href="https://example.com" />
 			<PrismicNextLink data-testid="internal-href-prop" href="/example" />
 			{/* @ts-expect-error - We are purposely providing an invalid `href` value. */}
 			<PrismicNextLink data-testid="falsy-href-prop" href={undefined} />
@@ -76,39 +72,46 @@ export default function Page({
 				override
 			</PrismicNextLink>
 		</>
-	);
+	)
 }
 
-export async function getServerSideProps({ req }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<{ tests: Awaited<ReturnType<ReturnType<typeof createClient>["getSingle"]>>["data"]; doc: Awaited<ReturnType<ReturnType<typeof createClient>["getByID"]>> }>> {
-	const repositoryName = req.cookies["repository-name"];
+export async function getServerSideProps({
+	req,
+}: GetServerSidePropsContext): Promise<
+	GetServerSidePropsResult<{
+		tests: Awaited<ReturnType<ReturnType<typeof createClient>["getSingle"]>>["data"]
+		doc: Awaited<ReturnType<ReturnType<typeof createClient>["getByID"]>>
+	}>
+> {
+	const repositoryName = req.cookies["repository-name"]
 	assert(
 		repositoryName && typeof repositoryName === "string",
 		"A repository-name cookie is required.",
-	);
+	)
 
-	const client = createClient(repositoryName);
-	const { data: tests } = await client.getSingle("link_test");
-	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
-	const doc = await client.getByID(tests.document.id);
+	const client = createClient(repositoryName)
+	const { data: tests } = await client.getSingle("link_test")
+	assert(isFilled.contentRelationship(tests.document) && tests.document.url)
+	const doc = await client.getByID(tests.document.id)
 
-	assert(isFilled.linkToMedia(tests.media));
+	assert(isFilled.linkToMedia(tests.media))
 	assert(
 		isFilled.link(tests.internal_web) &&
 			tests.internal_web.link_type === "Web" &&
 			!tests.internal_web.url.startsWith("http"),
-	);
+	)
 	assert(
 		isFilled.link(tests.external_web) &&
 			tests.external_web.link_type === "Web" &&
 			tests.external_web.url.startsWith("http"),
-	);
+	)
 	assert(
 		isFilled.link(tests.external_web_with_target) &&
 			tests.external_web_with_target.link_type === "Web" &&
 			tests.external_web_with_target.url.startsWith("http") &&
 			tests.external_web_with_target.target,
-	);
-	assert(isFilled.link(tests.with_text) && tests.with_text.text);
+	)
+	assert(isFilled.link(tests.with_text) && tests.with_text.text)
 
-	return { props: { tests, doc } };
+	return { props: { tests, doc } }
 }

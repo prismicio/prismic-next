@@ -1,36 +1,47 @@
-import type { JSX } from "react";
-import { useState } from "react";
-import type { GetServerSidePropsContext, GetServerSidePropsResult, InferGetServerSidePropsType } from "next";
-import { PrismicNextImage } from "@prismicio/next/pages";
-import { isFilled } from "@prismicio/client";
-import assert from "assert";
+import assert from "assert"
 
-import { createClient } from "@/prismicio";
+import { isFilled } from "@prismicio/client"
+import { PrismicNextImage } from "@prismicio/next/pages"
+import type {
+	GetServerSidePropsContext,
+	GetServerSidePropsResult,
+	InferGetServerSidePropsType,
+} from "next"
+import type { JSX } from "react"
+import { useState } from "react"
+
+import { createClient } from "@/prismicio"
 
 export default function Page({
 	field,
 }: InferGetServerSidePropsType<typeof getServerSideProps>): JSX.Element {
-	const [ref, setRef] = useState<Element | null>(null);
+	const [ref, setRef] = useState<Element | null>(null)
 
 	return (
 		<p>
 			<PrismicNextImage ref={setRef} field={field} />
 			<span data-testid="ref">tagname: {ref?.tagName}</span>
 		</p>
-	);
+	)
 }
 
-export async function getServerSideProps({ req }: GetServerSidePropsContext): Promise<GetServerSidePropsResult<{ field: Awaited<ReturnType<ReturnType<typeof createClient>["getSingle"]>>["data"]["filled"] }>> {
-	const repositoryName = req.cookies["repository-name"];
+export async function getServerSideProps({
+	req,
+}: GetServerSidePropsContext): Promise<
+	GetServerSidePropsResult<{
+		field: Awaited<ReturnType<ReturnType<typeof createClient>["getSingle"]>>["data"]["filled"]
+	}>
+> {
+	const repositoryName = req.cookies["repository-name"]
 	assert(
 		repositoryName && typeof repositoryName === "string",
 		"A repository-name cookie is required.",
-	);
+	)
 
-	const client = createClient(repositoryName);
-	const { data: tests } = await client.getSingle("image_test");
+	const client = createClient(repositoryName)
+	const { data: tests } = await client.getSingle("image_test")
 
-	assert(isFilled.image(tests.filled));
+	assert(isFilled.image(tests.filled))
 
-	return { props: { field: tests.filled } };
+	return { props: { field: tests.filled } }
 }

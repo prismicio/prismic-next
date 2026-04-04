@@ -1,22 +1,24 @@
+import assert from "assert"
+
+import type { Locator, Page } from "@playwright/test"
+import { test as base, expect } from "@playwright/test"
+import { createClient } from "@prismicio/client"
+
 /* oxlint-disable rules-of-hooks */
-import type { CoreAPIDocument, Repo } from "./client";
-import { Prismic } from "./client";
-import type { Locator, Page } from "@playwright/test";
-import { test as base, expect } from "@playwright/test";
-import { createClient } from "@prismicio/client";
-import assert from "assert";
+import type { CoreAPIDocument, Repo } from "./client"
+import { Prismic } from "./client"
 
 type Fixtures = {
-	prismic: Prismic;
-	repo: Repo;
-	linkDoc: CoreAPIDocument;
-	imageDoc: CoreAPIDocument;
-	pageDoc: CoreAPIDocument;
-	unpublishedPageDoc: CoreAPIDocument;
-	appPage: AppPage;
-};
+	prismic: Prismic
+	repo: Repo
+	linkDoc: CoreAPIDocument
+	imageDoc: CoreAPIDocument
+	pageDoc: CoreAPIDocument
+	unpublishedPageDoc: CoreAPIDocument
+	appPage: AppPage
+}
 
-const PREVIEW_TOOLBAR_TIMEOUT = 30_000;
+const PREVIEW_TOOLBAR_TIMEOUT = 30_000
 
 export const test = base.extend<Fixtures>({
 	prismic: async ({ page }, use) => {
@@ -27,79 +29,78 @@ export const test = base.extend<Fixtures>({
 				password: process.env.E2E_PRISMIC_PASSWORD,
 			},
 			request: page.request,
-		});
-		await use(prismic);
+		})
+		await use(prismic)
 	},
 	repo: async ({ page, prismic, baseURL }, use) => {
-		assert(baseURL, "A baseURL must be configured to test Prismic previews.");
-		const cookies = await page.context().cookies();
-		const repoName = cookies.find((c) => c.name === "repository-name")?.value;
-		assert(repoName, "Missing repository-name cookie. Run the setup project.");
-		const repo = prismic.getRepo(repoName);
-		const url = new URL("api/preview", baseURL);
-		await repo.createPreview({ name: url.toString(), url });
-		await use(repo);
+		assert(baseURL, "A baseURL must be configured to test Prismic previews.")
+		const cookies = await page.context().cookies()
+		const repoName = cookies.find((c) => c.name === "repository-name")?.value
+		assert(repoName, "Missing repository-name cookie. Run the setup project.")
+		const repo = prismic.getRepo(repoName)
+		const url = new URL("api/preview", baseURL)
+		await repo.createPreview({ name: url.toString(), url })
+		await use(repo)
 	},
 	pageDoc: async ({ repo }, use) => {
-		const document = await repo.getDocumentByUID("page", "published");
-		await use(document);
+		const document = await repo.getDocumentByUID("page", "published")
+		await use(document)
 	},
 	unpublishedPageDoc: async ({ repo }, use) => {
-		const document = await repo.getDocumentByUID("page", "unpublished");
-		await use(document);
+		const document = await repo.getDocumentByUID("page", "unpublished")
+		await use(document)
 	},
 	appPage: async ({ page, repo }, use) => {
-		const appPage = new AppPage(page, repo);
-		await use(appPage);
+		const appPage = new AppPage(page, repo)
+		await use(appPage)
 	},
-});
+})
 
 class AppPage {
-	page: Page;
-	repository: Repo;
-	toolbarScript: Locator;
-	toolbar: Locator;
-	payload: Locator;
+	page: Page
+	repository: Repo
+	toolbarScript: Locator
+	toolbar: Locator
+	payload: Locator
 
 	constructor(page: Page, repository: Repo) {
-		this.page = page;
-		this.repository = repository;
-		this.toolbarScript = page.locator('script[src*="prismic.io/prismic.js"]');
-		this.toolbar = page.locator("#prismic-toolbar-v2 .PreviewMenu");
-		this.payload = page.getByTestId("payload");
+		this.page = page
+		this.repository = repository
+		this.toolbarScript = page.locator('script[src*="prismic.io/prismic.js"]')
+		this.toolbar = page.locator("#prismic-toolbar-v2 .PreviewMenu")
+		this.payload = page.getByTestId("payload")
 	}
 
 	async goToDocument(document: CoreAPIDocument, pathPrefix = "") {
-		const client = createClient(
-			new URL("/api/v2", this.repository.urls.cdn).toString(),
-			{ routes: [{ type: "page", path: "/:uid" }] },
-		);
-		const apiDocument = await client.getByID(document.id);
-		return await this.page.goto(pathPrefix + apiDocument.url!);
+		const client = createClient(new URL("/api/v2", this.repository.urls.cdn).toString(), {
+			routes: [{ type: "page", path: "/:uid" }],
+		})
+		const apiDocument = await client.getByID(document.id)
+		return await this.page.goto(pathPrefix + apiDocument.url!)
 	}
 
 	async preview(document: CoreAPIDocument) {
-		const previewSession = await this.repository.createPreviewSession(document);
-		await this.page.goto(previewSession.preview_url);
+		const previewSession = await this.repository.createPreviewSession(document)
+		await this.page.goto(previewSession.preview_url)
 	}
 
 	async waitForToolbar() {
 		await expect(this.toolbar).toHaveCount(1, {
 			timeout: PREVIEW_TOOLBAR_TIMEOUT,
-		});
+		})
 	}
 
 	async exitPreview() {
-		await this.waitForToolbar();
-		const closeButton = this.toolbar.locator("img.Icon.x");
-		await closeButton.click();
+		await this.waitForToolbar()
+		const closeButton = this.toolbar.locator("img.Icon.x")
+		await closeButton.click()
 		await expect(this.toolbar).toHaveCount(0, {
 			timeout: PREVIEW_TOOLBAR_TIMEOUT,
-		});
+		})
 	}
 
 	async getToolbarScriptParam(name: string) {
-		const src = await this.toolbarScript.getAttribute("src");
-		return new URL(src ?? "").searchParams.get(name);
+		const src = await this.toolbarScript.getAttribute("src")
+		return new URL(src ?? "").searchParams.get(name)
 	}
 }

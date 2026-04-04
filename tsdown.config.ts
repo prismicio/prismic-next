@@ -1,4 +1,4 @@
-import { defineConfig } from "tsdown";
+import { defineConfig } from "tsdown"
 
 export default defineConfig({
 	entry: {
@@ -13,11 +13,11 @@ export default defineConfig({
 			name: "next-navigation-specifier",
 			resolveId(id) {
 				if (id === "next/navigation") {
-					return { id: "next/navigation", external: true };
+					return { id: "next/navigation", external: true }
 				}
 			},
 		},
 	],
 	sourcemap: true,
 	exports: false,
-});
+})

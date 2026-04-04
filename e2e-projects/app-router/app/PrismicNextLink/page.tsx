@@ -1,42 +1,40 @@
-import type { JSX } from "react";
-import Link from "next/link";
-import { isFilled } from "@prismicio/client";
-import { PrismicNextLink } from "@prismicio/next";
-import assert from "assert";
+import assert from "assert"
 
-import { createClient } from "@/prismicio";
+import { isFilled } from "@prismicio/client"
+import { PrismicNextLink } from "@prismicio/next"
+import Link from "next/link"
+import type { JSX } from "react"
+
+import { createClient } from "@/prismicio"
 
 export default async function Page(): Promise<JSX.Element> {
-	const client = await createClient();
-	const { data: tests } = await client.getSingle("link_test");
-	assert(isFilled.contentRelationship(tests.document) && tests.document.url);
-	const doc = await client.getByID(tests.document.id);
+	const client = await createClient()
+	const { data: tests } = await client.getSingle("link_test")
+	assert(isFilled.contentRelationship(tests.document) && tests.document.url)
+	const doc = await client.getByID(tests.document.id)
 
-	assert(isFilled.linkToMedia(tests.media));
+	assert(isFilled.linkToMedia(tests.media))
 	assert(
 		isFilled.link(tests.internal_web) &&
 			tests.internal_web.link_type === "Web" &&
 			!tests.internal_web.url.startsWith("http"),
-	);
+	)
 	assert(
 		isFilled.link(tests.external_web) &&
 			tests.external_web.link_type === "Web" &&
 			tests.external_web.url.startsWith("http"),
-	);
+	)
 	assert(
 		isFilled.link(tests.external_web_with_target) &&
 			tests.external_web_with_target.link_type === "Web" &&
 			tests.external_web_with_target.url.startsWith("http") &&
 			tests.external_web_with_target.target,
-	);
-	assert(isFilled.link(tests.with_text) && tests.with_text.text);
+	)
+	assert(isFilled.link(tests.with_text) && tests.with_text.text)
 
 	return (
 		<>
-			<PrismicNextLink
-				data-testid="document-link-with-route-resolver"
-				field={tests.document}
-			/>
+			<PrismicNextLink data-testid="document-link-with-route-resolver" field={tests.document} />
 			<PrismicNextLink
 				data-testid="document-link-with-link-resolver"
 				field={tests.document}
@@ -45,10 +43,7 @@ export default async function Page(): Promise<JSX.Element> {
 
 			<PrismicNextLink data-testid="media-link" field={tests.media} />
 
-			<PrismicNextLink
-				data-testid="document-prop-with-route-resolver"
-				document={doc}
-			/>
+			<PrismicNextLink data-testid="document-prop-with-route-resolver" document={doc} />
 			<PrismicNextLink
 				data-testid="document-prop-with-link-resolver"
 				document={doc}
@@ -82,10 +77,7 @@ export default async function Page(): Promise<JSX.Element> {
 				rel={(payload) => JSON.stringify(payload)}
 			/>
 
-			<PrismicNextLink
-				data-testid="external-href-prop"
-				href="https://example.com"
-			/>
+			<PrismicNextLink data-testid="external-href-prop" href="https://example.com" />
 			<PrismicNextLink data-testid="internal-href-prop" href="/example" />
 			{/* @ts-expect-error - We are purposely providing an invalid `href` value. */}
 			<PrismicNextLink data-testid="falsy-href-prop" href={undefined} />
@@ -96,5 +88,5 @@ export default async function Page(): Promise<JSX.Element> {
 				override
 			</PrismicNextLink>
 		</>
-	);
+	)
 }

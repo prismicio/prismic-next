@@ -1,49 +1,47 @@
-import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper";
 import {
 	SimulatorManager,
 	StateEventType,
 	getDefaultMessage,
 	getDefaultSlices,
-} from "@prismicio/simulator/kit";
+} from "@prismicio/simulator/kit"
 import type {
 	SliceSimulatorProps as BaseSliceSimulatorProps,
 	SliceSimulatorState,
-} from "@prismicio/simulator/kit";
-import { useEffect, useState } from "react";
-import type { ComponentType, FC } from "react";
+} from "@prismicio/simulator/kit"
+import { useEffect, useState } from "react"
+import type { ComponentType, FC } from "react"
 
-const simulatorManager = new SimulatorManager();
+import { SliceSimulatorWrapper } from "../SliceSimulatorWrapper"
+
+const simulatorManager = new SimulatorManager()
 
 export type SliceSimulatorSliceZoneProps = {
-	slices: SliceSimulatorState["slices"];
-};
+	slices: SliceSimulatorState["slices"]
+}
 
 export type SliceSimulatorProps = BaseSliceSimulatorProps & {
 	/**
 	 * React component to render simulated Slices.
 	 *
 	 * @example
+	 * 	```tsx
+	 * 	import { SliceSimulator } from "@slicemachine/adapter-next/simulator"
+	 * 	import { SliceZone } from "@prismicio/react"
 	 *
-	 * ```tsx
-	 * import { SliceSimulator } from "@slicemachine/adapter-next/simulator";
-	 * import { SliceZone } from "@prismicio/react";
+	 * 	import { components } from "../slices"
 	 *
-	 * import { components } from "../slices";
-	 *
-	 * <SliceSimulator
-	 * 	sliceZone={({ slices }) => (
-	 * 		<SliceZone slices={slices} components={components} />
-	 * 	)}
-	 * />;
-	 * ```
+	 * 	;<SliceSimulator
+	 * 		sliceZone={({ slices }) => <SliceZone slices={slices} components={components} />}
+	 * 	/>
+	 * 	```
 	 */
-	sliceZone: ComponentType<SliceSimulatorSliceZoneProps>;
-	className?: string;
-};
+	sliceZone: ComponentType<SliceSimulatorSliceZoneProps>
+	className?: string
+}
 
 /**
- * Simulate slices in isolation. The slice simulator enables live slice
- * development in Slice Machine and live previews in the Page Builder.
+ * Simulate slices in isolation. The slice simulator enables live slice development in Slice Machine
+ * and live previews in the Page Builder.
  */
 export const SliceSimulator: FC<SliceSimulatorProps> = ({
 	background,
@@ -51,33 +49,33 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 	className,
 	sliceZone: SliceZoneComp,
 }) => {
-	const [slices, setSlices] = useState(() => getDefaultSlices());
-	const [message, setMessage] = useState(() => getDefaultMessage());
+	const [slices, setSlices] = useState(() => getDefaultSlices())
+	const [message, setMessage] = useState(() => getDefaultMessage())
 
 	useEffect(() => {
 		simulatorManager.state.on(
 			StateEventType.Slices,
 			(_slices) => {
-				setSlices(_slices);
+				setSlices(_slices)
 			},
 			"simulator-slices",
-		);
+		)
 		simulatorManager.state.on(
 			StateEventType.Message,
 			(_message) => {
-				setMessage(_message);
+				setMessage(_message)
 			},
 			"simulator-message",
-		);
+		)
 
-		simulatorManager.init();
+		simulatorManager.init()
 
 		return () => {
-			simulatorManager.state.off(StateEventType.Slices, "simulator-slices");
+			simulatorManager.state.off(StateEventType.Slices, "simulator-slices")
 
-			simulatorManager.state.off(StateEventType.Message, "simulator-message");
-		};
-	}, []);
+			simulatorManager.state.off(StateEventType.Message, "simulator-message")
+		}
+	}, [])
 
 	return (
 		<SliceSimulatorWrapper
@@ -89,5 +87,5 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 		>
 			<SliceZoneComp slices={slices} />
 		</SliceSimulatorWrapper>
-	);
-};
+	)
+}

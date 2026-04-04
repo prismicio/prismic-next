@@ -1,5 +1,5 @@
 ---
-name: 🚨 Bug report
+name: "\U0001F6A8 Bug report"
 about: Report a bug report to help improve the package.
 title: ""
 labels: "bug"
@@ -16,13 +16,13 @@ assignees: ""
 
 ### Versions
 
-- `@prismicio/next`: <!-- ex: v0.1.0 -->
-- `next`: <!-- ex: v12.1.0 -->
-- node: <!-- ex: v12.14.0 -->
+- @prismicio/next: <!-- ex: v0.1.0 -->
+- next: <!-- ex: v14.0.0 -->
+- node: <!-- ex: v14.15.0 -->
 
 ### Reproduction
 
-<!-- If possible link to a minimal test case, without a reproduction, it is so hard to address problems :( -->
+<!-- If possible link to a minimal test case. Without a reproduction, it is very difficult to address problems. :( -->
 
 <details open>
 <summary>Additional Details</summary>

@@ -4,21 +4,18 @@ import {
 	onClickHandler,
 	simulatorClass,
 	simulatorRootClass,
-} from "@prismicio/simulator/kit";
-import type { SliceSimulatorProps } from "@prismicio/simulator/kit";
-import type { FC, ReactNode } from "react";
+} from "@prismicio/simulator/kit"
+import type { SliceSimulatorProps } from "@prismicio/simulator/kit"
+import type { FC, ReactNode } from "react"
 
 type SliceSimulatorWrapperProps = SliceSimulatorProps & {
-	children: ReactNode;
-	className?: string;
-	message?: string;
-	hasSlices: boolean;
-};
+	children: ReactNode
+	className?: string
+	message?: string
+	hasSlices: boolean
+}
 
-/**
- * A wrapper for the slice simulator that isolates the given children from the
- * page's layout.
- */
+/** A wrapper for the slice simulator that isolates the given children from the page's layout. */
 export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 	className,
 	children,
@@ -27,16 +24,13 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 	message,
 	hasSlices,
 }) => {
-	const defaultProps = getDefaultProps();
+	const defaultProps = getDefaultProps()
 
 	return (
 		<div
 			className={[simulatorClass, className].filter(Boolean).join(" ")}
 			style={{
-				zIndex:
-					typeof zIndex === "undefined"
-						? defaultProps.zIndex
-						: (zIndex ?? undefined),
+				zIndex: typeof zIndex === "undefined" ? defaultProps.zIndex : (zIndex ?? undefined),
 				position: "fixed",
 				top: 0,
 				left: 0,
@@ -44,9 +38,7 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 				height: "100vh",
 				overflow: "auto",
 				background:
-					typeof background === "undefined"
-						? defaultProps.background
-						: (background ?? undefined),
+					typeof background === "undefined" ? defaultProps.background : (background ?? undefined),
 			}}
 		>
 			{message ? (
@@ -56,13 +48,11 @@ export const SliceSimulatorWrapper: FC<SliceSimulatorWrapperProps> = ({
 					id="root"
 					className={simulatorRootClass}
 					onClickCapture={onClickHandler as unknown as React.MouseEventHandler}
-					onSubmitCapture={
-						disableEventHandler as unknown as React.FormEventHandler
-					}
+					onSubmitCapture={disableEventHandler as unknown as React.FormEventHandler}
 				>
 					{children}
 				</div>
 			) : null}
 		</div>
-	);
-};
+	)
+}
