@@ -3,20 +3,30 @@
 	"version": "2.2.3",
 	"description": "Helpers to integrate Prismic into Next.js apps",
 	"keywords": [
-		"typescript",
-		"prismic",
 		"next",
-		"vercel",
-		"preview"
+		"preview",
+		"prismic",
+		"typescript",
+		"vercel"
 	],
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/prismicio/prismic-next.git"
 	},
-	"license": "Apache-2.0",
-	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
-	"sideEffects": false,
+	"workspaces": [
+		".",
+		"e2e-projects/*"
+	],
+	"files": [
+		"dist",
+		"src"
+	],
 	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.cjs",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
@@ -28,22 +38,15 @@
 		},
 		"./package.json": "./package.json"
 	},
-	"main": "./dist/index.cjs",
-	"types": "./dist/index.d.ts",
-	"files": [
-		"dist",
-		"src"
-	],
-	"workspaces": [
-		".",
-		"e2e-projects/*"
-	],
+	"publishConfig": {
+		"access": "public"
+	},
 	"scripts": {
 		"build": "tsdown",
 		"dev": "tsdown --watch",
 		"e2e": "playwright test",
 		"e2e:ui": "npm run e2e -- --ui",
-		"format": "prettier --write .",
+		"format": "oxfmt",
 		"lint": "oxlint --deny-warnings",
 		"prepare": "npm run build",
 		"test": "npm run lint && npm run types && npm run build && npm run e2e",
@@ -57,14 +60,12 @@
 	"devDependencies": {
 		"@playwright/test": "^1.58.2",
 		"@prismicio/client": "^7.12.0",
-		"@trivago/prettier-plugin-sort-imports": "^6.0.2",
 		"@types/node": "^25.5.0",
 		"@types/react": "^19.2.14",
 		"next": "16.2.1",
+		"oxfmt": "^0.43.0",
 		"oxlint": "^1.58.0",
 		"playwright": "^1.58.2",
-		"prettier": "^3.8.1",
-		"prettier-plugin-jsdoc": "^1.8.0",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4",
 		"tsdown": "^0.21.7",
@@ -77,8 +78,5 @@
 	},
 	"engines": {
 		"node": ">=20"
-	},
-	"publishConfig": {
-		"access": "public"
 	}
 }

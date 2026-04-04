@@ -21,17 +21,15 @@ export const model = {
 			},
 		},
 	},
-} as const;
+} as const
 
-export function content(
-	args: { payload?: string; uid?: string } = {},
-): Record<string, unknown> {
-	const { payload, uid } = args;
+export function content(args: { payload?: string; uid?: string } = {}): Record<string, unknown> {
+	const { payload, uid } = args
 
 	return {
 		...(uid ? { uid } : {}),
 		uid_TYPE: "UID",
 		payload: payload ?? uid,
 		payload_TYPE: "Text",
-	};
+	}
 }

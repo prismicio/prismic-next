@@ -1,17 +1,17 @@
-import { defineConfig, devices } from "@playwright/test";
-import assert from "node:assert";
-import { fileURLToPath } from "node:url";
-import { existsSync, writeFileSync } from "node:fs";
+import assert from "node:assert"
+import { existsSync, writeFileSync } from "node:fs"
+import { fileURLToPath } from "node:url"
+
+import { defineConfig, devices } from "@playwright/test"
 
 try {
-	process.loadEnvFile(".env.test.local");
+	process.loadEnvFile(".env.test.local")
 } catch {}
 
 export const STORAGE_STATE = fileURLToPath(
 	new URL("./tests/infra/.storage-state.json", import.meta.url),
-);
-if (!existsSync(STORAGE_STATE))
-	writeFileSync(STORAGE_STATE, JSON.stringify({}));
+)
+if (!existsSync(STORAGE_STATE)) writeFileSync(STORAGE_STATE, JSON.stringify({}))
 
 // https://playwright.dev/docs/test-configuration
 export default defineConfig({
@@ -72,24 +72,18 @@ export default defineConfig({
 			reuseExistingServer: !process.env.CI,
 		},
 	],
-});
+})
 
 declare global {
 	// eslint-disable-next-line @typescript-eslint/no-namespace
 	namespace NodeJS {
 		interface ProcessEnv {
-			CI: boolean;
-			E2E_PRISMIC_EMAIL: string;
-			E2E_PRISMIC_PASSWORD: string;
+			CI: boolean
+			E2E_PRISMIC_EMAIL: string
+			E2E_PRISMIC_PASSWORD: string
 		}
 	}
 }
 
-assert.ok(
-	process.env.E2E_PRISMIC_EMAIL,
-	"Missing E2E_PRISMIC_EMAIL env variable.",
-);
-assert.ok(
-	process.env.E2E_PRISMIC_PASSWORD,
-	"Missing E2E_PRISMIC_PASSWORD env variable.",
-);
+assert.ok(process.env.E2E_PRISMIC_EMAIL, "Missing E2E_PRISMIC_EMAIL env variable.")
+assert.ok(process.env.E2E_PRISMIC_PASSWORD, "Missing E2E_PRISMIC_PASSWORD env variable.")

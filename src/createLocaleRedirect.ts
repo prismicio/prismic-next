@@ -1,4 +1,4 @@
-import { devMsg } from "./lib/devMsg";
+import { devMsg } from "./lib/devMsg"
 
 /**
  * @deprecated `createLocaleRedirect()` has been removed due to performance
@@ -9,10 +9,10 @@ export function createLocaleRedirect(): never {
 		`createLocaleRedirect() has been removed due to performance issues. See ${devMsg(
 			"replace-createLocaleRedirect",
 		)} for more details.`,
-	);
+	)
 }
 /**
  * @deprecated `createLocaleRedirect()` has been removed due to performance
  *   issues.
  */
-export type CreateLocaleRedirectConfig = never;
+export type CreateLocaleRedirectConfig = never

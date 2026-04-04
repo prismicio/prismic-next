@@ -5,15 +5,16 @@
 
 		"target": "esnext",
 		"module": "esnext",
+		"declaration": true,
+		"declarationMap": true,
 		"moduleResolution": "bundler",
 		"resolveJsonModule": true,
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
 
+		"forceConsistentCasingInFileNames": true,
 		"jsx": "react-jsx",
-		"lib": ["esnext", "dom"],
-
-		"declaration": true,
-		"outDir": "./dist",
-
+		"lib": ["esnext", "dom", "dom.iterable"],
 		"types": ["react"]
 	},
 	"exclude": ["node_modules", "dist", "e2e-projects"]

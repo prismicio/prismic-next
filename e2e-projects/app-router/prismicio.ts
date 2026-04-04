@@ -1,20 +1,21 @@
-import * as prismic from "@prismicio/client";
-import * as prismicNext from "@prismicio/next";
-import { cookies } from "next/headers";
-import assert from "node:assert";
+import assert from "node:assert"
+
+import * as prismic from "@prismicio/client"
+import * as prismicNext from "@prismicio/next"
+import { cookies } from "next/headers"
 
 export async function createClient(config: prismic.ClientConfig = {}): Promise<prismic.Client> {
-	const cookieJar = await cookies();
-	const repositoryName = cookieJar.get("repository-name")?.value;
-	assert(repositoryName, "A repository-name cookie is required.");
+	const cookieJar = await cookies()
+	const repositoryName = cookieJar.get("repository-name")?.value
+	assert(repositoryName, "A repository-name cookie is required.")
 
 	const client = prismic.createClient(repositoryName, {
 		routes: [{ type: "page", path: "/:uid" }],
 		fetchOptions: { cache: "no-store" },
 		...config,
-	});
+	})
 
-	prismicNext.enableAutoPreviews({ client });
+	prismicNext.enableAutoPreviews({ client })
 
-	return client;
+	return client
 }
