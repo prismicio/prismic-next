@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.2.4](https://github.com/prismicio/prismic-next/compare/v2.2.3...v2.2.4) (2026-04-09)
+
+
+### Bug Fixes
+
+* **deps:** maintain dependencies ([be25ac7](https://github.com/prismicio/prismic-next/commit/be25ac7aa3f55818d6e8815fcb12e3f500bb0d40))
+* upgrade infrastructure to match template ([1abb259](https://github.com/prismicio/prismic-next/commit/1abb259d2cee16d37c1a864c09d2b5bf5f276c25))
+
 ## [2.2.3](https://github.com/prismicio/prismic-next/compare/v2.2.2...v2.2.3) (2026-04-03)
 
 ### Bug Fixes
