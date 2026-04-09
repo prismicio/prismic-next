@@ -53,21 +53,21 @@
 		"types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@prismicio/simulator": "^0.2.0",
+		"@prismicio/simulator": "^0.2.2",
 		"imgix-url-builder": "^0.0.6",
 		"lz-string": "^1.5.0"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.58.2",
-		"@prismicio/client": "^7.12.0",
-		"@types/node": "^25.5.0",
+		"@playwright/test": "^1.59.1",
+		"@prismicio/client": "^7.21.8",
+		"@types/node": "^25.5.2",
 		"@types/react": "^19.2.14",
-		"next": "16.2.1",
-		"oxfmt": "^0.43.0",
-		"oxlint": "^1.58.0",
-		"playwright": "^1.58.2",
-		"react": "^19.2.4",
-		"react-dom": "^19.2.4",
+		"next": "16.2.3",
+		"oxfmt": "^0.44.0",
+		"oxlint": "^1.59.0",
+		"playwright": "^1.59.1",
+		"react": "^19.2.5",
+		"react-dom": "^19.2.5",
 		"tsdown": "^0.21.7",
 		"typescript": "^6.0.2"
 	},
