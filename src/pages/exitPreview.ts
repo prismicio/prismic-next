@@ -22,7 +22,7 @@ export type ExitPreviewAPIRouteConfig = {
  * route.
  *
  * @example
- * 	```typescript
+ * 	;```typescript
  * 	// src/pages/api/exit-preview.js
  *
  * 	import { exitPreview } from "@prismicio/next"

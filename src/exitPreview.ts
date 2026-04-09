@@ -3,7 +3,7 @@
  * Handler.
  *
  * @example
- * 	```typescript
+ * 	;```typescript
  * 	// src/app/api/exit-preview/route.js
  *
  * 	import { exitPreview } from "@prismicio/next"

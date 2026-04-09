@@ -82,9 +82,7 @@ export default function Page({
 	)
 }
 
-export async function getServerSideProps({
-	req,
-}: GetServerSidePropsContext): Promise<
+export async function getServerSideProps({ req }: GetServerSidePropsContext): Promise<
 	GetServerSidePropsResult<{
 		tests: Awaited<ReturnType<ReturnType<typeof createClient>["getSingle"]>>["data"]
 	}>

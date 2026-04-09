@@ -24,7 +24,7 @@ export type SliceSimulatorProps = BaseSliceSimulatorProps & {
 	 * React component to render simulated Slices.
 	 *
 	 * @example
-	 * 	```tsx
+	 * 	;```tsx
 	 * 	import { SliceSimulator } from "@slicemachine/adapter-next/simulator"
 	 * 	import { SliceZone } from "@prismicio/react"
 	 *
