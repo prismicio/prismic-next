@@ -1,99 +1,75 @@
 {
-	"workspaces": [
-		".",
-		"e2e-projects/*"
-	],
 	"name": "@prismicio/next",
-	"version": "2.0.2",
+	"version": "2.2.4",
 	"description": "Helpers to integrate Prismic into Next.js apps",
 	"keywords": [
-		"typescript",
-		"prismic",
 		"next",
-		"vercel",
-		"preview"
+		"preview",
+		"prismic",
+		"typescript",
+		"vercel"
 	],
+	"license": "Apache-2.0",
+	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/prismicio/prismic-next.git"
 	},
-	"license": "Apache-2.0",
-	"author": "Prismic <contact@prismic.io> (https://prismic.io)",
-	"sideEffects": false,
+	"workspaces": [
+		".",
+		"e2e-projects/*"
+	],
+	"files": [
+		"dist",
+		"src"
+	],
 	"type": "module",
+	"sideEffects": false,
+	"main": "./dist/index.cjs",
+	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"default": "./dist/index.cjs"
 		},
 		"./pages": {
-			"types": "./dist/pages/index.d.ts",
+			"types": "./dist/pages.d.ts",
 			"default": "./dist/pages.cjs"
 		},
 		"./package.json": "./package.json"
 	},
-	"typesVersions": {
-		"*": {
-			"*": [
-				"./dist/index.d.ts"
-			],
-			"pages": [
-				"./dist/pages/index.d.ts"
-			]
-		}
+	"publishConfig": {
+		"access": "public"
 	},
-	"files": [
-		"dist",
-		"src"
-	],
 	"scripts": {
-		"build": "vite build",
-		"dev": "vite build --watch",
-		"format": "prettier --write .",
-		"lint": "eslint",
-		"prepare": "npm run build",
-		"release": "npm run build && npm run test && standard-version && git push --follow-tags && npm run build && npm publish",
-		"release:alpha": "npm run build && npm run test && standard-version --prerelease alpha && git push --follow-tags && npm run build && npm publish --tag alpha",
-		"release:alpha:dry": "standard-version --prerelease alpha --dry-run",
-		"release:dry": "standard-version --dry-run",
-		"size": "size-limit",
-		"test": "npm run lint && npm run types && npm run build && npm run e2e && npm run size && npm run e2e",
-		"types": "tsc --noEmit",
+		"build": "tsdown",
+		"dev": "tsdown --watch",
 		"e2e": "playwright test",
-		"e2e:ui": "npm run e2e -- --ui"
+		"e2e:ui": "npm run e2e -- --ui",
+		"format": "oxfmt",
+		"lint": "oxlint --deny-warnings",
+		"prepare": "npm run build",
+		"test": "npm run lint && npm run types && npm run build && npm run e2e",
+		"types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"imgix-url-builder": "^0.0.5"
+		"@prismicio/simulator": "^0.2.2",
+		"imgix-url-builder": "^0.0.6",
+		"lz-string": "^1.5.0"
 	},
 	"devDependencies": {
-		"@eslint/js": "^9.17.0",
-		"@playwright/test": "^1.49.1",
-		"@prismicio/client": "^7.21.0",
-		"@prismicio/types-internal": "^3.3.0",
-		"@rollup/plugin-typescript": "^12.1.2",
-		"@size-limit/preset-small-lib": "^11.1.6",
-		"@types/node": "^22.10.2",
-		"@types/react": "^19.2.3",
-		"@vitejs/plugin-react": "^4.3.4",
-		"dotenv": "^16.4.7",
-		"eslint": "^9.17.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-plugin-prettier": "^5.2.1",
-		"eslint-plugin-react": "^7.37.2",
-		"eslint-plugin-react-hooks": "^5.1.0",
-		"eslint-plugin-tsdoc": "^0.4.0",
-		"next": "16.0.8",
-		"playwright": "^1.49.1",
-		"prettier": "^3.4.2",
-		"prettier-plugin-jsdoc": "^1.3.0",
-		"react": "^19.2.1",
-		"react-dom": "^19.2.1",
-		"rollup-preserve-directives": "^1.1.3",
-		"size-limit": "^11.1.6",
-		"standard-version": "^9.5.0",
-		"typescript": "^5.7.2",
-		"typescript-eslint": "^8.18.1",
-		"vite": "^6.0.4"
+		"@playwright/test": "^1.59.1",
+		"@prismicio/client": "^7.21.8",
+		"@types/node": "^25.5.2",
+		"@types/react": "^19.2.14",
+		"next": "16.2.3",
+		"oxfmt": "^0.44.0",
+		"oxlint": "^1.59.0",
+		"playwright": "^1.59.1",
+		"react": "^19.2.5",
+		"react-dom": "^19.2.5",
+		"tsdown": "^0.21.7",
+		"typescript": "^6.0.2"
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^7",
@@ -101,9 +77,6 @@
 		"react": "^18 || ^19"
 	},
 	"engines": {
-		"node": ">=18"
-	},
-	"publishConfig": {
-		"access": "public"
+		"node": ">=20"
 	}
 }

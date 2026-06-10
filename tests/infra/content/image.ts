@@ -48,9 +48,9 @@ export const model = {
 			},
 		},
 	},
-} as const;
+} as const
 
-export function content() {
+export function content(): Record<string, unknown> {
 	return {
 		filled: {
 			edit: {
@@ -144,5 +144,5 @@ export function content() {
 		with_alt_text_TYPE: "Image",
 		without_alt_text_TYPE: "Image",
 		with_crop_TYPE: "Image",
-	};
+	}
 }

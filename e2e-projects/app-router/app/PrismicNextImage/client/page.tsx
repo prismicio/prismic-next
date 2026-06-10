@@ -1,14 +1,17 @@
-import { isFilled } from "@prismicio/client";
-import assert from "assert";
+import assert from "assert"
 
-import { createClient } from "@/prismicio";
-import { ClientTest } from "./ClientTest";
+import { isFilled } from "@prismicio/client"
+import type { JSX } from "react"
 
-export default async function Page() {
-	const client = await createClient();
-	const { data: tests } = await client.getSingle("image_test");
+import { createClient } from "@/prismicio"
 
-	assert(isFilled.image(tests.filled));
+import { ClientTest } from "./ClientTest"
 
-	return <ClientTest field={tests.filled} />;
+export default async function Page(): Promise<JSX.Element> {
+	const client = await createClient()
+	const { data: tests } = await client.getSingle("image_test")
+
+	assert(isFilled.image(tests.filled))
+
+	return <ClientTest field={tests.filled} />
 }

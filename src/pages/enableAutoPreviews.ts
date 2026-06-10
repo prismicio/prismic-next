@@ -1,7 +1,7 @@
-import type { PreviewData } from "next";
-import type { Client } from "@prismicio/client";
+import type { Client } from "@prismicio/client"
+import type { PreviewData } from "next"
 
-import type { NextApiRequestLike } from "./types";
+import type { NextApiRequestLike } from "./types"
 
 /**
  * Configuration for `enableAutoPreviews`.
@@ -13,26 +13,26 @@ export type EnableAutoPreviewsConfig = {
 	// `Pick` is used to use the smallest possible subset of
 	// `prismic.Client`. Doing this reduces the surface area for breaking
 	// type changes.
-	client: Pick<Client, "queryContentFromRef" | "enableAutoPreviewsFromReq">;
+	client: Pick<Client, "queryContentFromRef" | "enableAutoPreviewsFromReq">
 
 	/**
-	 * The `previewData` object provided in the `getStaticProps()` or
-	 * `getServerSideProps()` context object.
+	 * The `previewData` object provided in the `getStaticProps()` or `getServerSideProps()` context
+	 * object.
 	 */
-	previewData?: PreviewData;
+	previewData?: PreviewData
 
 	/**
 	 * The `req` object from a Next.js API route.
 	 *
 	 * @see Next.js API route docs: \<https://nextjs.org/docs/api-routes/introduction\>
 	 */
-	req?: NextApiRequestLike;
-};
+	req?: NextApiRequestLike
+}
 
 /**
- * Configures a Prismic client to automatically query draft content during a
- * preview session. It either takes in a Next.js `getStaticProps` context object
- * or a Next.js API endpoint request object.
+ * Configures a Prismic client to automatically query draft content during a preview session. It
+ * either takes in a Next.js `getStaticProps` context object or a Next.js API endpoint request
+ * object.
  *
  * @param config - Configuration for the function.
  */
@@ -42,21 +42,21 @@ export function enableAutoPreviews(config: EnableAutoPreviewsConfig): void {
 		// `getServerSideProps()` with active Preview Mode.
 
 		if (isPrismicPreviewData(config.previewData)) {
-			config.client.queryContentFromRef(config.previewData.ref);
+			config.client.queryContentFromRef(config.previewData.ref)
 		}
 
-		return;
+		return
 	}
 
 	if ("req" in config && config.req) {
 		// Assume we are in an API Route.
 
-		config.client.enableAutoPreviewsFromReq(config.req);
+		config.client.enableAutoPreviewsFromReq(config.req)
 
-		return;
+		return
 	}
 }
 
 function isPrismicPreviewData(input: unknown): input is { ref: string } {
-	return typeof input === "object" && input !== null && "ref" in input;
+	return typeof input === "object" && input !== null && "ref" in input
 }

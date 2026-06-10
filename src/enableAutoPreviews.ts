@@ -1,4 +1,4 @@
-import { type Client, cookie as prismicCookie } from "@prismicio/client";
+import { type Client, cookie as prismicCookie } from "@prismicio/client"
 
 /** Configuration for `enableAutoPreviews`. */
 export type EnableAutoPreviewsConfig = {
@@ -6,12 +6,11 @@ export type EnableAutoPreviewsConfig = {
 	// `Pick` is used to use the smallest possible subset of
 	// `prismic.Client`. Doing this reduces the surface area for breaking
 	// type changes.
-	client: Pick<Client, "queryContentFromRef" | "enableAutoPreviewsFromReq">;
-};
+	client: Pick<Client, "queryContentFromRef" | "enableAutoPreviewsFromReq">
+}
 
 /**
- * Configures a Prismic client to automatically query draft content during a
- * preview session.
+ * Configures a Prismic client to automatically query draft content during a preview session.
  *
  * @param config - Configuration for the function.
  */
@@ -22,32 +21,32 @@ export function enableAutoPreviews(config: EnableAutoPreviewsConfig): void {
 		// Need this to avoid the following Next.js build-time error:
 		// You're importing a component that needs next/headers. That only works
 		// in a Server Component which is not supported in the pages/ directory.
-		const { cookies, draftMode } = await import("next/headers");
+		const { cookies, draftMode } = await import("next/headers")
 
-		let isDraftModeEnabled = false;
+		let isDraftModeEnabled = false
 		try {
-			isDraftModeEnabled = (await draftMode()).isEnabled;
+			isDraftModeEnabled = (await draftMode()).isEnabled
 		} catch {
 			// `draftMode()` may have been called in a palce that
 			// does not have access to its async storage. This
 			// occurs in places like `generateStaticParams()`. We
 			// can ignore this case.
-			return;
+			return
 		}
 		if (!isDraftModeEnabled) {
-			return;
+			return
 		}
 
-		const cookie = (await cookies()).get(prismicCookie.preview)?.value;
+		const cookie = (await cookies()).get(prismicCookie.preview)?.value
 		if (!cookie) {
-			return;
+			return
 		}
 
-		const isActiveCookie = cookie.includes("websitePreviewId=");
+		const isActiveCookie = cookie.includes("websitePreviewId=")
 		if (!isActiveCookie) {
-			return;
+			return
 		}
 
-		return cookie;
-	});
+		return cookie
+	})
 }

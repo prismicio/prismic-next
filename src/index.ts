@@ -1,29 +1,34 @@
-export { exitPreview } from "./exitPreview";
+export { exitPreview } from "./exitPreview"
 
-export { PrismicPreview } from "./PrismicPreview";
-export type { PrismicPreviewProps } from "./PrismicPreview";
+export { PrismicPreview } from "./PrismicPreview"
+export type { PrismicPreviewProps } from "./PrismicPreview"
 
-export { PrismicNextLink } from "./PrismicNextLink";
-export type { PrismicNextLinkProps } from "./PrismicNextLink";
+export { PrismicNextLink } from "./PrismicNextLink"
+export type { PrismicNextLinkProps } from "./PrismicNextLink"
 
-export { enableAutoPreviews } from "./enableAutoPreviews";
-export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
+export { enableAutoPreviews } from "./enableAutoPreviews"
+export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews"
 
-export { redirectToPreviewURL } from "./redirectToPreviewURL";
-export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL";
+export { redirectToPreviewURL } from "./redirectToPreviewURL"
+export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL"
 
-export { PrismicNextImage } from "./PrismicNextImage";
-export type { PrismicNextImageProps } from "./PrismicNextImage";
+export { PrismicNextImage } from "./PrismicNextImage"
+export type { PrismicNextImageProps } from "./PrismicNextImage"
 
-export { imgixLoader } from "./imgixLoader";
+export { SliceSimulator } from "./SliceSimulator"
+export type { SliceSimulatorProps, SliceSimulatorParams } from "./SliceSimulator"
 
-export type { CreateClientConfig } from "./types";
+export { getSlices } from "./getSlices"
 
-export { createLocaleRedirect } from "./createLocaleRedirect";
-export type { CreateLocaleRedirectConfig } from "./createLocaleRedirect";
+export { imgixLoader } from "./imgixLoader"
 
-export { getPrismicCacheTags } from "./getPrismicCacheTags";
+export type { CreateClientConfig } from "./types"
 
-export { cacheTagPrismicPages } from "./cacheTagPrismicPages";
+export { createLocaleRedirect } from "./createLocaleRedirect"
+export type { CreateLocaleRedirectConfig } from "./createLocaleRedirect"
 
-export { revalidatePrismicPages } from "./revalidatePrismicPages";
+export { getPrismicCacheTags } from "./getPrismicCacheTags"
+
+export { cacheTagPrismicPages } from "./cacheTagPrismicPages"
+
+export { revalidatePrismicPages } from "./revalidatePrismicPages"

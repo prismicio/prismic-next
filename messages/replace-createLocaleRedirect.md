@@ -17,9 +17,9 @@ The function should be removed from Next.js projects to ensure the best possible
 1. Create an `i18n.ts` file at the root of your project (or within `src` if you use that directory):
 
    ```ts
-   import type { NextRequest } from "next/server";
-   import { match } from "@formatjs/intl-localematcher";
-   import Negotiator from "negotiator";
+   import type { NextRequest } from "next/server"
+   import { match } from "@formatjs/intl-localematcher"
+   import Negotiator from "negotiator"
 
    /**
     * A record of locales mapped to a version displayed in URLs. The first entry is
@@ -31,27 +31,27 @@ The function should be removed from Next.js projects to ensure the best possible
    const LOCALES = {
    	"en-us": "en",
    	"fr-fr": "fr",
-   };
+   }
 
    /** Creates a redirect with an auto-detected locale prepended to the URL. */
    export function createLocaleRedirect(request: NextRequest): Response {
    	const headers = {
    		"accept-language": request.headers.get("accept-language"),
-   	};
-   	const languages = new Negotiator({ headers }).languages();
-   	const locales = Object.keys(LOCALES);
-   	const locale = match(languages, locales, locales[0]);
+   	}
+   	const languages = new Negotiator({ headers }).languages()
+   	const locales = Object.keys(LOCALES)
+   	const locale = match(languages, locales, locales[0])
 
-   	request.nextUrl.pathname = `/${LOCALES[locale]}${request.nextUrl.pathname}`;
+   	request.nextUrl.pathname = `/${LOCALES[locale]}${request.nextUrl.pathname}`
 
-   	return Response.redirect(request.nextUrl);
+   	return Response.redirect(request.nextUrl)
    }
 
    /** Determines if a pathname has a locale as its first segment. */
    export function pathnameHasLocale(request: NextRequest): boolean {
-   	const regexp = new RegExp(`^/(${Object.values(LOCALES).join("|")})(\/|$)`);
+   	const regexp = new RegExp(`^/(${Object.values(LOCALES).join("|")})(\/|$)`)
 
-   	return regexp.test(request.nextUrl.pathname);
+   	return regexp.test(request.nextUrl.pathname)
    }
 
    /**
@@ -61,7 +61,7 @@ The function should be removed from Next.js projects to ensure the best possible
    export function reverseLocaleLookup(locale: string): string | undefined {
    	for (const key in LOCALES) {
    		if (LOCALES[key] === locale) {
-   			return key;
+   			return key
    		}
    	}
    }
@@ -70,16 +70,16 @@ The function should be removed from Next.js projects to ensure the best possible
 1. Create or modify your `middleware.ts` file with the following:
 
    ```ts
-   import type { NextRequest } from "next/server";
-   import { createLocaleRedirect, pathnameHasLocale } from "@/i18n";
+   import type { NextRequest } from "next/server"
+   import { createLocaleRedirect, pathnameHasLocale } from "@/i18n"
 
    export async function middleware(request: NextRequest) {
    	if (!pathnameHasLocale(request)) {
-   		return createLocaleRedirect(request);
+   		return createLocaleRedirect(request)
    	}
    }
 
    export const config = {
    	matcher: ["/((?!_next|api|slice-simulator|icon.svg).*)"],
-   };
+   }
    ```

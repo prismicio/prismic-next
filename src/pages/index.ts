@@ -1,27 +1,30 @@
-export { PrismicNextLink } from "../PrismicNextLink";
-export { type PrismicNextLinkProps } from "../PrismicNextLink";
+export { PrismicNextLink } from "../PrismicNextLink"
+export { type PrismicNextLinkProps } from "../PrismicNextLink"
 
-export { PrismicNextImage } from "../PrismicNextImage";
-export { type PrismicNextImageProps } from "../PrismicNextImage";
+export { PrismicNextImage } from "../PrismicNextImage"
+export { type PrismicNextImageProps } from "../PrismicNextImage"
 
-export { imgixLoader } from "../imgixLoader";
+export { SliceSimulator } from "./SliceSimulator"
+export type { SliceSimulatorProps, SliceSimulatorSliceZoneProps } from "./SliceSimulator"
 
-export { PrismicPreview } from "./PrismicPreview";
-export type { PrismicPreviewProps } from "./PrismicPreview";
+export { imgixLoader } from "../imgixLoader"
 
-export { enableAutoPreviews } from "./enableAutoPreviews";
-export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews";
+export { PrismicPreview } from "./PrismicPreview"
+export type { PrismicPreviewProps } from "./PrismicPreview"
 
-export { redirectToPreviewURL } from "./redirectToPreviewURL";
-export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL";
+export { enableAutoPreviews } from "./enableAutoPreviews"
+export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews"
 
-export { exitPreview } from "./exitPreview";
-export type { ExitPreviewAPIRouteConfig } from "./exitPreview";
+export { redirectToPreviewURL } from "./redirectToPreviewURL"
+export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL"
 
-export { setPreviewData } from "./setPreviewData";
-export type { SetPreviewDataConfig } from "./setPreviewData";
+export { exitPreview } from "./exitPreview"
+export type { ExitPreviewAPIRouteConfig } from "./exitPreview"
 
-export type { CreateClientConfig } from "./types";
+export { setPreviewData } from "./setPreviewData"
+export type { SetPreviewDataConfig } from "./setPreviewData"
 
-export { createLocaleRedirect } from "../createLocaleRedirect";
-export type { CreateLocaleRedirectConfig } from "../createLocaleRedirect";
+export type { CreateClientConfig } from "./types"
+
+export { createLocaleRedirect } from "../createLocaleRedirect"
+export type { CreateLocaleRedirectConfig } from "../createLocaleRedirect"

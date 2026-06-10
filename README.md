@@ -81,8 +81,8 @@ For more clarity on this project and its structure you can also check out the de
 [npm-version-href]: https://npmjs.com/package/@prismicio/next
 [npm-downloads-src]: https://img.shields.io/npm/dm/@prismicio/next.svg
 [npm-downloads-href]: https://npmjs.com/package/@prismicio/next
-[github-actions-ci-src]: https://github.com/prismicio/prismic-next/workflows/ci/badge.svg
-[github-actions-ci-href]: https://github.com/prismicio/prismic-next/actions?query=workflow%3Aci
+[github-actions-ci-src]: https://github.com/prismicio/prismic-next/workflows/validate/badge.svg
+[github-actions-ci-href]: https://github.com/prismicio/prismic-next/actions?query=workflow%3Avalidate
 [codecov-src]: https://img.shields.io/codecov/c/github/prismicio/prismic-next.svg
 [codecov-href]: https://codecov.io/gh/prismicio/prismic-next
 [conventional-commits-src]: https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg
