@@ -1,16 +1,12 @@
+import type { WebhookBody } from "@prismicio/client"
 import { revalidatePrismicPages } from "@prismicio/next"
-import type { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 
-export function GET(request: NextRequest): Response {
-	const id = request.nextUrl.searchParams.get("id")
-	if (id) {
-		revalidatePrismicPages([id])
+export async function POST(request: Request): Promise<NextResponse> {
+	const body: WebhookBody = await request.json()
+	if (body.type === "api-update") {
+		revalidatePrismicPages(body.documents)
 	}
 
-	// `Cache-Control` header is used to prevent CDN-level caching.
-	return new Response(JSON.stringify({ success: true }), {
-		headers: {
-			"Cache-Control": "no-store",
-		},
-	})
+	return NextResponse.json({ revalidated: true })
 }
