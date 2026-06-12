@@ -9,6 +9,8 @@ export type { PrismicNextLinkProps } from "./PrismicNextLink"
 export { enableAutoPreviews } from "./enableAutoPreviews"
 export type { EnableAutoPreviewsConfig } from "./enableAutoPreviews"
 
+export { getPreviewRef } from "./getPreviewRef"
+
 export { redirectToPreviewURL } from "./redirectToPreviewURL"
 export type { RedirectToPreviewURLConfig } from "./redirectToPreviewURL"
 
