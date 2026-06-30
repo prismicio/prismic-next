@@ -1,13 +1,11 @@
 import { cookie as prismicCookie } from "@prismicio/client"
 
 /**
- * Reads the Prismic preview ref for the current request when an active preview
- * session exists.
+ * Reads the Prismic preview ref for the current request when an active preview session exists.
  *
- * This is the read-side counterpart to `redirectToPreviewURL`, which writes the
- * preview cookie. Use it with Next.js Cache Components to read the ref _outside_
- * a cached function and pass it _in_ as an argument so it becomes part of the
- * cache key:
+ * This is the read-side counterpart to `redirectToPreviewURL`, which writes the preview cookie. Use
+ * it with Next.js Cache Components to read the ref _outside_ a cached function and pass it _in_ as
+ * an argument so it becomes part of the cache key:
  *
  * @example
  * 	;```typescript
@@ -17,6 +15,7 @@ import { cookie as prismicCookie } from "@prismicio/client"
  * 	```
  *
  * @returns The active preview ref, or `undefined` if no preview session is active.
+ * @experimental
  */
 export async function getPreviewRef(): Promise<string | undefined> {
 	// Need this to avoid the following Next.js build-time error:

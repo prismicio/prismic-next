@@ -7,6 +7,8 @@ const CACHE_TAG_PREFIX = "prismic/"
  * relationship) are included to ensure all related content can be revalidated.
  *
  * @param pages - A set of Prismic pages used to tag the function.
+ * @experimental
+ *
  * @see {@link https://nextjs.org/docs/app/api-reference/functions/cacheTag}
  */
 export function getPrismicCacheTags(pages: PrismicDocument[]): string[] {

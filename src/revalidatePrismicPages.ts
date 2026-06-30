@@ -7,6 +7,8 @@ import { buildPrismicCacheTag } from "./getPrismicCacheTags"
  * typically comes from a Prismic webhook triggered when publishing content.
  *
  * @param ids - A list of Prismic page IDs to revalidate.
+ * @experimental
+ *
  * @see {@link https://nextjs.org/docs/app/api-reference/functions/revalidateTag}
  */
 export function revalidatePrismicPages(ids: string[]): void {
