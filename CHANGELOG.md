@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.0](https://github.com/prismicio/prismic-next/compare/v2.2.4...v2.3.0) (2026-07-02)
+
+
+### Features
+
+* experimental support for Cache Components ([#114](https://github.com/prismicio/prismic-next/issues/114)) ([080cd66](https://github.com/prismicio/prismic-next/commit/080cd66e7b4688f81d1faa7ea33aca9c1a3d6173))
+
 ## [2.2.4](https://github.com/prismicio/prismic-next/compare/v2.2.3...v2.2.4) (2026-04-09)
 
 
