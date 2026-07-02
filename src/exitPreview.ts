@@ -1,3 +1,5 @@
+import { cookie as prismicCookie } from "@prismicio/client"
+
 /**
  * Ends a Prismic preview session within a Next.js app. This function should be used in a Router
  * Handler.
@@ -17,9 +19,13 @@ export async function exitPreview(): Promise<Response> {
 	// Need this to avoid the following Next.js build-time error:
 	// You're importing a component that needs next/headers. That only works
 	// in a Server Component which is not supported in the pages/ directory.
-	const { draftMode } = await import("next/headers")
+	const { cookies, draftMode } = await import("next/headers")
 
 	;(await draftMode()).disable()
+
+	// `redirectToPreviewURL` writes the preview cookie, so `exitPreview`
+	// clears it to close the preview-cookie loop.
+	;(await cookies()).delete(prismicCookie.preview)
 
 	// `Cache-Control` header is used to prevent CDN-level caching.
 	return new Response(JSON.stringify({ success: true }), {

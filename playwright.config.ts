@@ -36,6 +36,7 @@ export default defineConfig({
 		},
 		{
 			name: "app-router",
+			testIgnore: "cache-components.spec.ts",
 			dependencies: ["setup"],
 			use: {
 				...devices["Desktop Chrome"],
@@ -45,10 +46,22 @@ export default defineConfig({
 		},
 		{
 			name: "pages-router",
+			testIgnore: "cache-components.spec.ts",
 			dependencies: ["setup", "app-router"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",
+				storageState: STORAGE_STATE,
+			},
+		},
+		{
+			name: "cache-components",
+			testMatch: "cache-components.spec.ts",
+			// Runs last because its tests publish content to the shared repo.
+			dependencies: ["setup", "app-router", "pages-router"],
+			use: {
+				...devices["Desktop Chrome"],
+				baseURL: "http://localhost:4323",
 				storageState: STORAGE_STATE,
 			},
 		},
@@ -69,6 +82,11 @@ export default defineConfig({
 		{
 			command: "npm run --workspace pages-router dev",
 			port: 4322,
+			reuseExistingServer: !process.env.CI,
+		},
+		{
+			command: "npm run --workspace cache-components dev",
+			port: 4323,
 			reuseExistingServer: !process.env.CI,
 		},
 	],

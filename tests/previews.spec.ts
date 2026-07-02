@@ -1,3 +1,5 @@
+import { cookie } from "@prismicio/client"
+
 import { test, expect } from "./infra"
 import { content } from "./infra/content/page"
 
@@ -44,6 +46,21 @@ test("restores published pageDoc on exit", async ({ appPage, repo, pageDoc }) =>
 	await appPage.preview(updatedDocument)
 	await appPage.exitPreview()
 	await expect(appPage.payload).not.toContainText("foo")
+})
+
+test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc }, testInfo) => {
+	// `exitPreview` clears the Prismic preview cookie. The Pages Router stores
+	// preview state in Next.js preview data instead, so this is App Router only.
+	test.skip(testInfo.project.name !== "app-router", "App Router only")
+
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	await appPage.preview(updatedDocument)
+	expect((await page.context().cookies()).map((c) => c.name)).toContain(cookie.preview)
+
+	// Exit via the endpoint directly so the assertion does not depend on the
+	// Prismic toolbar loading.
+	await page.goto("/api/exit-preview")
+	expect((await page.context().cookies()).map((c) => c.name)).not.toContain(cookie.preview)
 })
 
 // We can't get a real shareable link because we aren't authenticated with a

@@ -1,4 +1,6 @@
-import { type Client, cookie as prismicCookie } from "@prismicio/client"
+import type { Client } from "@prismicio/client"
+
+import { getPreviewRef } from "./getPreviewRef"
 
 /** Configuration for `enableAutoPreviews`. */
 export type EnableAutoPreviewsConfig = {
@@ -17,36 +19,5 @@ export type EnableAutoPreviewsConfig = {
 export function enableAutoPreviews(config: EnableAutoPreviewsConfig): void {
 	// We use a function value so the cookie is checked on every
 	// request. We don't have a static value to read from.
-	config.client.queryContentFromRef(async () => {
-		// Need this to avoid the following Next.js build-time error:
-		// You're importing a component that needs next/headers. That only works
-		// in a Server Component which is not supported in the pages/ directory.
-		const { cookies, draftMode } = await import("next/headers")
-
-		let isDraftModeEnabled = false
-		try {
-			isDraftModeEnabled = (await draftMode()).isEnabled
-		} catch {
-			// `draftMode()` may have been called in a palce that
-			// does not have access to its async storage. This
-			// occurs in places like `generateStaticParams()`. We
-			// can ignore this case.
-			return
-		}
-		if (!isDraftModeEnabled) {
-			return
-		}
-
-		const cookie = (await cookies()).get(prismicCookie.preview)?.value
-		if (!cookie) {
-			return
-		}
-
-		const isActiveCookie = cookie.includes("websitePreviewId=")
-		if (!isActiveCookie) {
-			return
-		}
-
-		return cookie
-	})
+	config.client.queryContentFromRef(() => getPreviewRef())
 }
