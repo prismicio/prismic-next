@@ -27,6 +27,7 @@ The following setup is required to work on this project:
 - `@prismicio/next` uses [Playwright](https://playwright.dev/) to test its APIs.
 - Using Playwright allows us to test the package's components and helpers against real Next.js apps.
 - The package is tested against an App Router-based project and a Pages Router-based project.
+- The `build` Playwright project runs `next build` on each project and on a minimal Next 15 project. It checks that the published package loads and tree-shakes.
 
 ## :construction_worker: Develop
 

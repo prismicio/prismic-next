@@ -17,7 +17,8 @@
 	},
 	"workspaces": [
 		".",
-		"e2e-projects/*"
+		"e2e-projects/*",
+		"!e2e-projects/next-15"
 	],
 	"files": [
 		"dist",

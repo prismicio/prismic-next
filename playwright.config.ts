@@ -1,4 +1,3 @@
-import assert from "node:assert"
 import { existsSync, writeFileSync } from "node:fs"
 import { fileURLToPath } from "node:url"
 
@@ -35,8 +34,13 @@ export default defineConfig({
 			},
 		},
 		{
+			name: "build",
+			testMatch: "build.spec.ts",
+			timeout: 5 * 60_000,
+		},
+		{
 			name: "app-router",
-			testIgnore: "cache-components.spec.ts",
+			testIgnore: ["cache-components.spec.ts", "build.spec.ts"],
 			dependencies: ["setup"],
 			use: {
 				...devices["Desktop Chrome"],
@@ -46,7 +50,7 @@ export default defineConfig({
 		},
 		{
 			name: "pages-router",
-			testIgnore: "cache-components.spec.ts",
+			testIgnore: ["cache-components.spec.ts", "build.spec.ts"],
 			dependencies: ["setup", "app-router"],
 			use: {
 				...devices["Desktop Chrome"],
@@ -102,6 +106,3 @@ declare global {
 		}
 	}
 }
-
-assert.ok(process.env.E2E_PRISMIC_EMAIL, "Missing E2E_PRISMIC_EMAIL env variable.")
-assert.ok(process.env.E2E_PRISMIC_PASSWORD, "Missing E2E_PRISMIC_PASSWORD env variable.")
