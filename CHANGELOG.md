@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.1](https://github.com/prismicio/prismic-next/compare/v2.3.0...v2.3.1) (2026-09-02)
+
+
+### Bug Fixes
+
+* restore ESM exports and make the ESM build loadable by Node.js ([#145](https://github.com/prismicio/prismic-next/issues/145)) ([d1640ef](https://github.com/prismicio/prismic-next/commit/d1640efceb631e709cd1f1ecc0bbf973628c7053))
+
 ## [2.3.0](https://github.com/prismicio/prismic-next/compare/v2.2.4...v2.3.0) (2026-07-02)
 
 
