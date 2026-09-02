@@ -1,5 +1,6 @@
 import type { PrismicDocument } from "@prismicio/client"
-import { cacheTag } from "next/cache"
+// Namespace import: Next.js 15 has no `cacheTag`, and a named import would fail to link.
+import * as nextCache from "next/cache"
 
 import { getPrismicCacheTags } from "./getPrismicCacheTags"
 
@@ -16,5 +17,5 @@ import { getPrismicCacheTags } from "./getPrismicCacheTags"
  * @see {@link https://nextjs.org/docs/app/api-reference/functions/cacheTag}
  */
 export function cacheTagPrismicPages(pages: PrismicDocument[]): void {
-	cacheTag(...getPrismicCacheTags(pages))
+	nextCache.cacheTag(...getPrismicCacheTags(pages))
 }
