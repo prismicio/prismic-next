@@ -2,7 +2,7 @@
 
 import { SimulatorManager, StateEventType, getDefaultMessage } from "@prismicio/simulator/kit"
 import type { SliceSimulatorProps as BaseSliceSimulatorProps } from "@prismicio/simulator/kit"
-import { compressToEncodedURIComponent } from "lz-string"
+import lzString from "lz-string"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import type { FC, ReactNode } from "react"
@@ -52,7 +52,7 @@ export const SliceSimulator: FC<SliceSimulatorProps> = ({
 				const url = new URL(window.location.href)
 				url.searchParams.set(
 					STATE_PARAMS_KEY,
-					compressToEncodedURIComponent(JSON.stringify(newSlices)),
+					lzString.compressToEncodedURIComponent(JSON.stringify(newSlices)),
 				)
 
 				window.history.replaceState(null, "", url)

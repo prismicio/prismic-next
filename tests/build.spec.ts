@@ -32,7 +32,6 @@ for (const name of ["app-router", "pages-router", "next-15"]) {
 		})
 
 		test("tree-shakes unused exports", () => {
-			test.fail(true, "https://github.com/prismicio/prismic-next/issues/142")
 			const dir = join(project, ".next/static/chunks")
 			const js = readdirSync(dir, { recursive: true, encoding: "utf8" })
 				.filter((file) => file.endsWith(".js"))

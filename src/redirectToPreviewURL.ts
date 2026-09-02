@@ -1,5 +1,4 @@
 import { cookie as prismicCookie, type Client, type LinkResolverFunction } from "@prismicio/client"
-import { redirect } from "next/navigation"
 
 import type { NextRequestLike } from "./types"
 
@@ -41,6 +40,11 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	// in a Server Component which is not supported in the pages/ directory.
 	const { cookies, draftMode } = await import("next/headers")
 
+	// `next/navigation` must stay a bare specifier for Next.js to alias it on the
+	// server (see tsdown.config.ts), but Node.js cannot resolve bare `next/*`
+	// imports. A dynamic import is only resolved when this function runs.
+	const { redirect } = await import("next/navigation")
+
 	const documentID = request.nextUrl.searchParams.get("documentId") ?? undefined
 
 	// Set the initial preview cookie. Setting the cookie here is necessary
@@ -62,5 +66,5 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 
 	;(await draftMode()).enable()
 
-	redirect(previewURL)
+	return redirect(previewURL)
 }
