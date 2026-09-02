@@ -1,6 +1,5 @@
 import type { PrismicDocument } from "@prismicio/client"
-// A namespace import keeps Node.js from failing to load the ESM build on
-// Next.js 15, where `cacheTag` does not exist yet.
+// Namespace import: Next.js 15 has no `cacheTag`, and a named import would fail to link.
 import * as nextCache from "next/cache"
 
 import { getPrismicCacheTags } from "./getPrismicCacheTags"

@@ -40,9 +40,8 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	// in a Server Component which is not supported in the pages/ directory.
 	const { cookies, draftMode } = await import("next/headers")
 
-	// `next/navigation` must stay a bare specifier for Next.js to alias it on the
-	// server (see tsdown.config.ts), but Node.js cannot resolve bare `next/*`
-	// imports. A dynamic import is only resolved when this function runs.
+	// Dynamic so Node.js can load this module: the bare specifier (kept by
+	// tsdown.config.ts for Next.js's server alias) is not resolvable by Node.js.
 	const { redirect } = await import("next/navigation")
 
 	const documentID = request.nextUrl.searchParams.get("documentId") ?? undefined

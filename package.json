@@ -30,24 +30,12 @@
 	"types": "./dist/index.d.ts",
 	"exports": {
 		".": {
-			"import": {
-				"types": "./dist/index.d.ts",
-				"default": "./dist/index.js"
-			},
-			"require": {
-				"types": "./dist/index.d.cts",
-				"default": "./dist/index.cjs"
-			}
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs"
 		},
 		"./pages": {
-			"import": {
-				"types": "./dist/pages.d.ts",
-				"default": "./dist/pages.js"
-			},
-			"require": {
-				"types": "./dist/pages.d.cts",
-				"default": "./dist/pages.cjs"
-			}
+			"import": "./dist/pages.js",
+			"require": "./dist/pages.cjs"
 		},
 		"./package.json": "./package.json"
 	},
