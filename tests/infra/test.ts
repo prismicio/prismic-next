@@ -22,6 +22,8 @@ const PREVIEW_TOOLBAR_TIMEOUT = 30_000
 
 export const test = base.extend<Fixtures>({
 	prismic: async ({ page }, use) => {
+		assert(process.env.E2E_PRISMIC_EMAIL, "Missing E2E_PRISMIC_EMAIL env variable.")
+		assert(process.env.E2E_PRISMIC_PASSWORD, "Missing E2E_PRISMIC_PASSWORD env variable.")
 		const prismic = new Prismic({
 			baseURL: "https://prismic.io",
 			auth: {

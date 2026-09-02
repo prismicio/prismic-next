@@ -17,7 +17,9 @@
 	},
 	"workspaces": [
 		".",
-		"e2e-projects/*"
+		"e2e-projects/app-router",
+		"e2e-projects/pages-router",
+		"e2e-projects/cache-components"
 	],
 	"files": [
 		"dist",
