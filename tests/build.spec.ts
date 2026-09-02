@@ -55,13 +55,10 @@ test.describe.serial("next-15", () => {
 		// Install the package like a consumer. A workspace symlink would resolve `next/*` from the
 		// root `node_modules`, which is Next 16.
 		const dir = mkdtempSync(join(tmpdir(), "prismic-next-"))
-		const tarball = run(
-			"npm",
-			["pack", "--silent", "--ignore-scripts", "--pack-destination", dir],
-			ROOT,
-		)
+		run("npm", ["pack", "--silent", "--ignore-scripts", "--pack-destination", dir], ROOT)
+		const [tarball] = readdirSync(dir)
 		const flags = ["--silent", "--no-save", "--no-package-lock", "--no-audit", "--no-fund"]
-		run("npm", ["install", ...flags, join(dir, tarball.trim())], project)
+		run("npm", ["install", ...flags, join(dir, tarball)], project)
 		build(project)
 	})
 
