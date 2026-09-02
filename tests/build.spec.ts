@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process"
-import { mkdtempSync, readFileSync, readdirSync } from "node:fs"
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { fileURLToPath } from "node:url"
@@ -18,6 +18,12 @@ function run(file: string, args: string[], cwd: string): string {
 	return execFileSync(file, args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] })
 }
 
+function build(project: string): void {
+	// The build cache treats `node_modules` as unchanged while the package version is the same.
+	rmSync(join(project, ".next/cache"), { recursive: true, force: true })
+	run("npx", ["next", "build"], project)
+}
+
 function clientJS(project: string): string {
 	const dir = join(project, ".next/static/chunks")
 	return readdirSync(dir, { recursive: true, encoding: "utf8" })
@@ -31,7 +37,7 @@ for (const name of ["app-router", "pages-router"]) {
 		const project = join(ROOT, "e2e-projects", name)
 
 		test("builds", () => {
-			run("npx", ["next", "build"], project)
+			build(project)
 		})
 
 		test("tree-shakes unused exports", () => {
@@ -56,7 +62,7 @@ test.describe.serial("next-15", () => {
 		)
 		const flags = ["--silent", "--no-save", "--no-package-lock", "--no-audit", "--no-fund"]
 		run("npm", ["install", ...flags, join(dir, tarball.trim())], project)
-		run("npx", ["next", "build"], project)
+		build(project)
 	})
 
 	test("tree-shakes unused exports", () => {
