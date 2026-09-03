@@ -1,4 +1,7 @@
-import { expiredPreviewCookieHeaders } from "./lib/expiredPreviewCookies"
+import {
+	expiredDraftModeCookieHeaders,
+	expiredPreviewCookieHeaders,
+} from "./lib/expiredPreviewCookies"
 
 /**
  * Ends a Prismic preview session within a Next.js app. This function should be used in a Router
@@ -16,22 +19,15 @@ import { expiredPreviewCookieHeaders } from "./lib/expiredPreviewCookies"
  * 	```
  */
 export async function exitPreview(): Promise<Response> {
-	// Need this to avoid the following Next.js build-time error:
-	// You're importing a component that needs next/headers. That only works
-	// in a Server Component which is not supported in the pages/ directory.
-	const { draftMode } = await import("next/headers")
-
-	;(await draftMode()).disable()
-
-	// `redirectToPreviewURL` writes SameSite=None; Secure. The toolbar may
-	// leave SameSite=Lax (not Secure). Those are different cookies to Chrome.
-	// Expire both on the Response. Do not use `cookies().set` / `delete()`:
-	// ResponseCookies is name-keyed, so a second `io.prismic.preview` overwrites
-	// the first and the Lax leftover survives.
+	// Do not call `cookies()` or `draftMode().disable()`. ResponseCookies is
+	// name-keyed: `appendMutableCookies` rebuilds Set-Cookie by name and drops
+	// the extra Lax expire. Emit every expire on the Response instead:
+	// toolbar Lax + iframe None; Secure for `io.prismic.preview`, and both
+	// shapes of `__prerender_bypass` that `disable()` would have cleared.
 	const headers = new Headers({
 		"Cache-Control": "no-store",
 	})
-	for (const setCookie of expiredPreviewCookieHeaders()) {
+	for (const setCookie of [...expiredPreviewCookieHeaders(), ...expiredDraftModeCookieHeaders()]) {
 		headers.append("Set-Cookie", setCookie)
 	}
 
