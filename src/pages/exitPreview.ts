@@ -1,5 +1,4 @@
-import { cookie as prismicCookie } from "@prismicio/client"
-
+import { expiredPreviewCookieHeaders } from "../lib/expiredPreviewCookies"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
 /** Configuration for `exitPreview()`. */
@@ -37,25 +36,23 @@ export type ExitPreviewAPIRouteConfig = {
 export function exitPreview(config: ExitPreviewAPIRouteConfig): void {
 	config.res.clearPreviewData()
 
-	// `clearPreviewData()` only clears Next.js preview cookies. The toolbar
-	// (or a prior App write) can leave `io.prismic.preview`. If it survives,
+	// `clearPreviewData()` only clears Next.js preview cookies. Expire both
+	// leftover `io.prismic.preview` shapes (toolbar Lax, not Secure; and the
+	// iframe SameSite=None; Secure write). If either survives,
 	// `<PrismicPreview>` calls `start()` → `/api/preview` and preview returns.
-	//
-	// Append an expired Set-Cookie with the App write attributes
-	// (Path=/; SameSite=None; Secure; not HttpOnly). Do not use
-	// `cookies().set` — that is the App Router helper. Do not replace the
-	// existing Set-Cookie header from `clearPreviewData()`.
-	const expiredPreviewCookie = `${prismicCookie.preview}=; Path=/; Expires=${new Date(0).toUTCString()}; SameSite=None; Secure`
+	// Do not use `cookies().set` — that is the App Router helper. Do not
+	// replace the existing Set-Cookie header from `clearPreviewData()`.
 	const existingSetCookie = config.res.getHeader("Set-Cookie")
+	const expiredPreviewCookies = expiredPreviewCookieHeaders()
 	config.res.setHeader(
 		"Set-Cookie",
 		existingSetCookie == null
-			? expiredPreviewCookie
+			? expiredPreviewCookies
 			: [
 					...(Array.isArray(existingSetCookie) ? existingSetCookie : [existingSetCookie]).map(
 						String,
 					),
-					expiredPreviewCookie,
+					...expiredPreviewCookies,
 				],
 	)
 

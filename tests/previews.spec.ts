@@ -60,26 +60,39 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 			secure: true,
 			httpOnly: false,
 		})
-	} else {
-		// Pages Router does not write `io.prismic.preview`. Plant the iframe-safe
-		// shape so `exitPreview` must expire it (toolbar leftover → start()).
-		await page.context().addCookies([
-			{
-				name: cookie.preview,
-				value: "planted",
-				domain: "localhost",
-				path: "/",
-				sameSite: "None",
-				secure: true,
-				httpOnly: false,
-			},
-		])
 	}
 
-	// Exit via the endpoint directly so the assertion does not depend on the
-	// Prismic toolbar loading. The expired overwrite must clear this
-	// SameSite=None; Secure cookie, not leave it behind.
+	// Toolbar leftover: JSON value with `"<repo>.prismic.io"`, SameSite=Lax,
+	// not Secure. Expiring only None; Secure leaves this cookie; then
+	// `<PrismicPreview>` `start()` replays `/api/preview`.
+	await page.context().addCookies([
+		{
+			name: cookie.preview,
+			value: JSON.stringify({ [`${repo.domain}.prismic.io`]: { preview: "toolbar" } }),
+			domain: "localhost",
+			path: "/",
+			sameSite: "Lax",
+			secure: false,
+			httpOnly: false,
+		},
+	])
+
 	await page.goto("/api/exit-preview")
+	expect((await page.context().cookies()).find((c) => c.name === cookie.preview)).toBeUndefined()
+
+	const previewRequests: string[] = []
+	page.on("request", (request) => {
+		if (new URL(request.url()).pathname === "/api/preview") {
+			previewRequests.push(request.url())
+		}
+	})
+
+	await appPage.goToDocument(pageDoc)
+	await expect(appPage.payload).toBeVisible()
+	await expect(appPage.toolbarScript).toHaveCount(1)
+	// `<PrismicPreview>` `start()` runs in `useEffect` after mount.
+	await page.waitForTimeout(1000)
+	expect(previewRequests).toEqual([])
 	expect((await page.context().cookies()).find((c) => c.name === cookie.preview)).toBeUndefined()
 })
 

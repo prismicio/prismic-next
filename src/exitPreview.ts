@@ -1,5 +1,10 @@
 import { cookie as prismicCookie } from "@prismicio/client"
 
+import {
+	expiredPreviewCookieHeaders,
+	expiredPreviewCookieSetOptions,
+} from "./lib/expiredPreviewCookies"
+
 /**
  * Ends a Prismic preview session within a Next.js app. This function should be used in a Router
  * Handler.
@@ -23,25 +28,22 @@ export async function exitPreview(): Promise<Response> {
 
 	;(await draftMode()).disable()
 
-	// `redirectToPreviewURL` writes the preview cookie, so `exitPreview`
-	// clears it to close the preview-cookie loop.
-	//
-	// Do not use `cookies().delete()`: on Next.js 13.4.5–15 it omits
-	// Secure/SameSite, so Chrome will not replace the iframe cookie
-	// (SameSite=None; Secure). Overwrite with an expired cookie that
-	// matches the write attributes instead.
-	;(await cookies()).set(prismicCookie.preview, "", {
-		path: "/",
-		sameSite: "none",
-		secure: true,
-		httpOnly: false,
-		expires: new Date(0),
-	})
+	// `redirectToPreviewURL` writes SameSite=None; Secure. The toolbar may
+	// leave SameSite=Lax (not Secure). Those are different cookies to Chrome.
+	// Expire both. Do not use `cookies().delete()`: on Next.js 13.4.5–15 it
+	// omits Secure/SameSite. `cookies()` is name-keyed, so also emit both
+	// Set-Cookie headers on the Response.
+	const cookieJar = await cookies()
+	for (const options of expiredPreviewCookieSetOptions) {
+		cookieJar.set(prismicCookie.preview, "", options)
+	}
 
-	// `Cache-Control` header is used to prevent CDN-level caching.
-	return new Response(JSON.stringify({ success: true }), {
-		headers: {
-			"Cache-Control": "no-store",
-		},
+	const headers = new Headers({
+		"Cache-Control": "no-store",
 	})
+	for (const setCookie of expiredPreviewCookieHeaders()) {
+		headers.append("Set-Cookie", setCookie)
+	}
+
+	return new Response(JSON.stringify({ success: true }), { headers })
 }
