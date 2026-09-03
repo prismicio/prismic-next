@@ -49,19 +49,32 @@ test("restores published pageDoc on exit", async ({ appPage, repo, pageDoc }) =>
 })
 
 test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc }, testInfo) => {
-	// `exitPreview` clears the Prismic preview cookie. The Pages Router stores
-	// preview state in Next.js preview data instead, so this is App Router only.
-	test.skip(testInfo.project.name !== "app-router", "App Router only")
-
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	await appPage.preview(updatedDocument)
-	expect((await page.context().cookies()).find((c) => c.name === cookie.preview)).toMatchObject({
-		name: cookie.preview,
-		path: "/",
-		sameSite: "None",
-		secure: true,
-		httpOnly: false,
-	})
+
+	if (testInfo.project.name === "app-router") {
+		expect((await page.context().cookies()).find((c) => c.name === cookie.preview)).toMatchObject({
+			name: cookie.preview,
+			path: "/",
+			sameSite: "None",
+			secure: true,
+			httpOnly: false,
+		})
+	} else {
+		// Pages Router does not write `io.prismic.preview`. Plant the iframe-safe
+		// shape so `exitPreview` must expire it (toolbar leftover → start()).
+		await page.context().addCookies([
+			{
+				name: cookie.preview,
+				value: "planted",
+				domain: "localhost",
+				path: "/",
+				sameSite: "None",
+				secure: true,
+				httpOnly: false,
+			},
+		])
+	}
 
 	// Exit via the endpoint directly so the assertion does not depend on the
 	// Prismic toolbar loading. The expired overwrite must clear this
