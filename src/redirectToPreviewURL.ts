@@ -50,10 +50,20 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	// to support unpublished previews. Without setting it here, the page
 	// will try to render without the preview cookie, leading to a
 	// PrismicNotFound error.
+	//
+	// Path=/; SameSite=None; Secure so the cookie is sent when the site is
+	// embedded in a cross-site iframe (e.g. the Platform editor). Chrome
+	// defaults omitted SameSite to Lax and strips the cookie from those
+	// requests. Do not set HttpOnly: the toolbar reads `document.cookie`.
 	const previewToken = request.nextUrl.searchParams.get("token") ?? undefined
 	if (previewToken) {
 		const cookieJar = await cookies()
-		cookieJar.set(prismicCookie.preview, previewToken)
+		cookieJar.set(prismicCookie.preview, previewToken, {
+			path: "/",
+			sameSite: "none",
+			secure: true,
+			httpOnly: false,
+		})
 	}
 
 	const previewURL = await client.resolvePreviewURL({

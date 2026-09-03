@@ -24,8 +24,15 @@ export async function exitPreview(): Promise<Response> {
 	;(await draftMode()).disable()
 
 	// `redirectToPreviewURL` writes the preview cookie, so `exitPreview`
-	// clears it to close the preview-cookie loop.
-	;(await cookies()).delete(prismicCookie.preview)
+	// clears it to close the preview-cookie loop. Attributes must match
+	// the write so the browser expires the cookie, including inside a
+	// cross-site iframe.
+	;(await cookies()).delete({
+		name: prismicCookie.preview,
+		path: "/",
+		sameSite: "none",
+		secure: true,
+	})
 
 	// `Cache-Control` header is used to prevent CDN-level caching.
 	return new Response(JSON.stringify({ success: true }), {
