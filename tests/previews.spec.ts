@@ -63,14 +63,12 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 	}
 
 	// Toolbar leftover: JSON value with `"<repo>.prismic.io"`, SameSite=Lax,
-	// not Secure. Expiring only None; Secure leaves this cookie; then
-	// `<PrismicPreview>` `start()` replays `/api/preview`.
+	// not Secure. Host-only (no Domain), matching `document.cookie`.
 	await page.context().addCookies([
 		{
 			name: cookie.preview,
 			value: JSON.stringify({ [`${repo.domain}.prismic.io`]: { preview: "toolbar" } }),
-			domain: "localhost",
-			path: "/",
+			url: new URL("/", page.url()).href,
 			sameSite: "Lax",
 			secure: false,
 			httpOnly: false,
@@ -79,6 +77,11 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 
 	await page.goto("/api/exit-preview")
 	expect((await page.context().cookies()).find((c) => c.name === cookie.preview)).toBeUndefined()
+
+	// The toolbar can write `io.prismic.preview` again on the next page load.
+	// Abort it so a `/api/preview` hit is from `<PrismicPreview>` `start()`.
+	await page.route("**/prismic.js*", (route) => route.abort())
+	await page.route("**/prismic-toolbar/**", (route) => route.abort())
 
 	const previewRequests: string[] = []
 	page.on("request", (request) => {
@@ -89,7 +92,6 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 
 	await appPage.goToDocument(pageDoc)
 	await expect(appPage.payload).toBeVisible()
-	await expect(appPage.toolbarScript).toHaveCount(1)
 	// `<PrismicPreview>` `start()` runs in `useEffect` after mount.
 	await page.waitForTimeout(1000)
 	expect(previewRequests).toEqual([])
