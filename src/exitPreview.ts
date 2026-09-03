@@ -24,14 +24,18 @@ export async function exitPreview(): Promise<Response> {
 	;(await draftMode()).disable()
 
 	// `redirectToPreviewURL` writes the preview cookie, so `exitPreview`
-	// clears it to close the preview-cookie loop. Attributes must match
-	// the write so the browser expires the cookie, including inside a
-	// cross-site iframe.
-	;(await cookies()).delete({
-		name: prismicCookie.preview,
+	// clears it to close the preview-cookie loop.
+	//
+	// Do not use `cookies().delete()`: on Next.js 13.4.5–15 it omits
+	// Secure/SameSite, so Chrome will not replace the iframe cookie
+	// (SameSite=None; Secure). Overwrite with an expired cookie that
+	// matches the write attributes instead.
+	;(await cookies()).set(prismicCookie.preview, "", {
 		path: "/",
 		sameSite: "none",
 		secure: true,
+		httpOnly: false,
+		expires: new Date(0),
 	})
 
 	// `Cache-Control` header is used to prevent CDN-level caching.

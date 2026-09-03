@@ -55,8 +55,7 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	await appPage.preview(updatedDocument)
-	const previewCookie = (await page.context().cookies()).find((c) => c.name === cookie.preview)
-	expect(previewCookie).toMatchObject({
+	expect((await page.context().cookies()).find((c) => c.name === cookie.preview)).toMatchObject({
 		name: cookie.preview,
 		path: "/",
 		sameSite: "None",
@@ -65,9 +64,10 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 	})
 
 	// Exit via the endpoint directly so the assertion does not depend on the
-	// Prismic toolbar loading.
+	// Prismic toolbar loading. The expired overwrite must clear this
+	// SameSite=None; Secure cookie, not leave it behind.
 	await page.goto("/api/exit-preview")
-	expect((await page.context().cookies()).map((c) => c.name)).not.toContain(cookie.preview)
+	expect((await page.context().cookies()).find((c) => c.name === cookie.preview)).toBeUndefined()
 })
 
 // We can't get a real shareable link because we aren't authenticated with a
