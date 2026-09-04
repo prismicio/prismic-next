@@ -10,11 +10,14 @@ const toolbarCookie = JSON.stringify({
 
 async function setupPreviewData(
 	request: APIRequestContext,
-	config: { token?: string; previewCookie?: string },
+	config: { token?: string | string[]; previewCookie?: string },
 ): Promise<void> {
 	const searchParams = new URLSearchParams()
 	if (config.token !== undefined) {
-		searchParams.set("token", config.token)
+		const tokens = Array.isArray(config.token) ? config.token : [config.token]
+		for (const token of tokens) {
+			searchParams.append("token", token)
+		}
 	}
 	if (config.previewCookie !== undefined) {
 		searchParams.set("previewCookie", config.previewCookie)
@@ -34,9 +37,9 @@ async function readPreviewRef(request: APIRequestContext): Promise<unknown> {
 
 test.describe("setPreviewData", () => {
 	test("stores a token query value as-is", async ({ request }) => {
-		await setupPreviewData(request, { token: "opaque-preview-token" })
+		await setupPreviewData(request, { token: "opaque-preview-ref" })
 
-		await expect(readPreviewRef(request)).resolves.toBe("opaque-preview-token")
+		await expect(readPreviewRef(request)).resolves.toBe("opaque-preview-ref")
 	})
 
 	test("does not unwrap a token query that looks like a toolbar jar", async ({ request }) => {
@@ -59,11 +62,22 @@ test.describe("setPreviewData", () => {
 
 	test("prefers the token query over a preview cookie", async ({ request }) => {
 		await setupPreviewData(request, {
-			token: "query-token",
+			token: "query-preview-ref",
 			previewCookie: toolbarCookie,
 		})
 
-		await expect(readPreviewRef(request)).resolves.toBe("query-token")
+		await expect(readPreviewRef(request)).resolves.toBe("query-preview-ref")
+	})
+
+	test("stores repeated token query values as an ordered array", async ({ request }) => {
+		const queryValues = ["query-preview-ref-one", "query-preview-ref-two"]
+
+		await setupPreviewData(request, {
+			token: queryValues,
+			previewCookie: toolbarCookie,
+		})
+
+		await expect(readPreviewRef(request)).resolves.toEqual(queryValues)
 	})
 
 	test("stores nothing when the preview cookie is JSON without a preview field", async ({
