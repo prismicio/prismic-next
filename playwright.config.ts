@@ -40,7 +40,7 @@ export default defineConfig({
 		},
 		{
 			name: "app-router",
-			testIgnore: ["cache-components.spec.ts", "build.spec.ts"],
+			testIgnore: ["cache-components.spec.ts", "build.spec.ts", "getPreviewRef.spec.ts"],
 			dependencies: ["setup"],
 			use: {
 				...devices["Desktop Chrome"],
@@ -50,12 +50,20 @@ export default defineConfig({
 		},
 		{
 			name: "pages-router",
-			testIgnore: ["cache-components.spec.ts", "build.spec.ts"],
+			testIgnore: ["cache-components.spec.ts", "build.spec.ts", "getPreviewRef.spec.ts"],
 			dependencies: ["setup", "app-router"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",
 				storageState: STORAGE_STATE,
+			},
+		},
+		{
+			name: "get-preview-ref",
+			testMatch: "getPreviewRef.spec.ts",
+			use: {
+				...devices["Desktop Chrome"],
+				baseURL: "http://localhost:4321",
 			},
 		},
 		{

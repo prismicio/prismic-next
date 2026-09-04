@@ -42,10 +42,6 @@ export async function getPreviewRef(): Promise<string | undefined> {
 		return
 	}
 
-	const isActiveCookie = cookie.includes("websitePreviewId=")
-	if (!isActiveCookie) {
-		return
-	}
-
+	// Draft Mode gates preview reads; the Content API validates the opaque ref.
 	return cookie
 }
