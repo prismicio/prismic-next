@@ -1,5 +1,6 @@
 import { cookie } from "@prismicio/client"
 
+import { previewRefFromCookie } from "../lib/previewRefFromCookie"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
 /** Configuration for `setPreviewData`. */
@@ -21,8 +22,19 @@ export type SetPreviewDataConfig = {
 
 /** Set Prismic preview data for Next.js's Preview Mode. */
 export function setPreviewData({ req, res }: SetPreviewDataConfig): void {
-	const ref = req.query.token || req.cookies[cookie.preview]
+	const token = req.query.token
+	if (token) {
+		res.setPreviewData({ ref: token })
+		return
+	}
 
+	// Cookie-only path: unwrap the toolbar jar. `token` stays as-is above.
+	const previewCookie = req.cookies[cookie.preview]
+	if (!previewCookie) {
+		return
+	}
+
+	const ref = previewRefFromCookie(previewCookie)
 	if (ref) {
 		res.setPreviewData({ ref })
 	}
