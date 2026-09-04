@@ -27,6 +27,11 @@ async function setupPreviewRef(
 }
 
 test.describe("getPreviewRef", () => {
+	const toolbarPreviewRef = "m-master-ref:p-overlay-ref"
+	const toolbarCookie = JSON.stringify({
+		"example.prismic.io": { preview: toolbarPreviewRef },
+	})
+
 	for (const previewCookie of [
 		"websitePreviewId=legacy-preview-ref",
 		"m-master-ref:p-overlay-ref",
@@ -41,6 +46,31 @@ test.describe("getPreviewRef", () => {
 			})
 		})
 	}
+
+	test("unwraps the toolbar JSON preview cookie when Draft Mode is enabled", async ({
+		request,
+	}) => {
+		await setupPreviewRef(request, { mode: "enable", previewCookie: toolbarCookie })
+
+		await expect(getPreviewRef(request)).resolves.toEqual({
+			draftModeEnabled: true,
+			previewRef: toolbarPreviewRef,
+		})
+	})
+
+	test("returns null when the preview cookie is JSON without a preview field", async ({
+		request,
+	}) => {
+		await setupPreviewRef(request, {
+			mode: "enable",
+			previewCookie: JSON.stringify({ "example.prismic.io": {} }),
+		})
+
+		await expect(getPreviewRef(request)).resolves.toEqual({
+			draftModeEnabled: true,
+			previewRef: null,
+		})
+	})
 
 	test("returns null when Draft Mode is disabled with a preview cookie", async ({ request }) => {
 		await setupPreviewRef(request, { mode: "disable", previewCookie: "opaque-preview-ref" })

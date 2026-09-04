@@ -42,6 +42,38 @@ export async function getPreviewRef(): Promise<string | undefined> {
 		return
 	}
 
-	// Draft Mode gates preview reads; the Content API validates the opaque ref.
-	return cookie
+	// Draft Mode gates preview reads. The cookie may be a raw token or the
+	// toolbar jar (`{ "<repo>.prismic.io": { preview } }`). Only `preview` is a
+	// Content API ref; the jar string is not.
+	return previewRefFromCookie(cookie)
+}
+
+/**
+ * Unwraps `io.prismic.preview` to a Content API ref.
+ *
+ * After toolbar `PreviewCookie.sync` / `upsertPreviewForDomain`, the cookie is
+ * `{ [domain]: { preview: string } }`. Returning that jar makes `enableAutoPreviews`
+ * / Cache Components send a non-ref (ParsingError / 404).
+ */
+function previewRefFromCookie(cookie: string): string | undefined {
+	try {
+		const parsed: unknown = JSON.parse(cookie)
+		if (parsed === null || typeof parsed !== "object" || Array.isArray(parsed)) {
+			return
+		}
+
+		for (const value of Object.values(parsed)) {
+			if (
+				value !== null &&
+				typeof value === "object" &&
+				!Array.isArray(value) &&
+				"preview" in value &&
+				typeof value.preview === "string"
+			) {
+				return value.preview
+			}
+		}
+	} catch {
+		return cookie
+	}
 }
