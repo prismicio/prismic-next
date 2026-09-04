@@ -62,6 +62,7 @@ function previewRefFromCookie(cookie: string): string | undefined {
 			return
 		}
 
+		const previewRefs: string[] = []
 		for (const value of Object.values(parsed)) {
 			if (
 				value !== null &&
@@ -70,9 +71,11 @@ function previewRefFromCookie(cookie: string): string | undefined {
 				"preview" in value &&
 				typeof value.preview === "string"
 			) {
-				return value.preview
+				previewRefs.push(value.preview)
 			}
 		}
+
+		return previewRefs.length === 1 ? previewRefs[0] : undefined
 	} catch {
 		return cookie
 	}

@@ -29,6 +29,7 @@ async function setupPreviewRef(
 test.describe("getPreviewRef", () => {
 	const toolbarPreviewRef = "m-master-ref:p-overlay-ref"
 	const toolbarCookie = JSON.stringify({
+		_tracker: "https://example.prismic.io",
 		"example.prismic.io": { preview: toolbarPreviewRef },
 	})
 
@@ -64,6 +65,35 @@ test.describe("getPreviewRef", () => {
 		await setupPreviewRef(request, {
 			mode: "enable",
 			previewCookie: JSON.stringify({ "example.prismic.io": {} }),
+		})
+
+		await expect(getPreviewRef(request)).resolves.toEqual({
+			draftModeEnabled: true,
+			previewRef: null,
+		})
+	})
+
+	test("returns null when the preview cookie is a JSON array", async ({ request }) => {
+		await setupPreviewRef(request, {
+			mode: "enable",
+			previewCookie: JSON.stringify([{ preview: toolbarPreviewRef }]),
+		})
+
+		await expect(getPreviewRef(request)).resolves.toEqual({
+			draftModeEnabled: true,
+			previewRef: null,
+		})
+	})
+
+	test("returns null when the preview cookie has multiple repository previews", async ({
+		request,
+	}) => {
+		await setupPreviewRef(request, {
+			mode: "enable",
+			previewCookie: JSON.stringify({
+				"example.prismic.io": { preview: toolbarPreviewRef },
+				"other.prismic.io": { preview: "other-preview-ref" },
+			}),
 		})
 
 		await expect(getPreviewRef(request)).resolves.toEqual({
