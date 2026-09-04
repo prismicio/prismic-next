@@ -1,4 +1,4 @@
-import type { Page } from "@playwright/test"
+import type { APIRequestContext } from "@playwright/test"
 
 import { expect, test } from "./infra"
 
@@ -9,7 +9,7 @@ const toolbarCookie = JSON.stringify({
 })
 
 async function setupPreviewData(
-	page: Page,
+	request: APIRequestContext,
 	config: { token?: string; previewCookie?: string },
 ): Promise<void> {
 	const searchParams = new URLSearchParams()
@@ -20,57 +20,59 @@ async function setupPreviewData(
 		searchParams.set("previewCookie", config.previewCookie)
 	}
 
-	const response = await page.request.get(`/api/set-preview-data-test?${searchParams}`)
+	const response = await request.get(`/api/set-preview-data-test?${searchParams}`)
 	expect(response.ok()).toBe(true)
 }
 
-async function readPreviewRef(page: Page): Promise<unknown> {
-	await page.goto("/set-preview-data-test")
-	const text = await page.getByTestId("preview-ref").textContent()
-	return JSON.parse(text ?? "null")
+async function readPreviewRef(request: APIRequestContext): Promise<unknown> {
+	const response = await request.get("/set-preview-data-test", {
+		headers: { Accept: "application/json" },
+	})
+	expect(response.ok()).toBe(true)
+	return (await response.json()).previewRef
 }
 
 test.describe("setPreviewData", () => {
-	test("stores a token query value as-is", async ({ page }) => {
-		await setupPreviewData(page, { token: "opaque-preview-token" })
+	test("stores a token query value as-is", async ({ request }) => {
+		await setupPreviewData(request, { token: "opaque-preview-token" })
 
-		await expect(readPreviewRef(page)).resolves.toBe("opaque-preview-token")
+		await expect(readPreviewRef(request)).resolves.toBe("opaque-preview-token")
 	})
 
-	test("does not unwrap a token query that looks like a toolbar jar", async ({ page }) => {
-		await setupPreviewData(page, { token: toolbarCookie })
+	test("does not unwrap a token query that looks like a toolbar jar", async ({ request }) => {
+		await setupPreviewData(request, { token: toolbarCookie })
 
-		await expect(readPreviewRef(page)).resolves.toBe(toolbarCookie)
+		await expect(readPreviewRef(request)).resolves.toBe(toolbarCookie)
 	})
 
-	test("unwraps a toolbar JSON preview cookie", async ({ page }) => {
-		await setupPreviewData(page, { previewCookie: toolbarCookie })
+	test("unwraps a toolbar JSON preview cookie", async ({ request }) => {
+		await setupPreviewData(request, { previewCookie: toolbarCookie })
 
-		await expect(readPreviewRef(page)).resolves.toBe(toolbarPreviewRef)
+		await expect(readPreviewRef(request)).resolves.toBe(toolbarPreviewRef)
 	})
 
-	test("stores a raw cookie token", async ({ page }) => {
-		await setupPreviewData(page, { previewCookie: "opaque-preview-ref" })
+	test("stores a raw cookie token", async ({ request }) => {
+		await setupPreviewData(request, { previewCookie: "opaque-preview-ref" })
 
-		await expect(readPreviewRef(page)).resolves.toBe("opaque-preview-ref")
+		await expect(readPreviewRef(request)).resolves.toBe("opaque-preview-ref")
 	})
 
-	test("prefers the token query over a preview cookie", async ({ page }) => {
-		await setupPreviewData(page, {
+	test("prefers the token query over a preview cookie", async ({ request }) => {
+		await setupPreviewData(request, {
 			token: "query-token",
 			previewCookie: toolbarCookie,
 		})
 
-		await expect(readPreviewRef(page)).resolves.toBe("query-token")
+		await expect(readPreviewRef(request)).resolves.toBe("query-token")
 	})
 
 	test("stores nothing when the preview cookie is JSON without a preview field", async ({
-		page,
+		request,
 	}) => {
-		await setupPreviewData(page, {
+		await setupPreviewData(request, {
 			previewCookie: JSON.stringify({ "example.prismic.io": {} }),
 		})
 
-		await expect(readPreviewRef(page)).resolves.toBeNull()
+		await expect(readPreviewRef(request)).resolves.toBeNull()
 	})
 })
