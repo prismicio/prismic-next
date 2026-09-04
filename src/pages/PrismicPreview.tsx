@@ -50,6 +50,10 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 
 	useEffect(() => {
 		const controller = new AbortController()
+		let starting: Promise<void> | undefined
+		let startController: AbortController | undefined
+		let updateRequested = false
+		let ending = false
 
 		window.addEventListener("prismicPreviewUpdate", onUpdate, {
 			signal: controller.signal,
@@ -74,6 +78,10 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 
 		function onEnd(event: Event) {
 			event.preventDefault()
+			if (ending) return
+			ending = true
+			updateRequested = false
+			startController?.abort()
 			fetch(router.basePath + exitPreviewURL, { signal: controller.signal })
 				.then((res) => {
 					if (!res.ok) {
@@ -87,41 +95,60 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 					refresh()
 				})
 				.catch(() => {})
+				.finally(() => {
+					ending = false
+				})
 		}
 
 		function onUpdate(event: Event) {
 			event.preventDefault()
+			if (ending) return
 			start()
 		}
 
 		function start() {
+			updateRequested = true
+			if (starting) return
+			const requestController = new AbortController()
+			startController = requestController
+
 			// We check `opaqueredirect` because we don't care if
 			// the redirect was successful or not. As long as it
 			// redirects, we know the endpoint exists and at least
 			// attempted to set preview data.
-			fetch(router.basePath + updatePreviewURL, {
-				redirect: "manual",
-				signal: controller.signal,
-			})
-				.then((res) => {
+			starting = (async () => {
+				do {
+					updateRequested = false
+					const res = await fetch(router.basePath + updatePreviewURL, {
+						redirect: "manual",
+						signal: requestController.signal,
+					})
 					if (res.type !== "opaqueredirect") {
 						console.error(
 							`[<PrismicPreview>] Failed to start or update the preview using "${updatePreviewURL}". Does it exist?`,
 						)
-
 						return
 					}
-
-					refresh()
-				})
+					// Preview Data captures the cookie when the request starts.
+					// If edits arrived meanwhile, store the latest ref before rendering.
+				} while (updateRequested && !requestController.signal.aborted)
+				if (!requestController.signal.aborted) refresh()
+			})()
 				.catch(() => {})
+				.finally(() => {
+					starting = undefined
+					startController = undefined
+				})
 		}
 
 		function refresh() {
 			router.replace(router.asPath, undefined, { scroll: false })
 		}
 
-		return () => controller.abort()
+		return () => {
+			controller.abort()
+			startController?.abort()
+		}
 	}, [exitPreviewURL, updatePreviewURL, repositoryName, router])
 
 	return (

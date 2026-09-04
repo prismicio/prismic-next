@@ -45,6 +45,8 @@ export default defineConfig({
 				"build.spec.ts",
 				"getPreviewRef.spec.ts",
 				"setPreviewData.spec.ts",
+				"previewClient.spec.ts",
+				"pagesPreviewClient.spec.ts",
 			],
 			dependencies: ["setup"],
 			use: {
@@ -60,6 +62,8 @@ export default defineConfig({
 				"build.spec.ts",
 				"getPreviewRef.spec.ts",
 				"setPreviewData.spec.ts",
+				"previewClient.spec.ts",
+				"pagesPreviewClient.spec.ts",
 			],
 			dependencies: ["setup", "app-router"],
 			use: {
@@ -70,7 +74,7 @@ export default defineConfig({
 		},
 		{
 			name: "get-preview-ref",
-			testMatch: "getPreviewRef.spec.ts",
+			testMatch: ["getPreviewRef.spec.ts", "previewClient.spec.ts"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4321",
@@ -78,7 +82,7 @@ export default defineConfig({
 		},
 		{
 			name: "set-preview-data",
-			testMatch: "setPreviewData.spec.ts",
+			testMatch: ["setPreviewData.spec.ts", "pagesPreviewClient.spec.ts"],
 			use: {
 				...devices["Desktop Chrome"],
 				baseURL: "http://localhost:4322",

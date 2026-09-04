@@ -27,6 +27,43 @@ async function setupPreviewRef(
 }
 
 test.describe("getPreviewRef", () => {
+	test("keeps Draft Mode enabled for cross-site iframe requests in development", async ({
+		request,
+	}) => {
+		const response = await request.get(
+			"/api/get-preview-ref-test?mode=bootstrap&token=opaque-preview-ref",
+			{ maxRedirects: 0 },
+		)
+		expect(response.status()).toBe(307)
+		const setCookies = response
+			.headersArray()
+			.filter((header) => header.name.toLowerCase() === "set-cookie")
+		for (const name of ["io.prismic.preview", "__prerender_bypass"]) {
+			const cookie = setCookies.find((header) => header.value.startsWith(`${name}=`))?.value
+			expect(cookie).toMatch(/; SameSite=None/i)
+			expect(cookie).toMatch(/; Secure/i)
+		}
+		await expect(getPreviewRef(request)).resolves.toEqual({
+			draftModeEnabled: true,
+			previewRef: "opaque-preview-ref",
+		})
+	})
+
+	test("exits the standard preview bootstrap and removes both preview cookies", async ({
+		request,
+	}) => {
+		await request.get("/api/get-preview-ref-test?mode=bootstrap&token=opaque-preview-ref")
+		const response = await request.get("/api/exit-preview")
+		expect(response.ok()).toBe(true)
+		const cookieNames = (await request.storageState()).cookies.map((cookie) => cookie.name)
+		expect(cookieNames).not.toContain("io.prismic.preview")
+		expect(cookieNames).not.toContain("__prerender_bypass")
+		await expect(getPreviewRef(request)).resolves.toEqual({
+			draftModeEnabled: false,
+			previewRef: null,
+		})
+	})
+
 	const toolbarPreviewRef = "m-master-ref:p-overlay-ref"
 	const toolbarCookie = JSON.stringify({
 		_tracker: "https://example.prismic.io",

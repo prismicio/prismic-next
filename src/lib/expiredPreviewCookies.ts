@@ -30,3 +30,8 @@ export function expiredDraftModeCookieHeaders(): string[] {
 		`${name}=; Path=/; ${expires}; SameSite=None; Secure; HttpOnly`,
 	]
 }
+
+/** Expire Pages Router's signed preview data in development and production. */
+export function expiredPreviewDataCookieHeaders(): string[] {
+	return expiredPreviewCookieHeaders("__next_preview_data").map((header) => `${header}; HttpOnly`)
+}

@@ -1,4 +1,8 @@
-import { expiredPreviewCookieHeaders } from "../lib/expiredPreviewCookies"
+import {
+	expiredDraftModeCookieHeaders,
+	expiredPreviewCookieHeaders,
+	expiredPreviewDataCookieHeaders,
+} from "../lib/expiredPreviewCookies"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
 /** Configuration for `exitPreview()`. */
@@ -40,10 +44,16 @@ export function exitPreview(config: ExitPreviewAPIRouteConfig): void {
 	// leftover `io.prismic.preview` shapes (toolbar Lax, not Secure; and the
 	// iframe SameSite=None; Secure write). If either survives,
 	// `<PrismicPreview>` calls `start()` → `/api/preview` and preview returns.
+	// Next also emits Lax expiries in development, so explicitly clear the
+	// Secure Next preview cookies written by `setPreviewData()`.
 	// Do not use `cookies().set` — that is the App Router helper. Do not
 	// replace the existing Set-Cookie header from `clearPreviewData()`.
 	const existingSetCookie = config.res.getHeader("Set-Cookie")
-	const expiredPreviewCookies = expiredPreviewCookieHeaders()
+	const expiredPreviewCookies = [
+		...expiredPreviewCookieHeaders(),
+		...expiredDraftModeCookieHeaders(),
+		...expiredPreviewDataCookieHeaders(),
+	]
 	config.res.setHeader(
 		"Set-Cookie",
 		existingSetCookie == null

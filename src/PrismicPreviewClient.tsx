@@ -24,6 +24,9 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 
 	useEffect(() => {
 		const controller = new AbortController()
+		let starting: Promise<void> | undefined
+		let startController: AbortController | undefined
+		let ending = false
 
 		window.addEventListener("prismicPreviewUpdate", onUpdate, {
 			signal: controller.signal,
@@ -42,14 +45,21 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 		// share links do not go to the `updatePreviewURL` like a normal
 		// preview.
 		if (hasCookieForRepository && !isDraftMode) {
+			start()
+		}
+
+		function start() {
+			if (starting) return
+			startController = new AbortController()
+
 			// We check `opaqueredirect` because we don't care if
 			// the redirect was successful or not. As long as it
 			// redirects, we know the endpoint exists and draft mode
 			// is active.
-			globalThis
+			starting = globalThis
 				.fetch(updatePreviewURL, {
 					redirect: "manual",
-					signal: controller.signal,
+					signal: startController.signal,
 				})
 				.then((res) => {
 					if (res.type !== "opaqueredirect") {
@@ -60,20 +70,35 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 						return
 					}
 
-					refresh()
+					// A soft refresh does not reset Next.js's not-found boundary
+					// when an unpublished page enters Draft Mode at the same URL.
+					// Only this initial activation navigates; active previews stay soft.
+					window.location.reload()
 				})
 				.catch(() => {
 					// noop
+				})
+				.finally(() => {
+					starting = undefined
+					startController = undefined
 				})
 		}
 
 		function onUpdate(event: Event) {
 			event.preventDefault()
-			refresh()
+			if (ending) return
+			if (isDraftMode) {
+				refresh()
+			} else {
+				start()
+			}
 		}
 
 		function onEnd(event: Event) {
 			event.preventDefault()
+			if (ending) return
+			ending = true
+			startController?.abort()
 			globalThis
 				.fetch(exitPreviewURL, { signal: controller.signal })
 				.then((res) => {
@@ -90,9 +115,15 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 				.catch(() => {
 					// noop
 				})
+				.finally(() => {
+					ending = false
+				})
 		}
 
-		return () => controller.abort()
+		return () => {
+			controller.abort()
+			startController?.abort()
+		}
 	}, [repositoryName, isDraftMode, updatePreviewURL, exitPreviewURL, refresh])
 
 	return null

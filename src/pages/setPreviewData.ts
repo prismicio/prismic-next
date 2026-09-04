@@ -22,20 +22,25 @@ export type SetPreviewDataConfig = {
 
 /** Set Prismic preview data for Next.js's Preview Mode. */
 export function setPreviewData({ req, res }: SetPreviewDataConfig): void {
-	const token = req.query.token
-	if (token) {
-		res.setPreviewData({ ref: token })
-		return
-	}
-
-	// Cookie-only path: unwrap the toolbar jar. `token` stays as-is above.
+	// Only unwrap the cookie. Query tokens, including arrays, stay as-is.
 	const previewCookie = req.cookies[cookie.preview]
-	if (!previewCookie) {
-		return
-	}
-
-	const ref = previewRefFromCookie(previewCookie)
+	const ref = req.query.token || (previewCookie && previewRefFromCookie(previewCookie))
 	if (ref) {
 		res.setPreviewData({ ref })
+
+		// Next.js uses Lax preview cookies in development. Preserve its
+		// signed/encrypted values and all other attributes, but allow both
+		// cookies to reach the site inside the editor's cross-site iframe.
+		const setCookie = res.getHeader("Set-Cookie")
+		if (typeof setCookie === "string" || Array.isArray(setCookie)) {
+			res.setHeader(
+				"Set-Cookie",
+				(typeof setCookie === "string" ? [setCookie] : setCookie).map((header) =>
+					/^__(?:prerender_bypass|next_preview_data)=/.test(header)
+						? `${header.replace(/;\s*(?:Secure|SameSite=[^;]*)(?=;|$)/gi, "")}; SameSite=None; Secure`
+						: header,
+				),
+			)
+		}
 	}
 }

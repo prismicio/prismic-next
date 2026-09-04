@@ -36,6 +36,37 @@ async function readPreviewRef(request: APIRequestContext): Promise<unknown> {
 }
 
 test.describe("setPreviewData", () => {
+	test("keeps Preview Mode cookies available to cross-site iframe requests in development", async ({
+		request,
+	}) => {
+		const response = await request.get("/api/set-preview-data-test?token=opaque-preview-ref")
+		expect(response.ok()).toBe(true)
+		const setCookies = response
+			.headersArray()
+			.filter((header) => header.name.toLowerCase() === "set-cookie")
+		expect(setCookies.map((header) => header.value)).toContain(
+			"unrelated=value; Path=/; HttpOnly; SameSite=Lax",
+		)
+		for (const name of ["__prerender_bypass", "__next_preview_data"]) {
+			const cookie = setCookies.find((header) => header.value.startsWith(`${name}=`))?.value
+			expect(cookie).toMatch(/; SameSite=None/i)
+			expect(cookie).toMatch(/; Secure/i)
+			expect(cookie).toMatch(/; HttpOnly/i)
+		}
+		await expect(readPreviewRef(request)).resolves.toBe("opaque-preview-ref")
+	})
+
+	test("exits Preview Mode and removes both Next preview cookies", async ({ request }) => {
+		await setupPreviewData(request, { token: "opaque-preview-ref" })
+		const response = await request.get("/api/exit-preview")
+		expect(response.ok()).toBe(true)
+		const cookieNames = (await request.storageState()).cookies.map((cookie) => cookie.name)
+		expect(cookieNames).not.toContain("__prerender_bypass")
+		expect(cookieNames).not.toContain("__next_preview_data")
+		expect(cookieNames).toContain("unrelated")
+		await expect(readPreviewRef(request)).resolves.toBeNull()
+	})
+
 	test("stores a token query value as-is", async ({ request }) => {
 		await setupPreviewData(request, { token: "opaque-preview-ref" })
 

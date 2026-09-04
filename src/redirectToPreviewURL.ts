@@ -74,6 +74,18 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	})
 
 	;(await draftMode()).enable()
+	// Next.js uses SameSite=Lax for Draft Mode in development. Keep its
+	// generated value, but allow the editor iframe to send this cookie too.
+	const cookieJar = await cookies()
+	const draftCookie = cookieJar.get("__prerender_bypass")
+	if (draftCookie) {
+		cookieJar.set(draftCookie.name, draftCookie.value, {
+			path: "/",
+			sameSite: "none",
+			secure: true,
+			httpOnly: true,
+		})
+	}
 
 	return redirect(previewURL)
 }
