@@ -1,5 +1,7 @@
 import { cookie as prismicCookie } from "@prismicio/client"
 
+import { previewRefFromCookie } from "./lib/previewRefFromCookie"
+
 /**
  * Reads the Prismic preview ref for the current request when an active preview session exists.
  *
@@ -42,10 +44,8 @@ export async function getPreviewRef(): Promise<string | undefined> {
 		return
 	}
 
-	const isActiveCookie = cookie.includes("websitePreviewId=")
-	if (!isActiveCookie) {
-		return
-	}
-
-	return cookie
+	// Draft Mode gates preview reads. The cookie may be a raw token or the
+	// toolbar jar (`{ "<repo>.prismic.io": { preview } }`). Only `preview` is a
+	// Content API ref; the jar string is not.
+	return previewRefFromCookie(cookie)
 }
