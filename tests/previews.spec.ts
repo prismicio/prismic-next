@@ -1,4 +1,4 @@
-import { cookie } from "@prismicio/client"
+import { cookie, createClient } from "@prismicio/client"
 
 import { test, expect } from "./infra"
 import { content } from "./infra/content/page"
@@ -90,4 +90,62 @@ test("supports custom exit endpoint", async ({ appPage, repo, pageDoc }) => {
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 })
 	await appPage.exitPreview()
 	await expect(appPage.payload).not.toContainText("foo")
+})
+
+test("previews and exits inside a cross-site iframe", async ({
+	page,
+	repo,
+	pageDoc,
+	baseURL,
+}, testInfo) => {
+	test.skip(testInfo.project.name !== "app-router", "App Router only")
+
+	const parentURL = new URL("/iframe", baseURL)
+	parentURL.hostname = "127.0.0.1"
+	// Chromium treats `page.route` responses as public, so the frame needs this to reach loopback.
+	await page.context().grantPermissions(["local-network-access"], { origin: parentURL.origin })
+
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const previewSession = await repo.createPreviewSession(updatedDocument)
+	await page.route(parentURL.href, (route) =>
+		route.fulfill({
+			contentType: "text/html",
+			body: `<iframe src="${previewSession.preview_url}">`,
+		}),
+	)
+	await page.goto(parentURL.href)
+	const frame = page.frameLocator("iframe")
+	await expect(frame.getByTestId("payload")).toContainText("foo")
+
+	await frame.locator("body").evaluate(() => fetch("/api/exit-preview"))
+	await frame.locator("body").evaluate(() => location.reload())
+	await expect(frame.getByTestId("payload")).toHaveText("published")
+})
+
+test("reads any preview ref but ignores the toolbar's inactive cookie", async ({
+	appPage,
+	page,
+	repo,
+	pageDoc,
+}, testInfo) => {
+	test.skip(testInfo.project.name !== "app-router", "App Router only")
+
+	// Draft Mode on, as when a site also uses it for something other than Prismic.
+	await page.request.get("/api/preview?token=placeholder")
+	const previewRef = page.getByTestId("preview-ref")
+
+	const trackerOnly = encodeURIComponent('{"_tracker":"abc123"}')
+	await page
+		.context()
+		.addCookies([{ name: cookie.preview, value: trackerOnly, domain: "localhost", path: "/" }])
+	await appPage.goToDocument(pageDoc)
+	await expect(previewRef).toBeEmpty()
+
+	const client = createClient(new URL("/api/v2", repo.urls.cdn).toString())
+	const { ref: masterRef } = await client.getMasterRef()
+	await page
+		.context()
+		.addCookies([{ name: cookie.preview, value: masterRef, domain: "localhost", path: "/" }])
+	await page.reload()
+	await expect(previewRef).toHaveText(masterRef)
 })

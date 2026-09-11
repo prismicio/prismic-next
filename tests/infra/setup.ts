@@ -18,6 +18,8 @@ setup("create repo", async ({ page, prismic }) => {
 			value: repository.domain,
 			domain: "localhost",
 			path: "/",
+			sameSite: "None",
+			secure: true,
 		},
 	])
 	await page.context().storageState({ path: STORAGE_STATE })
