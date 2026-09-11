@@ -48,19 +48,25 @@ test("restores published pageDoc on exit", async ({ appPage, repo, pageDoc }) =>
 	await expect(appPage.payload).not.toContainText("foo")
 })
 
-test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc }, testInfo) => {
+test("clears the preview cookies on exit", async ({ appPage, page, repo, pageDoc }, testInfo) => {
 	// `exitPreview` clears the Prismic preview cookie. The Pages Router stores
 	// preview state in Next.js preview data instead, so this is App Router only.
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
 
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	await appPage.preview(updatedDocument)
-	expect((await page.context().cookies()).map((c) => c.name)).toContain(cookie.preview)
+	const cookies = await page.context().cookies()
+	const previewCookie = cookies.find((c) => c.name === cookie.preview)
+	const draftModeCookie = cookies.find((c) => c.name === "__prerender_bypass")
+	expect(previewCookie).toMatchObject({ sameSite: "None", secure: true })
+	expect(draftModeCookie).toMatchObject({ sameSite: "None", secure: true })
 
 	// Exit via the endpoint directly so the assertion does not depend on the
 	// Prismic toolbar loading.
 	await page.goto("/api/exit-preview")
-	expect((await page.context().cookies()).map((c) => c.name)).not.toContain(cookie.preview)
+	const cookieNames = (await page.context().cookies()).map((c) => c.name)
+	expect(cookieNames).not.toContain(cookie.preview)
+	expect(cookieNames).not.toContain("__prerender_bypass")
 })
 
 // We can't get a real shareable link because we aren't authenticated with a
@@ -90,4 +96,24 @@ test("supports custom exit endpoint", async ({ appPage, repo, pageDoc }) => {
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 })
 	await appPage.exitPreview()
 	await expect(appPage.payload).not.toContainText("foo")
+})
+
+test("previews inside a cross-site iframe", async ({ page, repo, pageDoc, baseURL }, testInfo) => {
+	test.skip(testInfo.project.name !== "app-router", "App Router only")
+
+	const parentURL = new URL("/iframe", baseURL)
+	parentURL.hostname = "127.0.0.1"
+	// Chromium treats `page.route` responses as public, so the frame needs this to reach loopback.
+	await page.context().grantPermissions(["local-network-access"], { origin: parentURL.origin })
+
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const previewSession = await repo.createPreviewSession(updatedDocument)
+	await page.route(parentURL.href, (route) =>
+		route.fulfill({
+			contentType: "text/html",
+			body: `<iframe src="${previewSession.preview_url}">`,
+		}),
+	)
+	await page.goto(parentURL.href)
+	await expect(page.frameLocator("iframe").getByTestId("payload")).toContainText("foo")
 })
