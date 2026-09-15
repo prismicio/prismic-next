@@ -1,4 +1,4 @@
-import { cookie, createClient } from "@prismicio/client"
+import { cookie } from "@prismicio/client"
 
 import { test, expect } from "./infra"
 import { content } from "./infra/content/page"
@@ -96,6 +96,7 @@ test("previews and exits inside a cross-site iframe", async ({
 	page,
 	repo,
 	pageDoc,
+	masterRef,
 	baseURL,
 }, testInfo) => {
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
@@ -117,35 +118,40 @@ test("previews and exits inside a cross-site iframe", async ({
 	const frame = page.frameLocator("iframe")
 	await expect(frame.getByTestId("payload")).toContainText("foo")
 
+	// A ref update refreshes in place, so the marker survives.
+	await frame.locator("html").evaluate(
+		(html, [name, ref]) => {
+			html.dataset.marker = ""
+			document.cookie = `${name}=${ref}; SameSite=None; Secure`
+			window.dispatchEvent(new Event("prismicPreviewUpdate"))
+		},
+		[cookie.preview, masterRef],
+	)
+	await expect(frame.getByTestId("payload")).toHaveText("published")
+	await expect(frame.locator("html")).toHaveAttribute("data-marker", "")
+
 	await frame.locator("body").evaluate(() => fetch("/api/exit-preview"))
 	await frame.locator("body").evaluate(() => location.reload())
 	await expect(frame.getByTestId("payload")).toHaveText("published")
 })
 
 test("reads any preview ref but ignores the toolbar's inactive cookie", async ({
-	appPage,
 	page,
-	repo,
 	pageDoc,
+	masterRef,
 }, testInfo) => {
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
 
-	// Draft Mode on, as when a site also uses it for something other than Prismic.
-	await page.request.get("/api/preview?token=placeholder")
+	// The master ref stands in for a ref in any format.
+	await page.goto(`/api/preview?token=${masterRef}&documentId=${pageDoc.id}`)
 	const previewRef = page.getByTestId("preview-ref")
+	await expect(previewRef).toHaveText(masterRef)
 
+	// Draft Mode stays on, as when a site also uses it for something other than Prismic.
 	const trackerOnly = encodeURIComponent('{"_tracker":"abc123"}')
 	await page
 		.context()
 		.addCookies([{ name: cookie.preview, value: trackerOnly, domain: "localhost", path: "/" }])
-	await appPage.goToDocument(pageDoc)
-	await expect(previewRef).toBeEmpty()
-
-	const client = createClient(new URL("/api/v2", repo.urls.cdn).toString())
-	const { ref: masterRef } = await client.getMasterRef()
-	await page
-		.context()
-		.addCookies([{ name: cookie.preview, value: masterRef, domain: "localhost", path: "/" }])
 	await page.reload()
-	await expect(previewRef).toHaveText(masterRef)
+	await expect(previewRef).toBeEmpty()
 })

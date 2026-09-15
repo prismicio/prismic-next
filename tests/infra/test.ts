@@ -15,6 +15,7 @@ type Fixtures = {
 	imageDoc: CoreAPIDocument
 	pageDoc: CoreAPIDocument
 	unpublishedPageDoc: CoreAPIDocument
+	masterRef: string
 	appPage: AppPage
 }
 
@@ -51,6 +52,11 @@ export const test = base.extend<Fixtures>({
 	unpublishedPageDoc: async ({ repo }, use) => {
 		const document = await repo.getDocumentByUID("page", "unpublished")
 		await use(document)
+	},
+	masterRef: async ({ repo }, use) => {
+		const client = createClient(new URL("/api/v2", repo.urls.cdn).toString())
+		const { ref } = await client.getMasterRef()
+		await use(ref)
 	},
 	appPage: async ({ page, repo }, use) => {
 		const appPage = new AppPage(page, repo)
