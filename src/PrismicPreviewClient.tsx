@@ -36,15 +36,15 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 		})
 
 		const cookie = getPrismicPreviewCookie(window.document.cookie)
-		const cookieRepositoryName = cookie
-			? (decodeURIComponent(cookie).match(/"([^"]+)\.prismic\.io"/) || [])[1]
-			: undefined
-		const hasCookieForRepository = cookieRepositoryName === repositoryName
+		const decodedCookie = cookie ? decodeURIComponent(cookie) : undefined
+		// A raw ref, or the toolbar's JSON cookie with a preview for this repository.
+		const hasActiveCookie =
+			decodedCookie !== undefined &&
+			(!decodedCookie.startsWith("{") || decodedCookie.includes(`"${repositoryName}.prismic.io"`))
 
-		// Start the preview for preview share links. Previews from
-		// share links do not go to the `updatePreviewURL` like a normal
-		// preview.
-		if (hasCookieForRepository && !isDraftMode) {
+		// Start previews that did not go through `updatePreviewURL`, like
+		// share links, and restart after a preview ended in another tab.
+		if (hasActiveCookie && !isDraftMode) {
 			start()
 		}
 

@@ -57,6 +57,10 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	await appPage.preview(updatedDocument)
 	expect((await page.context().cookies()).map((c) => c.name)).toContain(cookie.preview)
+	// Older versions and the toolbar write the cookie with `SameSite=Lax`.
+	await page
+		.context()
+		.addCookies([{ name: cookie.preview, value: "leftover", domain: "localhost", path: "/" }])
 
 	// Exit via the endpoint directly so the assertion does not depend on the
 	// Prismic toolbar loading.
@@ -137,18 +141,71 @@ test("supports sharable links to unpublished documents", async ({
 		content({ payload: "foo" }),
 	)
 	const previewSession = await repo.createPreviewSession(updatedDocument)
-	await page
-		.context()
-		.addCookies([
-			{
-				name: cookie.preview,
-				value: activeCookie(repo, previewSession),
-				domain: "localhost",
-				path: "/",
-			},
-		])
+	await page.context().addCookies([
+		{
+			name: cookie.preview,
+			value: activeCookie(repo, previewSession),
+			domain: "localhost",
+			path: "/",
+		},
+	])
 	await page.goto("/unpublished")
 	await expect(page.getByTestId("payload")).toContainText("foo")
+})
+
+test("refreshes in place when the toolbar replaces the cookie", async ({
+	appPage,
+	page,
+	repo,
+	pageDoc,
+}, testInfo) => {
+	test.skip(testInfo.project.name !== "app-router", "App Router only")
+
+	const firstDraft = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	await appPage.preview(firstDraft)
+	await expect(appPage.payload).toContainText("foo")
+	const secondDraft = await repo.createDocumentDraft(firstDraft, content({ payload: "bar" }))
+	const previewSession = await repo.createPreviewSession(secondDraft)
+
+	const handled = await page.evaluate(
+		([name, value]) => {
+			document.documentElement.dataset.marker = ""
+			document.cookie = `${name}=${value}`
+			return !window.dispatchEvent(new CustomEvent("prismicPreviewStart", { cancelable: true }))
+		},
+		[cookie.preview, activeCookie(repo, previewSession)],
+	)
+	expect(handled).toBe(true)
+	await expect(appPage.payload).toContainText("bar")
+	await expect(page.locator("html")).toHaveAttribute("data-marker", "")
+})
+
+test("restarts a preview that ended in another tab", async ({
+	appPage,
+	page,
+	repo,
+	pageDoc,
+}, testInfo) => {
+	test.skip(testInfo.project.name !== "app-router", "App Router only")
+
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const previewSession = await repo.createPreviewSession(updatedDocument)
+	await page.goto(previewSession.preview_url)
+	await expect(appPage.payload).toContainText("foo")
+
+	// Another tab exits, then the editor pushes a ref to this page.
+	await page.evaluate(() => fetch("/api/exit-preview"))
+	await page.evaluate(
+		([name, value]) => {
+			document.cookie = `${name}=${value}`
+			window.dispatchEvent(new CustomEvent("prismicPreviewUpdate", { cancelable: true }))
+		},
+		[cookie.preview, new URL(previewSession.preview_url).searchParams.get("token")!],
+	)
+	const hasDraftMode = async () =>
+		(await page.context().cookies()).some((c) => c.name === "__prerender_bypass")
+	await expect.poll(hasDraftMode).toBe(true)
+	await expect(appPage.payload).toContainText("foo")
 })
 
 test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
