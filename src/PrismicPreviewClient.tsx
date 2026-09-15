@@ -25,6 +25,9 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 	useEffect(() => {
 		const controller = new AbortController()
 
+		window.addEventListener("prismicPreviewStart", onUpdate, {
+			signal: controller.signal,
+		})
 		window.addEventListener("prismicPreviewUpdate", onUpdate, {
 			signal: controller.signal,
 		})
@@ -42,6 +45,10 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 		// share links do not go to the `updatePreviewURL` like a normal
 		// preview.
 		if (hasCookieForRepository && !isDraftMode) {
+			start()
+		}
+
+		function start() {
 			// We check `opaqueredirect` because we don't care if
 			// the redirect was successful or not. As long as it
 			// redirects, we know the endpoint exists and draft mode
@@ -60,7 +67,8 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 						return
 					}
 
-					refresh()
+					// A soft refresh cannot leave Next.js's not-found boundary.
+					window.location.reload()
 				})
 				.catch(() => {
 					// noop
@@ -69,7 +77,11 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 
 		function onUpdate(event: Event) {
 			event.preventDefault()
-			refresh()
+			if (isDraftMode) {
+				refresh()
+			} else {
+				start()
+			}
 		}
 
 		function onEnd(event: Event) {
