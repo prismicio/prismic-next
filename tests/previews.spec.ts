@@ -181,7 +181,7 @@ test("refreshes in place when the toolbar replaces the cookie", async ({
 })
 
 test("restarts a preview that ended in another tab", async ({
-	appPage,
+	embed,
 	page,
 	repo,
 	pageDoc,
@@ -190,14 +190,15 @@ test("restarts a preview that ended in another tab", async ({
 
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	const previewSession = await repo.createPreviewSession(updatedDocument)
-	await page.goto(previewSession.preview_url)
-	await expect(appPage.payload).toContainText("foo")
+	const frame = await embed(previewSession.preview_url)
+	await expect(frame.getByTestId("payload")).toContainText("foo")
 
-	// Another tab exits, then the editor pushes a ref to this page.
-	await page.evaluate(() => fetch("/api/exit-preview"))
-	await page.evaluate(
-		([name, value]) => {
-			document.cookie = `${name}=${value}`
+	// Another tab exits, then the editor pushes a ref to this frame.
+	await frame.locator("body").evaluate(() => fetch("/api/exit-preview"))
+	await frame.locator("html").evaluate(
+		(html, [name, ref]) => {
+			html.dataset.marker = ""
+			document.cookie = `${name}=${ref}; SameSite=None; Secure`
 			window.dispatchEvent(new CustomEvent("prismicPreviewUpdate", { cancelable: true }))
 		},
 		[cookie.preview, new URL(previewSession.preview_url).searchParams.get("token")!],
@@ -205,7 +206,34 @@ test("restarts a preview that ended in another tab", async ({
 	const hasDraftMode = async () =>
 		(await page.context().cookies()).some((c) => c.name === "__prerender_bypass")
 	await expect.poll(hasDraftMode).toBe(true)
+	await expect(frame.getByTestId("payload")).toContainText("foo")
+	await expect(frame.locator("html")).toHaveAttribute("data-marker", "")
+})
+
+test("starts a preview in place on a published page", async ({
+	appPage,
+	page,
+	repo,
+	pageDoc,
+}, testInfo) => {
+	test.skip(testInfo.project.name !== "app-router", "App Router only")
+
+	await appPage.goToDocument(pageDoc)
+	await expect(appPage.payload).toHaveText("published")
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const previewSession = await repo.createPreviewSession(updatedDocument)
+
+	const handled = await page.evaluate(
+		([name, value]) => {
+			document.documentElement.dataset.marker = ""
+			document.cookie = `${name}=${value}`
+			return !window.dispatchEvent(new CustomEvent("prismicPreviewStart", { cancelable: true }))
+		},
+		[cookie.preview, activeCookie(repo, previewSession)],
+	)
+	expect(handled).toBe(true)
 	await expect(appPage.payload).toContainText("foo")
+	await expect(page.locator("html")).toHaveAttribute("data-marker", "")
 })
 
 test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
@@ -227,29 +255,16 @@ test("supports custom exit endpoint", async ({ appPage, repo, pageDoc }) => {
 })
 
 test("previews and exits inside a cross-site iframe", async ({
-	page,
+	embed,
 	repo,
 	pageDoc,
 	masterRef,
-	baseURL,
 }, testInfo) => {
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
 
-	const parentURL = new URL("/iframe", baseURL)
-	parentURL.hostname = "127.0.0.1"
-	// Chromium treats `page.route` responses as public, so the frame needs this to reach loopback.
-	await page.context().grantPermissions(["local-network-access"], { origin: parentURL.origin })
-
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	const previewSession = await repo.createPreviewSession(updatedDocument)
-	await page.route(parentURL.href, (route) =>
-		route.fulfill({
-			contentType: "text/html",
-			body: `<iframe src="${previewSession.preview_url}">`,
-		}),
-	)
-	await page.goto(parentURL.href)
-	const frame = page.frameLocator("iframe")
+	const frame = await embed(previewSession.preview_url)
 	await expect(frame.getByTestId("payload")).toContainText("foo")
 
 	// A ref update refreshes in place, so the marker survives.

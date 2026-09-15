@@ -68,7 +68,12 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 					}
 
 					// A soft refresh cannot leave Next.js's not-found boundary.
-					window.location.reload()
+					const [navigation] = performance.getEntriesByType("navigation")
+					if ((navigation as PerformanceNavigationTiming | undefined)?.responseStatus === 200) {
+						refresh()
+					} else {
+						window.location.reload()
+					}
 				})
 				.catch(() => {
 					// noop

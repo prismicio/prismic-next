@@ -1,6 +1,6 @@
 import assert from "assert"
 
-import type { Locator, Page } from "@playwright/test"
+import type { FrameLocator, Locator, Page } from "@playwright/test"
 import { test as base, expect } from "@playwright/test"
 import { createClient } from "@prismicio/client"
 
@@ -16,6 +16,7 @@ type Fixtures = {
 	pageDoc: CoreAPIDocument
 	unpublishedPageDoc: CoreAPIDocument
 	masterRef: string
+	embed: (src: string) => Promise<FrameLocator>
 	appPage: AppPage
 }
 
@@ -57,6 +58,20 @@ export const test = base.extend<Fixtures>({
 		const client = createClient(new URL("/api/v2", repo.urls.cdn).toString())
 		const { ref } = await client.getMasterRef()
 		await use(ref)
+	},
+	// Loads a URL inside an iframe on another site, as the Prismic editor does.
+	embed: async ({ page, baseURL }, use) => {
+		const parentURL = new URL("/iframe", baseURL)
+		parentURL.hostname = "127.0.0.1"
+		// Chromium treats `page.route` responses as public, so the frame needs this to reach loopback.
+		await page.context().grantPermissions(["local-network-access"], { origin: parentURL.origin })
+		await use(async (src) => {
+			await page.route(parentURL.href, (route) =>
+				route.fulfill({ contentType: "text/html", body: `<iframe src="${src}">` }),
+			)
+			await page.goto(parentURL.href)
+			return page.frameLocator("iframe")
+		})
 	},
 	appPage: async ({ page, repo }, use) => {
 		const appPage = new AppPage(page, repo)
