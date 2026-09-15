@@ -123,7 +123,9 @@ test("previews and exits inside a cross-site iframe", async ({
 		(html, [name, ref]) => {
 			html.dataset.marker = ""
 			document.cookie = `${name}=${ref}; SameSite=None; Secure`
-			window.dispatchEvent(new Event("prismicPreviewUpdate"))
+			window.dispatchEvent(
+				new CustomEvent("prismicPreviewUpdate", { detail: { ref }, cancelable: true }),
+			)
 		},
 		[cookie.preview, masterRef],
 	)
