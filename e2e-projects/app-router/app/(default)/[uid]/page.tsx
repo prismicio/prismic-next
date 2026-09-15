@@ -1,4 +1,5 @@
-import { PrismicPreview } from "@prismicio/next"
+import { getPreviewRef } from "@prismicio/next"
+import { notFound } from "next/navigation"
 import type { JSX } from "react"
 
 import { createClient } from "@/prismicio"
@@ -11,12 +12,12 @@ export default async function Page({
 	const { uid } = await params
 
 	const client = await createClient()
-	const page = await client.getByUID("page", uid)
+	const page = await client.getByUID("page", uid).catch(() => notFound())
 
 	return (
 		<>
 			<div data-testid="payload">{page.data.payload}</div>
-			<PrismicPreview repositoryName={client.repositoryName} />
+			<div data-testid="preview-ref">{await getPreviewRef()}</div>
 		</>
 	)
 }

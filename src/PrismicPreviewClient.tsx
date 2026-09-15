@@ -25,6 +25,9 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 	useEffect(() => {
 		const controller = new AbortController()
 
+		window.addEventListener("prismicPreviewStart", onUpdate, {
+			signal: controller.signal,
+		})
 		window.addEventListener("prismicPreviewUpdate", onUpdate, {
 			signal: controller.signal,
 		})
@@ -33,15 +36,19 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 		})
 
 		const cookie = getPrismicPreviewCookie(window.document.cookie)
-		const cookieRepositoryName = cookie
-			? (decodeURIComponent(cookie).match(/"([^"]+)\.prismic\.io"/) || [])[1]
-			: undefined
-		const hasCookieForRepository = cookieRepositoryName === repositoryName
+		const decodedCookie = cookie ? decodeURIComponent(cookie) : undefined
+		// A raw ref, or the toolbar's JSON cookie with a preview for this repository.
+		const hasActiveCookie =
+			decodedCookie !== undefined &&
+			(!decodedCookie.startsWith("{") || decodedCookie.includes(`"${repositoryName}.prismic.io"`))
 
-		// Start the preview for preview share links. Previews from
-		// share links do not go to the `updatePreviewURL` like a normal
-		// preview.
-		if (hasCookieForRepository && !isDraftMode) {
+		// Start previews that did not go through `updatePreviewURL`, like
+		// share links, and restart after a preview ended in another tab.
+		if (hasActiveCookie && !isDraftMode) {
+			start()
+		}
+
+		function start() {
 			// We check `opaqueredirect` because we don't care if
 			// the redirect was successful or not. As long as it
 			// redirects, we know the endpoint exists and draft mode
@@ -60,7 +67,13 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 						return
 					}
 
-					refresh()
+					// A soft refresh cannot leave Next.js's not-found boundary.
+					const [navigation] = performance.getEntriesByType("navigation")
+					if ((navigation as PerformanceNavigationTiming | undefined)?.responseStatus === 200) {
+						refresh()
+					} else {
+						window.location.reload()
+					}
 				})
 				.catch(() => {
 					// noop
@@ -69,7 +82,11 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 
 		function onUpdate(event: Event) {
 			event.preventDefault()
-			refresh()
+			if (isDraftMode) {
+				refresh()
+			} else {
+				start()
+			}
 		}
 
 		function onEnd(event: Event) {
