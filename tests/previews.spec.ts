@@ -1,7 +1,6 @@
 import { cookie } from "@prismicio/client"
 
 import { test, expect } from "./infra"
-import type { Repo } from "./infra/client"
 import { content } from "./infra/content/page"
 
 test.describe.configure({ mode: "serial" })
@@ -91,14 +90,14 @@ test("supports sharable links to unpublished documents", async ({
 		content({ payload: "foo" }),
 	)
 	const previewSession = await repo.createPreviewSession(updatedDocument)
-	await page.context().addCookies([
-		{
-			name: cookie.preview,
-			value: activeCookie(repo, previewSession),
-			domain: "localhost",
-			path: "/",
-		},
-	])
+	const ref = new URL(previewSession.preview_url).searchParams.get("token")
+	// The toolbar's cookie for an active preview session.
+	const jar = encodeURIComponent(
+		JSON.stringify({ [`${repo.domain}.prismic.io`]: { preview: ref } }),
+	)
+	await page
+		.context()
+		.addCookies([{ name: cookie.preview, value: jar, domain: "localhost", path: "/" }])
 	await page.goto("/unpublished")
 	await expect(page.getByTestId("payload")).toContainText("foo")
 })
@@ -119,7 +118,9 @@ test("restarts a preview that ended in another tab", async ({ embed, repo, pageD
 		(html, [name, ref]) => {
 			html.dataset.marker = ""
 			document.cookie = `${name}=${ref}; SameSite=None; Secure`
-			window.dispatchEvent(new CustomEvent("prismicPreviewUpdate", { cancelable: true }))
+			window.dispatchEvent(
+				new CustomEvent("prismicPreviewUpdate", { detail: { ref }, cancelable: true }),
+			)
 		},
 		[cookie.preview, new URL(nextSession.preview_url).searchParams.get("token")!],
 	)
@@ -139,14 +140,21 @@ test("starts a preview in place on a published page", async ({
 	await expect(appPage.payload).toHaveText("published")
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	const previewSession = await repo.createPreviewSession(updatedDocument)
+	const ref = new URL(previewSession.preview_url).searchParams.get("token")
+	const jar = encodeURIComponent(
+		JSON.stringify({ [`${repo.domain}.prismic.io`]: { preview: ref } }),
+	)
 
+	// The toolbar writes the cookie, then reloads unless the page handles the event.
 	const handled = await page.evaluate(
-		([name, value]) => {
+		([name, jar, ref]) => {
 			document.documentElement.dataset.marker = ""
-			document.cookie = `${name}=${value}`
-			return !window.dispatchEvent(new CustomEvent("prismicPreviewStart", { cancelable: true }))
+			document.cookie = `${name}=${jar}`
+			return !window.dispatchEvent(
+				new CustomEvent("prismicPreviewStart", { detail: { ref }, cancelable: true }),
+			)
 		},
-		[cookie.preview, activeCookie(repo, previewSession)],
+		[cookie.preview, jar, ref],
 	)
 	expect(handled).toBe(true)
 	await expect(appPage.payload).toContainText("foo")
@@ -223,9 +231,3 @@ test("reads any preview ref but ignores the toolbar's inactive cookie", async ({
 	await page.reload()
 	await expect(previewRef).toBeEmpty()
 })
-
-// The cookie the toolbar writes for an active preview session.
-function activeCookie(repo: Repo, previewSession: { preview_url: string }) {
-	const token = new URL(previewSession.preview_url).searchParams.get("token")
-	return encodeURIComponent(JSON.stringify({ [`${repo.domain}.prismic.io`]: { preview: token } }))
-}

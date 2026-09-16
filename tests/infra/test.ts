@@ -59,7 +59,6 @@ export const test = base.extend<Fixtures>({
 		const { ref } = await client.getMasterRef()
 		await use(ref)
 	},
-	// Loads a URL inside an iframe on another site, as the Prismic editor does.
 	embed: async ({ page, baseURL }, use) => {
 		const parentURL = new URL("/iframe", baseURL)
 		parentURL.hostname = "127.0.0.1"
