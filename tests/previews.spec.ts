@@ -86,7 +86,8 @@ test("starts Draft Mode when the toolbar finds a session on an unpublished page"
 }, testInfo) => {
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
 
-	expect((await page.goto("/unpublished"))?.status()).toBe(404)
+	await page.goto("/unpublished")
+	await expect(page.getByRole("heading")).toHaveText("Not found")
 	const updatedDocument = await repo.createDocumentDraft(
 		unpublishedPageDoc,
 		content({ payload: "foo" }),
