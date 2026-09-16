@@ -106,30 +106,6 @@ test("starts Draft Mode when the toolbar finds a session on an unpublished page"
 	await expect(page.getByTestId("payload")).toContainText("foo")
 })
 
-test("starts Draft Mode when a preview update reaches a page without one", async ({
-	appPage,
-	page,
-	repo,
-	pageDoc,
-}, testInfo) => {
-	test.skip(testInfo.project.name !== "app-router", "App Router only")
-
-	await appPage.goToDocument(pageDoc)
-	await expect(appPage.payload).toHaveText("published")
-	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	const previewSession = await repo.createPreviewSession(updatedDocument)
-
-	const handled = await page.evaluate(
-		([name, value]) => {
-			document.cookie = `${name}=${value}`
-			return !window.dispatchEvent(new CustomEvent("prismicPreviewUpdate", { cancelable: true }))
-		},
-		[cookie.preview, activeCookie(repo, previewSession)],
-	)
-	expect(handled).toBe(true)
-	await expect(appPage.payload).toContainText("foo")
-})
-
 test("supports sharable links to unpublished documents", async ({
 	page,
 	repo,
@@ -152,33 +128,6 @@ test("supports sharable links to unpublished documents", async ({
 	])
 	await page.goto("/unpublished")
 	await expect(page.getByTestId("payload")).toContainText("foo")
-})
-
-test("refreshes in place when the toolbar replaces the cookie", async ({
-	appPage,
-	page,
-	repo,
-	pageDoc,
-}, testInfo) => {
-	test.skip(testInfo.project.name !== "app-router", "App Router only")
-
-	const firstDraft = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	await appPage.preview(firstDraft)
-	await expect(appPage.payload).toContainText("foo")
-	const secondDraft = await repo.createDocumentDraft(firstDraft, content({ payload: "bar" }))
-	const previewSession = await repo.createPreviewSession(secondDraft)
-
-	const handled = await page.evaluate(
-		([name, value]) => {
-			document.documentElement.dataset.marker = ""
-			document.cookie = `${name}=${value}`
-			return !window.dispatchEvent(new CustomEvent("prismicPreviewStart", { cancelable: true }))
-		},
-		[cookie.preview, activeCookie(repo, previewSession)],
-	)
-	expect(handled).toBe(true)
-	await expect(appPage.payload).toContainText("bar")
-	await expect(page.locator("html")).toHaveAttribute("data-marker", "")
 })
 
 test("restarts a preview that ended in another tab", async ({

@@ -35,12 +35,11 @@ export const PrismicPreviewClient: FC<PrismicPreviewClientProps> = (props) => {
 			signal: controller.signal,
 		})
 
-		const cookie = getPrismicPreviewCookie(window.document.cookie)
-		const decodedCookie = cookie ? decodeURIComponent(cookie) : undefined
+		const cookie = decodeURIComponent(getPrismicPreviewCookie(window.document.cookie) ?? "")
 		// A raw ref, or the toolbar's JSON cookie with a preview for this repository.
 		const hasActiveCookie =
-			decodedCookie !== undefined &&
-			(!decodedCookie.startsWith("{") || decodedCookie.includes(`"${repositoryName}.prismic.io"`))
+			cookie !== "" &&
+			(!cookie.startsWith("{") || cookie.includes(`"${repositoryName}.prismic.io"`))
 
 		// Start previews that did not go through `updatePreviewURL`, like
 		// share links, and restart after a preview ended in another tab.
