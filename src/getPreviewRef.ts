@@ -42,8 +42,9 @@ export async function getPreviewRef(): Promise<string | undefined> {
 		return
 	}
 
-	const isActiveCookie = cookie.includes("websitePreviewId=")
-	if (!isActiveCookie) {
+	// The toolbar's JSON cookie has a `preview` entry only while a preview is active.
+	const isInactiveCookie = cookie.startsWith("{") && !cookie.includes('"preview"')
+	if (isInactiveCookie) {
 		return
 	}
 

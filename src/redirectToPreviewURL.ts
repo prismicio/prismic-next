@@ -50,10 +50,10 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	// to support unpublished previews. Without setting it here, the page
 	// will try to render without the preview cookie, leading to a
 	// PrismicNotFound error.
+	const cookieJar = await cookies()
 	const previewToken = request.nextUrl.searchParams.get("token") ?? undefined
 	if (previewToken) {
-		const cookieJar = await cookies()
-		cookieJar.set(prismicCookie.preview, previewToken)
+		cookieJar.set(prismicCookie.preview, previewToken, { sameSite: "none", secure: true })
 	}
 
 	const previewURL = await client.resolvePreviewURL({
@@ -64,6 +64,14 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	})
 
 	;(await draftMode()).enable()
+
+	// Next.js uses `SameSite=Lax` in development, which cross-site iframes drop.
+	cookieJar.set({
+		...cookieJar.get("__prerender_bypass")!,
+		httpOnly: true,
+		sameSite: "none",
+		secure: true,
+	})
 
 	return redirect(previewURL)
 }
