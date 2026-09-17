@@ -5,9 +5,9 @@ All notable changes to this project will be documented in this file. See [standa
 ## [2.3.2](https://github.com/prismicio/prismic-next/compare/v2.3.1...v2.3.2) (2026-09-17)
 
 
-### Miscellaneous Chores
+### Documentation
 
-* release 2.3.2 ([e585adc](https://github.com/prismicio/prismic-next/commit/e585adcc118279f311281534505c3dbf11bc1e20))
+* add a README note that tells AI agents to install the Prismic skill ([19f5e0a](https://github.com/prismicio/prismic-next/commit/19f5e0ab3d1b66b867906c73d500e847c2c6d290))
 
 ## [2.3.1](https://github.com/prismicio/prismic-next/compare/v2.3.0...v2.3.1) (2026-09-02)
 
