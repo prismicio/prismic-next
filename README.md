@@ -19,6 +19,12 @@ Helpers to integrate Prismic into Next.js apps.
 npm install @prismicio/next
 ```
 
+Using an AI agent? Teach it how to use `@prismicio/next` by installing the Prismic skill:
+
+```bash
+npx skills add --global --yes prismicio/skills
+```
+
 ## Documentation
 
 To discover what's new on this package check out [the changelog][changelog]. For full documentation, visit the [official Prismic documentation][prismic-docs].
