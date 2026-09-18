@@ -20,25 +20,23 @@ jobs:
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         id: release
         continue-on-error: true
         with:
           release-type: node
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
         if: steps.release.outputs.release_created == 'true'
-      - uses: actions/setup-node@v6
+      - uses: actions/setup-node@v7
         if: steps.release.outputs.release_created == 'true'
         with:
-          node-version: 24
+          node-version: 26
           registry-url: "https://registry.npmjs.org"
       - if: steps.release.outputs.release_created == 'true'
         run: npm ci
       - name: "Publish release"
         if: steps.release.outputs.release_created == 'true'
-        run: npm publish --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish
 
   prerelease:
     if: "!cancelled() && github.repository_owner == 'prismicio'"
@@ -50,10 +48,10 @@ jobs:
     env:
       MODE: production
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
-          node-version: 24
+          node-version: 26
           registry-url: "https://registry.npmjs.org"
 
       # Canary
@@ -76,9 +74,7 @@ jobs:
           CURRENT_VERSION=$(jq -r '.version' package.json)
           npm ci
           npm version "${CURRENT_VERSION}-canary.${SHORT_SHA}" --no-git-tag-version
-          npm publish --provenance --tag canary
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --tag canary
 
       # Pull request
       - name: "Deprecate previous PR prerelease"
@@ -101,9 +97,7 @@ jobs:
           CURRENT_VERSION=$(jq -r '.version' package.json)
           npm ci
           npm version "${CURRENT_VERSION}-pr.${{ github.event.number }}.${SHORT_SHA}" --no-git-tag-version
-          npm publish --provenance --tag pr-${{ github.event.number }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          npm publish --tag pr-${{ github.event.number }}
 
       - name: "Clean up PR prerelease"
         if: github.event_name == 'pull_request' && github.event.action == 'closed'
