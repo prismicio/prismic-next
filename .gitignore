@@ -3,6 +3,10 @@ dist
 examples/**/package-lock.json
 *.tgz
 
+# next.js
+e2e-projects/*/AGENTS.md
+e2e-projects/*/CLAUDE.md
+
 # os
 .DS_Store
 ._*
