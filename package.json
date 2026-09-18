@@ -63,7 +63,7 @@
 		"@prismicio/client": "^7.21.8",
 		"@types/node": "^25.5.2",
 		"@types/react": "^19.2.14",
-		"next": "16.2.3",
+		"next": "16.3.3",
 		"oxfmt": "^0.44.0",
 		"oxlint": "^1.59.0",
 		"playwright": "^1.59.1",
