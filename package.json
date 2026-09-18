@@ -54,23 +54,23 @@
 		"types": "tsc --noEmit"
 	},
 	"dependencies": {
-		"@prismicio/simulator": "^0.2.2",
+		"@prismicio/simulator": "^0.2.4",
 		"imgix-url-builder": "^0.0.6",
 		"lz-string": "^1.5.0"
 	},
 	"devDependencies": {
-		"@playwright/test": "^1.59.1",
-		"@prismicio/client": "^7.21.8",
-		"@types/node": "^25.5.2",
-		"@types/react": "^19.2.14",
-		"next": "16.2.3",
-		"oxfmt": "^0.44.0",
-		"oxlint": "^1.59.0",
-		"playwright": "^1.59.1",
-		"react": "^19.2.5",
-		"react-dom": "^19.2.5",
-		"tsdown": "^0.21.7",
-		"typescript": "^6.0.2"
+		"@playwright/test": "^1.63.0",
+		"@prismicio/client": "^7.22.1",
+		"@types/node": "^26.6.1",
+		"@types/react": "^19.3.0",
+		"next": "16.3.5",
+		"oxfmt": "^0.68.0",
+		"oxlint": "^1.83.0",
+		"playwright": "^1.63.0",
+		"react": "^19.3.0",
+		"react-dom": "^19.3.0",
+		"tsdown": "^0.22.14",
+		"typescript": "^7.0.2"
 	},
 	"peerDependencies": {
 		"@prismicio/client": "^7",
@@ -78,6 +78,6 @@
 		"react": "^18 || ^19"
 	},
 	"engines": {
-		"node": ">=20"
+		"node": ">=22"
 	}
 }

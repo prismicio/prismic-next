@@ -13,6 +13,8 @@ import { imgixLoader } from "./imgixLoader"
 import { devMsg } from "./lib/devMsg"
 import { resolveDefaultExport } from "./lib/resolveDefaultExport"
 
+const ResolvedImage = resolveDefaultExport(Image)
+
 const castInt = (input: string | number | undefined): number | undefined => {
 	if (typeof input === "number" || typeof input === "undefined") {
 		return input
@@ -113,14 +115,14 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 		return <>{fallback}</>
 	}
 
-	const resolvedImgixParams = imgixParams
-	for (const x in imgixParams) {
+	const resolvedImgixParams = { ...imgixParams }
+	for (const x in resolvedImgixParams) {
 		if (resolvedImgixParams[x as keyof typeof resolvedImgixParams] === null) {
 			resolvedImgixParams[x as keyof typeof resolvedImgixParams] = undefined
 		}
 	}
 
-	const src = buildURL(field.url, imgixParams as ImgixURLParams)
+	const src = buildURL(field.url, resolvedImgixParams as ImgixURLParams)
 
 	const ar = field.dimensions.width / field.dimensions.height
 
@@ -146,8 +148,6 @@ export const PrismicNextImage: ForwardRefExoticComponent<
 			src,
 		)
 	}
-
-	const ResolvedImage = resolveDefaultExport(Image)
 
 	return (
 		<ResolvedImage

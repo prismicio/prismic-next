@@ -5,6 +5,8 @@ import type { FC, ReactNode } from "react"
 import { resolveDefaultExport } from "./lib/resolveDefaultExport"
 import { PrismicPreviewClient } from "./PrismicPreviewClient"
 
+const ResolvedScript = resolveDefaultExport(Script)
+
 /** Props for `<PrismicPreview>`. */
 export type PrismicPreviewProps = {
 	/**
@@ -47,8 +49,6 @@ export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
 
 	const toolbarSrc = getToolbarSrc(repositoryName)
 	const isDraftMode = (await draftMode()).isEnabled
-
-	const ResolvedScript = resolveDefaultExport(Script)
 
 	return (
 		<>

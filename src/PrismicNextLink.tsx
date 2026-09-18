@@ -11,6 +11,8 @@ import { forwardRef } from "react"
 
 import { resolveDefaultExport } from "./lib/resolveDefaultExport"
 
+const ResolvedLink = resolveDefaultExport(Link)
+
 export type PrismicNextLinkProps = Omit<
 	ComponentProps<typeof Link>,
 	"field" | "document" | "href" | "rel"
@@ -53,8 +55,6 @@ export const PrismicNextLink = forwardRef<HTMLAnchorElement, PrismicNextLinkProp
 		if ("rel" in restProps && typeof restProps.rel !== "function") {
 			rel = restProps.rel
 		}
-
-		const ResolvedLink = resolveDefaultExport(Link)
 
 		return (
 			<ResolvedLink ref={ref} {...attrs} {...restProps} href={href} rel={rel}>
