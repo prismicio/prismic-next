@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.3](https://github.com/prismicio/prismic-next/compare/v2.3.2...v2.3.3) (2026-09-18)
+
+
+### Bug Fixes
+
+* support previews inside cross-site iframes ([#149](https://github.com/prismicio/prismic-next/issues/149)) ([5493fc2](https://github.com/prismicio/prismic-next/commit/5493fc25f07db5e0216727f8bbe235ebc932a6f4))
+
 ## [2.3.2](https://github.com/prismicio/prismic-next/compare/v2.3.1...v2.3.2) (2026-09-17)
 
 
