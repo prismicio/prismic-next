@@ -1,7 +1,7 @@
 # custom
+*.tgz
 dist
 examples/**/package-lock.json
-*.tgz
 
 # next.js
 e2e-projects/*/AGENTS.md
