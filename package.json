@@ -61,15 +61,15 @@
 	"devDependencies": {
 		"@playwright/test": "^1.63.0",
 		"@prismicio/client": "^7.22.1",
-		"@types/node": "^26.6.1",
+		"@types/node": "^26.6.2",
 		"@types/react": "^19.3.0",
 		"next": "16.3.5",
-		"oxfmt": "^0.68.0",
-		"oxlint": "^1.83.0",
+		"oxfmt": "^0.70.0",
+		"oxlint": "^1.85.0",
 		"playwright": "^1.63.0",
 		"react": "^19.3.0",
 		"react-dom": "^19.3.0",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.0",
 		"typescript": "^7.0.2"
 	},
 	"peerDependencies": {
