@@ -8,6 +8,9 @@ export default defineConfig({
 	format: ["esm", "cjs"],
 	platform: "neutral",
 	unbundle: true,
+	// `next` has no `exports` field, so Node.js needs the `.js` extension on
+	// `next/*` imports. tsdown 0.23 stopped adding it by default.
+	deps: { resolveDepSubpath: true },
 	plugins: [
 		{
 			// Next.js aliases `next/navigation` (not `next/navigation.js`) on the server.
