@@ -9,15 +9,15 @@ import { expect, test } from "@playwright/test"
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 
 function run(file: string, args: string[], cwd: string) {
-	execFileSync(file, args, { cwd, stdio: ["ignore", "ignore", "inherit"] })
+	return execFileSync(file, args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] })
 }
 
-for (const name of ["app-router", "pages-router", "next-15"]) {
+for (const name of ["app-router", "pages-router", "next-14", "next-15"]) {
 	test.describe.serial(name, () => {
 		const project = join(ROOT, "e2e-projects", name)
 
 		test("builds", () => {
-			if (name === "next-15") {
+			if (name === "next-14" || name === "next-15") {
 				// Install the package like a consumer. A workspace symlink would resolve `next/*` from
 				// the root `node_modules`, which is Next 16.
 				const dir = mkdtempSync(join(tmpdir(), "prismic-next-"))
@@ -28,7 +28,9 @@ for (const name of ["app-router", "pages-router", "next-15"]) {
 			}
 			// The build cache treats `node_modules` as unchanged while the package version is the same.
 			rmSync(join(project, ".next/cache"), { recursive: true, force: true })
-			run("npx", ["next", "build"], project)
+			const output = run("npx", ["next", "build"], project)
+			// Webpack reports a missing export as a warning, and the build still succeeds.
+			expect(output).not.toContain("Attempted import error")
 		})
 
 		test("tree-shakes unused exports", () => {

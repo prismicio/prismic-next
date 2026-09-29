@@ -1,0 +1,13 @@
+{
+	"name": "next-14",
+	"private": true,
+	"scripts": {
+		"build": "next build"
+	},
+	"dependencies": {
+		"@prismicio/client": "^7",
+		"next": "14",
+		"react": "18",
+		"react-dom": "18"
+	}
+}
