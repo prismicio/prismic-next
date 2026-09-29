@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process"
+import { spawnSync } from "node:child_process"
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -8,8 +8,13 @@ import { expect, test } from "@playwright/test"
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 
+// Returns stdout and stderr together: Next.js prints webpack warnings to stderr.
 function run(file: string, args: string[], cwd: string) {
-	return execFileSync(file, args, { cwd, encoding: "utf8", stdio: ["ignore", "pipe", "inherit"] })
+	const { status, stdout, stderr } = spawnSync(file, args, { cwd, encoding: "utf8" })
+	if (status !== 0) {
+		throw new Error(`\`${[file, ...args].join(" ")}\` failed:\n${stderr}`)
+	}
+	return stdout + stderr
 }
 
 for (const name of ["app-router", "pages-router", "next-14", "next-15"]) {
