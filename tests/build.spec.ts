@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process"
+import { spawnSync } from "node:child_process"
 import { mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
@@ -8,16 +8,21 @@ import { expect, test } from "@playwright/test"
 
 const ROOT = fileURLToPath(new URL("..", import.meta.url))
 
+// Returns stdout and stderr together: Next.js prints webpack warnings to stderr.
 function run(file: string, args: string[], cwd: string) {
-	execFileSync(file, args, { cwd, stdio: ["ignore", "ignore", "inherit"] })
+	const { status, stdout, stderr } = spawnSync(file, args, { cwd, encoding: "utf8" })
+	if (status !== 0) {
+		throw new Error(`\`${[file, ...args].join(" ")}\` failed:\n${stderr}`)
+	}
+	return stdout + stderr
 }
 
-for (const name of ["app-router", "pages-router", "next-15"]) {
+for (const name of ["app-router", "pages-router", "next-14", "next-15"]) {
 	test.describe.serial(name, () => {
 		const project = join(ROOT, "e2e-projects", name)
 
 		test("builds", () => {
-			if (name === "next-15") {
+			if (name === "next-14" || name === "next-15") {
 				// Install the package like a consumer. A workspace symlink would resolve `next/*` from
 				// the root `node_modules`, which is Next 16.
 				const dir = mkdtempSync(join(tmpdir(), "prismic-next-"))
@@ -28,7 +33,9 @@ for (const name of ["app-router", "pages-router", "next-15"]) {
 			}
 			// The build cache treats `node_modules` as unchanged while the package version is the same.
 			rmSync(join(project, ".next/cache"), { recursive: true, force: true })
-			run("npx", ["next", "build"], project)
+			const output = run("npx", ["next", "build"], project)
+			// Webpack reports a missing export as a warning, and the build still succeeds.
+			expect(output).not.toContain("Attempted import error")
 		})
 
 		test("tree-shakes unused exports", () => {
