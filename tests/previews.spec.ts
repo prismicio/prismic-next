@@ -1,9 +1,24 @@
+import { createRequire } from "node:module"
+
 import { cookie } from "@prismicio/client"
 
 import { test, expect } from "./infra"
 import { content } from "./infra/content/page"
 
 test.describe.configure({ mode: "serial" })
+
+// Next.js's bundled `jsonwebtoken` reads `SlowBuffer`, which Node.js 26
+// removed, so `res.setPreviewData()` throws. Remove once Next.js ships
+// https://github.com/vercel/next.js/pull/97492.
+function isPagesPreviewModeBroken(): boolean {
+	const require = createRequire(new URL("../e2e-projects/pages-router/", import.meta.url))
+	try {
+		require("next/dist/compiled/jsonwebtoken")
+		return false
+	} catch (error) {
+		return error instanceof TypeError
+	}
+}
 
 test("adds the Prismic toolbar script", async ({ appPage, pageDoc, repo }) => {
 	await appPage.goToDocument(pageDoc)
@@ -71,7 +86,12 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 // SESSION cookie. Instead, we can simulate what the link does by starting a new
 // preview session and directly navigating to the document. The app's preview
 // resolver URL is bypassed.
-test("supports sharable links", async ({ appPage, repo, pageDoc }) => {
+test("supports sharable links", async ({ appPage, repo, pageDoc }, testInfo) => {
+	test.skip(
+		testInfo.project.name === "pages-router" && isPagesPreviewModeBroken(),
+		"Next.js Preview Mode is broken on this Node.js version",
+	)
+
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	await repo.createPreviewSession(updatedDocument)
 	await appPage.goToDocument(pageDoc)
