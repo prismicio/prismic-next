@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.3.4](https://github.com/prismicio/prismic-next/compare/v2.3.3...v2.3.4) (2026-10-16)
+
+
+### Bug Fixes
+
+* only render simulator slices sent by Slice Machine or the Page Builder ([#172](https://github.com/prismicio/prismic-next/issues/172)) ([6340cef](https://github.com/prismicio/prismic-next/commit/6340cef759e945f20cb19eeb55d79fb23de6344e))
+
 ## [2.3.3](https://github.com/prismicio/prismic-next/compare/v2.3.2...v2.3.3) (2026-09-18)
 
 
