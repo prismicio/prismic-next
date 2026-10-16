@@ -12,12 +12,12 @@ function run(file: string, args: string[], cwd: string) {
 	execFileSync(file, args, { cwd, stdio: ["ignore", "ignore", "inherit"] })
 }
 
-for (const name of ["app-router", "pages-router", "next-15"]) {
+for (const name of ["app-router", "pages-router", "next-15", "next-14"]) {
 	test.describe.serial(name, () => {
 		const project = join(ROOT, "e2e-projects", name)
 
 		test("builds", () => {
-			if (name === "next-15") {
+			if (name === "next-15" || name === "next-14") {
 				// Install the package like a consumer. A workspace symlink would resolve `next/*` from
 				// the root `node_modules`, which is Next 16.
 				const dir = mkdtempSync(join(tmpdir(), "prismic-next-"))

@@ -39,8 +39,15 @@ export default defineConfig({
 			timeout: 5 * 60_000,
 		},
 		{
+			name: "slice-simulator",
+			testMatch: "SliceSimulator.spec.ts",
+			// Runs against the production builds, where the simulator only trusts Prismic.
+			dependencies: ["build"],
+			use: devices["Desktop Chrome"],
+		},
+		{
 			name: "app-router",
-			testIgnore: ["cache-components.spec.ts", "build.spec.ts"],
+			testIgnore: ["cache-components.spec.ts", "build.spec.ts", "SliceSimulator.spec.ts"],
 			dependencies: ["setup"],
 			use: {
 				...devices["Desktop Chrome"],
@@ -50,7 +57,7 @@ export default defineConfig({
 		},
 		{
 			name: "pages-router",
-			testIgnore: ["cache-components.spec.ts", "build.spec.ts"],
+			testIgnore: ["cache-components.spec.ts", "build.spec.ts", "SliceSimulator.spec.ts"],
 			dependencies: ["setup", "app-router"],
 			use: {
 				...devices["Desktop Chrome"],
