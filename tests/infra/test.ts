@@ -89,10 +89,7 @@ class AppPage {
 		this.page = page
 		this.repository = repository
 		this.toolbarScript = page.locator('script[src*="prismic.io/prismic.js"]')
-		// Toolbar v5, or the 4.x toolbar until v5 is released.
-		this.toolbar = page
-			.getByRole("region", { name: "Prismic preview" })
-			.or(page.locator("#prismic-toolbar-v2 .PreviewMenu"))
+		this.toolbar = page.getByRole("region", { name: "Prismic preview" })
 		this.payload = page.getByTestId("payload")
 	}
 
@@ -117,10 +114,7 @@ class AppPage {
 
 	async exitPreview() {
 		await this.waitForToolbar()
-		await this.toolbar
-			.getByRole("button", { name: "Exit preview" })
-			.or(this.toolbar.locator("img.Icon.x"))
-			.click()
+		await this.toolbar.getByRole("button", { name: "Exit preview" }).click()
 		await expect(this.toolbar).toHaveCount(0, {
 			timeout: PREVIEW_TOOLBAR_TIMEOUT,
 		})
