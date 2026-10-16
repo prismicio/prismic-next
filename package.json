@@ -18,6 +18,7 @@
 	"workspaces": [
 		".",
 		"e2e-projects/*",
+		"!e2e-projects/next-14",
 		"!e2e-projects/next-15"
 	],
 	"files": [
@@ -34,8 +35,8 @@
 			"require": "./dist/index.cjs"
 		},
 		"./pages": {
-			"import": "./dist/pages.js",
-			"require": "./dist/pages.cjs"
+			"import": "./dist/router-pages.js",
+			"require": "./dist/router-pages.cjs"
 		},
 		"./package.json": "./package.json"
 	},
