@@ -40,6 +40,7 @@ test("stores the preview session and clears it on exit", async ({
 	await page.goto("/api/exit-preview")
 	const names = (await page.context().cookies(baseURL)).map((c) => c.name)
 	expect(names).not.toContain("io.prismic.previewSession")
+	expect(names).not.toContain(cookie.preview)
 })
 
 test("supports previews on published documents", async ({ appPage, repo, pageDoc }) => {
