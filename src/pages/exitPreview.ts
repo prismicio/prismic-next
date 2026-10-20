@@ -1,3 +1,5 @@
+import { previewSessionCookie } from "../lib/previewSessionCookie"
+import { appendCookie } from "./appendCookie"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
 /** Configuration for `exitPreview()`. */
@@ -34,6 +36,7 @@ export type ExitPreviewAPIRouteConfig = {
  */
 export function exitPreview(config: ExitPreviewAPIRouteConfig): void {
 	config.res.clearPreviewData()
+	appendCookie(config.res, `${previewSessionCookie}=; Expires=${new Date(0).toUTCString()}`)
 
 	// `Cache-Control` header is used to prevent CDN-level caching.
 	config.res.setHeader("Cache-Control", "no-store")

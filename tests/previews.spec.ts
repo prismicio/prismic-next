@@ -8,8 +8,38 @@ test.describe.configure({ mode: "serial" })
 test("adds the Prismic toolbar script", async ({ appPage, pageDoc, repo }) => {
 	await appPage.goToDocument(pageDoc)
 	await expect(appPage.toolbarScript).toHaveCount(1)
-	const param = await appPage.getToolbarScriptParam("repo")
-	expect(param).toBe(repo.domain)
+	expect(await appPage.getToolbarScriptParam("repo")).toBe(repo.domain)
+	expect(await appPage.getToolbarScriptParam("v")).toBe("5")
+})
+
+test("stores the preview session and clears it on exit", async ({
+	appPage,
+	page,
+	repo,
+	pageDoc,
+	baseURL,
+}) => {
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const { preview_url, session_id } = await repo.createPreviewSession(updatedDocument)
+	await page.goto(`${preview_url}&session=${session_id}`)
+	await expect(appPage.payload).toContainText("foo")
+	// Prismic sets a cookie with the same name on the repository host.
+	const cookies = await page.context().cookies(baseURL)
+	expect(cookies).toContainEqual(
+		expect.objectContaining({
+			name: "io.prismic.previewSession",
+			value: session_id,
+			path: "/",
+			httpOnly: false,
+			secure: true,
+			sameSite: "None",
+		}),
+	)
+	expect(cookies.map((c) => c.name)).toContain(cookie.preview)
+
+	await page.goto("/api/exit-preview")
+	const names = (await page.context().cookies(baseURL)).map((c) => c.name)
+	expect(names).not.toContain("io.prismic.previewSession")
 })
 
 test("supports previews on published documents", async ({ appPage, repo, pageDoc }) => {

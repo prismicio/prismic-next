@@ -1,5 +1,6 @@
 import { cookie as prismicCookie, type Client, type LinkResolverFunction } from "@prismicio/client"
 
+import { previewSessionCookie } from "./lib/previewSessionCookie"
 import type { NextRequestLike } from "./types"
 
 export type RedirectToPreviewURLConfig = {
@@ -54,6 +55,12 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	const previewToken = request.nextUrl.searchParams.get("token") ?? undefined
 	if (previewToken) {
 		cookieJar.set(prismicCookie.preview, previewToken, { sameSite: "none", secure: true })
+	}
+
+	// The toolbar's v5 flow follows this session.
+	const session = request.nextUrl.searchParams.get("session")
+	if (session) {
+		cookieJar.set(previewSessionCookie, session, { sameSite: "none", secure: true })
 	}
 
 	const previewURL = await client.resolvePreviewURL({

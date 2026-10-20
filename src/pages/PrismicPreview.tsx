@@ -46,7 +46,8 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 
 	const router = useRouter()
 
-	const toolbarSrc = getToolbarSrc(repositoryName)
+	// TODO: Remove `&v=5` once `getToolbarSrc()` from `@prismicio/client` adds it.
+	const toolbarSrc = `${getToolbarSrc(repositoryName)}&v=5`
 
 	useEffect(() => {
 		const controller = new AbortController()
