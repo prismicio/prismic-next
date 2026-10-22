@@ -146,21 +146,26 @@ test("restarts a preview that ended in another tab", async ({ embed, repo, pageD
 	await expect(frame.locator("html")).toHaveAttribute("data-marker", "")
 })
 
-test("starts a preview in place on a published page", async ({
-	appPage,
-	page,
-	repo,
-	pageDoc,
-}, testInfo) => {
-	test.skip(testInfo.project.name !== "app-router", "App Router only")
-
-	await appPage.goToDocument(pageDoc)
-	await expect(appPage.payload).toHaveText("published")
+test("starts a preview from a share link", async ({ appPage, page, repo, pageDoc }, testInfo) => {
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	const previewSession = await repo.createPreviewSession(updatedDocument)
 	const ref = new URL(previewSession.preview_url).searchParams.get("token")!
+	// This test plays the toolbar's part.
+	await page.route("**/prismic.js?*", (route) => route.abort())
+	// The toolbar loads once the page is idle.
+	await page.goto(`/published#prismic-session=${previewSession.session_id}`, {
+		waitUntil: "networkidle",
+	})
+	await expect(appPage.payload).toHaveText("published")
 
-	// The toolbar writes the cookie, then reloads unless the page handles the event.
+	// The toolbar removes the hash when it loads, like this. The App Router adopts the URL from a
+	// `null` state, then writes its own state back.
+	await page.evaluate(() => {
+		const state = history.state?.__NA ? null : { ...history.state, as: location.pathname }
+		history.replaceState(state, "", location.pathname)
+	})
+	await page.waitForFunction(() => history.state)
+	// After a ping, the toolbar writes the cookie, then reloads unless the page handles the event.
 	const handled = await page.evaluate(
 		([name, ref]) => {
 			document.documentElement.dataset.marker = ""
@@ -173,7 +178,11 @@ test("starts a preview in place on a published page", async ({
 	)
 	expect(handled).toBe(true)
 	await expect(appPage.payload).toContainText("foo")
-	await expect(page.locator("html")).toHaveAttribute("data-marker", "")
+	expect(new URL(page.url()).hash).toBe("")
+	// The App Router refreshes in place. The Pages Router reloads.
+	if (testInfo.project.name === "app-router") {
+		await expect(page.locator("html")).toHaveAttribute("data-marker", "")
+	}
 })
 
 test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
