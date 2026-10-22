@@ -56,6 +56,12 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 		cookieJar.set(prismicCookie.preview, previewToken, { sameSite: "none", secure: true })
 	}
 
+	// The toolbar's v5 flow follows this session.
+	const session = request.nextUrl.searchParams.get("session")
+	if (session) {
+		cookieJar.set(prismicCookie.previewSession, session, { sameSite: "none", secure: true })
+	}
+
 	const previewURL = await client.resolvePreviewURL({
 		documentID,
 		previewToken,

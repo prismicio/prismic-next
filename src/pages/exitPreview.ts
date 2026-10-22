@@ -1,3 +1,6 @@
+import { cookie as prismicCookie } from "@prismicio/client"
+
+import { appendCookie } from "./appendCookie"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
 /** Configuration for `exitPreview()`. */
@@ -34,6 +37,9 @@ export type ExitPreviewAPIRouteConfig = {
  */
 export function exitPreview(config: ExitPreviewAPIRouteConfig): void {
 	config.res.clearPreviewData()
+	for (const name of [prismicCookie.preview, prismicCookie.previewSession]) {
+		appendCookie(config.res, `${name}=; Expires=${new Date(0).toUTCString()}`)
+	}
 
 	// `Cache-Control` header is used to prevent CDN-level caching.
 	config.res.setHeader("Cache-Control", "no-store")

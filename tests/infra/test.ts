@@ -2,7 +2,7 @@ import assert from "assert"
 
 import type { FrameLocator, Locator, Page } from "@playwright/test"
 import { test as base, expect } from "@playwright/test"
-import { createClient } from "@prismicio/client"
+import { cookie, createClient } from "@prismicio/client"
 
 /* oxlint-disable rules-of-hooks */
 import type { CoreAPIDocument, Repo } from "./client"
@@ -103,7 +103,19 @@ class AppPage {
 
 	async preview(document: CoreAPIDocument) {
 		const previewSession = await this.repository.createPreviewSession(document)
-		await this.page.goto(previewSession.preview_url)
+		// The editor adds the session for websites that opt into the toolbar's v5.
+		await this.page.goto(`${previewSession.preview_url}&session=${previewSession.session_id}`)
+		return previewSession
+	}
+
+	/** Stores a preview session like a share link, which skips the app's preview route. */
+	async share(document: CoreAPIDocument) {
+		const { session_id } = await this.repository.createPreviewSession(document)
+		await this.page
+			.context()
+			.addCookies([
+				{ name: cookie.previewSession, value: session_id, domain: "localhost", path: "/" },
+			])
 	}
 
 	async waitForToolbar() {
