@@ -1,6 +1,5 @@
 import { cookie as prismicCookie, type LinkResolverFunction, type Client } from "@prismicio/client"
 
-import { previewSessionCookie } from "../lib/previewSessionCookie"
 import { appendCookie } from "./appendCookie"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
@@ -56,12 +55,10 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 
 	const previewToken = req.query.token?.toString()
 
-	// The toolbar's v5 flow follows this session. It only starts with a preview
-	// cookie, which the Pages Router does not set otherwise.
+	// The toolbar's v5 flow follows this session.
 	const session = req.query.session?.toString()
-	if (previewToken && session) {
-		appendCookie(res, `${prismicCookie.preview}=${encodeURIComponent(previewToken)}`)
-		appendCookie(res, `${previewSessionCookie}=${encodeURIComponent(session)}`)
+	if (session) {
+		appendCookie(res, `${prismicCookie.previewSession}=${encodeURIComponent(session)}`)
 	}
 
 	const previewURL = await client.resolvePreviewURL({

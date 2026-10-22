@@ -7,7 +7,7 @@
 		"start": "next start --port=4322"
 	},
 	"dependencies": {
-		"@prismicio/client": "^7.22.3",
+		"@prismicio/client": "7.22.3-pr.477.5e5ad22",
 		"@prismicio/next": "*",
 		"next": "16.4.2",
 		"react": "19.3.1",

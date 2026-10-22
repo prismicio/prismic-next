@@ -1,7 +1,5 @@
 import { cookie as prismicCookie } from "@prismicio/client"
 
-import { previewSessionCookie } from "./lib/previewSessionCookie"
-
 /**
  * Ends a Prismic preview session within a Next.js app. This function should be used in a Router
  * Handler.
@@ -26,7 +24,7 @@ export async function exitPreview(): Promise<Response> {
 	const cookieJar = await cookies()
 	cookieJar.delete({ name: "__prerender_bypass", sameSite: "none", secure: true })
 	cookieJar.delete({ name: prismicCookie.preview, sameSite: "none", secure: true })
-	cookieJar.delete({ name: previewSessionCookie, sameSite: "none", secure: true })
+	cookieJar.delete({ name: prismicCookie.previewSession, sameSite: "none", secure: true })
 
 	// `Cache-Control` header is used to prevent CDN-level caching.
 	return new Response(JSON.stringify({ success: true }), {
