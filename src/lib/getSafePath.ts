@@ -5,8 +5,16 @@ export function getSafePath(path: string | null | undefined): string | undefined
 	}
 
 	const origin = "https://placeholder.invalid"
-	const url = new URL(path, origin)
-	if (url.origin === origin) {
-		return url.href.slice(origin.length)
+	let url: URL
+	try {
+		url = new URL(path, origin)
+	} catch {
+		return
+	}
+
+	// Dot segments can normalize `/a/..//evil.com` to `//evil.com`, which leaves the origin.
+	const safePath = url.href.slice(origin.length)
+	if (url.origin === origin && !safePath.startsWith("//")) {
+		return safePath
 	}
 }

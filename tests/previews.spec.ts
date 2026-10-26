@@ -111,7 +111,15 @@ test("redirects sharable links only to paths on the website", async ({ page, rep
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
 	const { preview_url, session_id } = await repo.createPreviewSession(updatedDocument)
 	const token = new URL(preview_url).searchParams.get("token")!
-	for (const path of ["//evil.com", "/\\evil.com", "https://evil.com"]) {
+	const paths = [
+		"//evil.com",
+		"/\\evil.com",
+		"https://evil.com",
+		"/a/..//evil.com",
+		"/%2e//evil.com",
+		"/\t/[",
+	]
+	for (const path of paths) {
 		const params = new URLSearchParams({ token, session: session_id, path })
 		const res = await page.request.get(`/api/preview?${params}`, { maxRedirects: 0 })
 		expect(res.headers().location, path).toBe("/")
@@ -165,6 +173,8 @@ test("starts a preview in place on a published page", async ({
 }, testInfo) => {
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
 
+	// The toolbar's v5 ends previews without a session.
+	await page.route("**/prismic.js?*", (route) => route.abort())
 	await appPage.goToDocument(pageDoc)
 	await expect(appPage.payload).toHaveText("published")
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
