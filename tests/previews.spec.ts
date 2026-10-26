@@ -103,10 +103,8 @@ test("supports sharable links", async ({ appPage, page, repo, pageDoc, baseURL }
 	await appPage.share(updatedDocument, path)
 	await expect(page).toHaveURL((url) => url.href.endsWith(path))
 	await expect(appPage.payload).toContainText("foo")
-	// The Pages Router keeps the ref in Next.js preview data, so the toolbar writes its cookie.
-	await expect
-		.poll(async () => (await page.context().cookies(baseURL)).map((c) => c.name))
-		.toEqual(expect.arrayContaining([cookie.preview, cookie.previewSession]))
+	const names = (await page.context().cookies(baseURL)).map((c) => c.name)
+	expect(names).toEqual(expect.arrayContaining([cookie.preview, cookie.previewSession]))
 })
 
 test("redirects sharable links only to paths on the website", async ({ page, repo, pageDoc }) => {

@@ -56,10 +56,14 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 
 	const previewToken = req.query.token?.toString()
 
-	// The toolbar's v5 flow follows this session.
+	// The toolbar's v5 flow follows this session from the ref the page shows. Without that ref, its
+	// first ping would start the preview again, racing an early exit.
 	const session = req.query.session?.toString()
 	if (session) {
 		appendCookie(res, `${prismicCookie.previewSession}=${encodeURIComponent(session)}`)
+		if (previewToken) {
+			appendCookie(res, `${prismicCookie.preview}=${encodeURIComponent(previewToken)}`)
+		}
 	}
 
 	// Share links return to the page they were opened from. Its path includes `basePath`.
