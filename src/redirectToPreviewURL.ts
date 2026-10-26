@@ -1,5 +1,6 @@
 import { cookie as prismicCookie, type Client, type LinkResolverFunction } from "@prismicio/client"
 
+import { getSafePath } from "./lib/getSafePath"
 import type { NextRequestLike } from "./types"
 
 export type RedirectToPreviewURLConfig = {
@@ -62,12 +63,15 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 		cookieJar.set(prismicCookie.previewSession, session, { sameSite: "none", secure: true })
 	}
 
-	const previewURL = await client.resolvePreviewURL({
-		documentID,
-		previewToken,
-		defaultURL,
-		linkResolver,
-	})
+	// Share links return to the page they were opened from.
+	const previewURL =
+		getSafePath(request.nextUrl.searchParams.get("path")) ??
+		(await client.resolvePreviewURL({
+			documentID,
+			previewToken,
+			defaultURL,
+			linkResolver,
+		}))
 
 	;(await draftMode()).enable()
 

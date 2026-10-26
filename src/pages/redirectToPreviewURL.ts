@@ -1,5 +1,6 @@
 import { cookie as prismicCookie, type LinkResolverFunction, type Client } from "@prismicio/client"
 
+import { getSafePath } from "../lib/getSafePath"
 import { appendCookie } from "./appendCookie"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
@@ -59,6 +60,14 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	const session = req.query.session?.toString()
 	if (session) {
 		appendCookie(res, `${prismicCookie.previewSession}=${encodeURIComponent(session)}`)
+	}
+
+	// Share links return to the page they were opened from. Its path includes `basePath`.
+	const path = getSafePath(req.query.path?.toString())
+	if (path) {
+		res.redirect(path)
+
+		return
 	}
 
 	const previewURL = await client.resolvePreviewURL({

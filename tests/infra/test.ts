@@ -2,7 +2,7 @@ import assert from "assert"
 
 import type { FrameLocator, Locator, Page } from "@playwright/test"
 import { test as base, expect } from "@playwright/test"
-import { cookie, createClient } from "@prismicio/client"
+import { createClient } from "@prismicio/client"
 
 /* oxlint-disable rules-of-hooks */
 import type { CoreAPIDocument, Repo } from "./client"
@@ -108,14 +108,13 @@ class AppPage {
 		return previewSession
 	}
 
-	/** Stores a preview session like a share link, which skips the app's preview route. */
-	async share(document: CoreAPIDocument) {
-		const { session_id } = await this.repository.createPreviewSession(document)
-		await this.page
-			.context()
-			.addCookies([
-				{ name: cookie.previewSession, value: session_id, domain: "localhost", path: "/" },
-			])
+	/** Opens a share link, which goes through the app's preview route to `path`. */
+	async share(document: CoreAPIDocument, path: string) {
+		const { preview_url, session_id } = await this.repository.createPreviewSession(document)
+		const token = new URL(preview_url).searchParams.get("token")!
+		await this.page.goto(
+			`/api/preview?${new URLSearchParams({ token, session: session_id, path })}`,
+		)
 	}
 
 	async waitForToolbar() {

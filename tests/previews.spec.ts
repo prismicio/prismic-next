@@ -10,6 +10,7 @@ test("adds the Prismic toolbar script", async ({ appPage, pageDoc, repo }) => {
 	await expect(appPage.toolbarScript).toHaveCount(1)
 	expect(await appPage.getToolbarScriptParam("repo")).toBe(repo.domain)
 	expect(await appPage.getToolbarScriptParam("v")).toBe("5")
+	await expect(appPage.toolbarScript).toHaveAttribute("data-preview-url", "/api/preview")
 })
 
 test("stores the preview session and clears it on exit", async ({
@@ -96,28 +97,40 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 	expect((await page.context().cookies()).map((c) => c.name)).not.toContain(cookie.preview)
 })
 
-test("supports sharable links", async ({ appPage, repo, pageDoc }) => {
+test("supports sharable links", async ({ appPage, page, repo, pageDoc, baseURL }) => {
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	await appPage.share(updatedDocument)
-	await appPage.goToDocument(pageDoc)
+	const path = "/published?query=1#hash"
+	await appPage.share(updatedDocument, path)
+	await expect(page).toHaveURL((url) => url.href.endsWith(path))
 	await expect(appPage.payload).toContainText("foo")
+	// The Pages Router keeps the ref in Next.js preview data, so the toolbar writes its cookie.
+	await expect
+		.poll(async () => (await page.context().cookies(baseURL)).map((c) => c.name))
+		.toEqual(expect.arrayContaining([cookie.preview, cookie.previewSession]))
+})
+
+test("redirects sharable links only to paths on the website", async ({ page, repo, pageDoc }) => {
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const { preview_url, session_id } = await repo.createPreviewSession(updatedDocument)
+	const token = new URL(preview_url).searchParams.get("token")!
+	for (const path of ["//evil.com", "/\\evil.com", "https://evil.com"]) {
+		const params = new URLSearchParams({ token, session: session_id, path })
+		const res = await page.request.get(`/api/preview?${params}`, { maxRedirects: 0 })
+		expect(res.headers().location, path).toBe("/")
+	}
 })
 
 test("supports sharable links to unpublished documents", async ({
 	appPage,
-	page,
 	repo,
 	unpublishedPageDoc,
-}, testInfo) => {
-	test.skip(testInfo.project.name !== "app-router", "App Router only")
-
+}) => {
 	const updatedDocument = await repo.createDocumentDraft(
 		unpublishedPageDoc,
 		content({ payload: "foo" }),
 	)
-	await appPage.share(updatedDocument)
-	await page.goto("/unpublished")
-	await expect(page.getByTestId("payload")).toContainText("foo")
+	await appPage.share(updatedDocument, "/unpublished")
+	await expect(appPage.payload).toContainText("foo")
 })
 
 test("restarts a preview that ended in another tab", async ({ embed, repo, pageDoc }, testInfo) => {
@@ -178,8 +191,7 @@ test("starts a preview in place on a published page", async ({
 
 test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	await appPage.share(updatedDocument)
-	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints")
+	await appPage.share(updatedDocument, "/with-custom-preview-endpoints/published")
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 })
 	await repo.createDocumentDraft(updatedDocument, content({ payload: "bar" }))
 	await expect(appPage.payload).toContainText("bar")
@@ -187,8 +199,7 @@ test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
 
 test("supports custom exit endpoint", async ({ appPage, repo, pageDoc }) => {
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	await appPage.share(updatedDocument)
-	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints")
+	await appPage.share(updatedDocument, "/with-custom-preview-endpoints/published")
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 })
 	await appPage.exitPreview()
 	await expect(appPage.payload).not.toContainText("foo")
