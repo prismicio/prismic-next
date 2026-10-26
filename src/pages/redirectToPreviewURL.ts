@@ -66,7 +66,7 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 		}
 	}
 
-	// Share links return to the page they were opened from. Its path includes `basePath`.
+	// Share links return to the page they were opened from.
 	const path = getSafePath(req.query.path?.toString())
 	if (path) {
 		res.redirect(path)
