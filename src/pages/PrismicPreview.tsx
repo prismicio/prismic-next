@@ -51,9 +51,6 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 	useEffect(() => {
 		const controller = new AbortController()
 
-		window.addEventListener("prismicPreviewStart", onStart, {
-			signal: controller.signal,
-		})
 		window.addEventListener("prismicPreviewUpdate", onUpdate, {
 			signal: controller.signal,
 		})
@@ -92,19 +89,12 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 				.catch(() => {})
 		}
 
-		function onStart(event: Event) {
-			event.preventDefault()
-			// `router.replace()` would restore the share link's hash and, as a
-			// hash-only change, skip `getServerSideProps`.
-			start(() => window.location.reload())
-		}
-
 		function onUpdate(event: Event) {
 			event.preventDefault()
 			start()
 		}
 
-		function start(onStarted = refresh) {
+		function start() {
 			// We check `opaqueredirect` because we don't care if
 			// the redirect was successful or not. As long as it
 			// redirects, we know the endpoint exists and at least
@@ -122,7 +112,7 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 						return
 					}
 
-					onStarted()
+					refresh()
 				})
 				.catch(() => {})
 		}
