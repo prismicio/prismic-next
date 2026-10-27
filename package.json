@@ -61,7 +61,7 @@
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.64.1",
-		"@prismicio/client": "7.22.3-pr.477.5e5ad22",
+		"@prismicio/client": "^7.23.0",
 		"@types/node": "^26.6.5",
 		"@types/react": "^19.3.0",
 		"next": "16.4.2",
@@ -73,11 +73,8 @@
 		"tsdown": "^0.23.1",
 		"typescript": "^7.0.2"
 	},
-	"overrides": {
-		"@prismicio/client": "$@prismicio/client"
-	},
 	"peerDependencies": {
-		"@prismicio/client": "^7",
+		"@prismicio/client": "^7.23.0",
 		"next": "^13.4.5 || ^14 || ^15 || ^16",
 		"react": "^18 || ^19"
 	},
