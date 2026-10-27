@@ -10,7 +10,6 @@ test("adds the Prismic toolbar script", async ({ appPage, pageDoc, repo }) => {
 	await expect(appPage.toolbarScript).toHaveCount(1)
 	expect(await appPage.getToolbarScriptParam("repo")).toBe(repo.domain)
 	expect(await appPage.getToolbarScriptParam("v")).toBe("5")
-	await expect(appPage.toolbarScript).toHaveAttribute("data-preview-url", "/api/preview")
 })
 
 test("stores the preview session and clears it on exit", async ({

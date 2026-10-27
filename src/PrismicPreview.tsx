@@ -40,7 +40,7 @@ export type PrismicPreviewProps = {
  * rendered on every page.
  */
 export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
-	const { repositoryName, updatePreviewURL = "/api/preview", children, ...otherProps } = props
+	const { repositoryName, children, ...otherProps } = props
 
 	// Need this to avoid the following Next.js build-time error:
 	// You're importing a component that needs next/headers. That only works
@@ -56,10 +56,9 @@ export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
 			<PrismicPreviewClient
 				repositoryName={repositoryName}
 				isDraftMode={isDraftMode}
-				updatePreviewURL={updatePreviewURL}
 				{...otherProps}
 			/>
-			<ResolvedScript src={toolbarSrc} strategy="lazyOnload" data-preview-url={updatePreviewURL} />
+			<ResolvedScript src={toolbarSrc} strategy="lazyOnload" />
 		</>
 	)
 }

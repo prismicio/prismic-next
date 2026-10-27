@@ -127,11 +127,7 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 	return (
 		<>
 			{children}
-			<Script
-				src={toolbarSrc}
-				strategy="lazyOnload"
-				data-preview-url={router.basePath + updatePreviewURL}
-			/>
+			<Script src={toolbarSrc} strategy="lazyOnload" />
 		</>
 	)
 }
