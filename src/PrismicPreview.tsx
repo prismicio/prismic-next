@@ -47,7 +47,7 @@ export const PrismicPreview: FC<PrismicPreviewProps> = async (props) => {
 	// in a Server Component which is not supported in the pages/ directory.
 	const { draftMode } = await import("next/headers")
 
-	const toolbarSrc = getToolbarSrc(repositoryName)
+	const toolbarSrc = getToolbarSrc(repositoryName, { version: 5 })
 	const isDraftMode = (await draftMode()).isEnabled
 
 	return (
