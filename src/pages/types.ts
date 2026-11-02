@@ -24,7 +24,7 @@ export type NextApiRequestLike = {
 export type NextApiResponseLike = {
 	redirect(url: string): NextApiResponseLike
 	clearPreviewData(): NextApiResponseLike
-	getHeader(name: string): number | string | string[] | undefined
+	appendHeader(name: string, value: string | string[]): NextApiResponseLike
 	setHeader(name: string, value: string | string[]): NextApiResponseLike
 	// oxlint-disable-next-line no-explicit-any explicit-module-boundary-types
 	json(body: any): void

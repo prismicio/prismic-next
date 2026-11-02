@@ -1,7 +1,6 @@
 import { cookie as prismicCookie, type LinkResolverFunction, type Client } from "@prismicio/client"
 
 import { getSafePath } from "../lib/getSafePath"
-import { appendCookie } from "./appendCookie"
 import type { NextApiRequestLike, NextApiResponseLike } from "./types"
 
 export type RedirectToPreviewURLConfig = {
@@ -59,11 +58,11 @@ export async function redirectToPreviewURL(config: RedirectToPreviewURLConfig): 
 	// The toolbar's v5 flow follows this session from the ref the page shows. Without that ref, its
 	// first ping would start the preview again, racing an early exit.
 	const session = req.query.session?.toString()
-	if (session) {
-		appendCookie(res, `${prismicCookie.previewSession}=${encodeURIComponent(session)}`)
-		if (previewToken) {
-			appendCookie(res, `${prismicCookie.preview}=${encodeURIComponent(previewToken)}`)
-		}
+	if (session && previewToken) {
+		res.appendHeader("Set-Cookie", [
+			`${prismicCookie.previewSession}=${encodeURIComponent(session)}; Path=/; SameSite=None; Secure`,
+			`${prismicCookie.preview}=${encodeURIComponent(previewToken)}; Path=/; SameSite=None; Secure`,
+		])
 	}
 
 	// Share links return to the page they were opened from.
