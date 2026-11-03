@@ -2,7 +2,7 @@
 	"name": "cache-components",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --port=4323 --hostname=127.0.0.1 --turbopack",
+		"dev": "next dev --port=4323 --hostname=127.0.0.1",
 		"build": "next build",
 		"start": "next start --port=4323 --hostname=127.0.0.1"
 	},
