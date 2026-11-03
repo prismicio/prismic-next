@@ -35,8 +35,8 @@
 			"require": "./dist/index.cjs"
 		},
 		"./pages": {
-			"import": "./dist/pages.js",
-			"require": "./dist/pages.cjs"
+			"import": "./dist/router-pages.js",
+			"require": "./dist/router-pages.cjs"
 		},
 		"./package.json": "./package.json"
 	},
