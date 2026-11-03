@@ -3,8 +3,8 @@ import { defineConfig } from "tsdown"
 export default defineConfig({
 	entry: {
 		index: "./src/index.ts",
-		// Next.js 13 and 14 compile any path matching `next/dist/pages` as their own
-		// code, which breaks this package's ESM build, so the output can't live there.
+		// Next.js 13 and 14 compile any path matching `next/dist/pages` as their own code,
+		// which breaks the ESM build. `unbundle` mirrors `src`, so neither can be `pages`.
 		"router-pages": "./src/router-pages/index.ts",
 	},
 	format: ["esm", "cjs"],
