@@ -24,7 +24,10 @@ for (const name of ["app-router", "pages-router", "next-15", "next-14"]) {
 				run("npm", ["pack", "--silent", "--ignore-scripts", "--pack-destination", dir], ROOT)
 				const [tarball] = readdirSync(dir)
 				const flags = ["--silent", "--no-save", "--no-package-lock", "--no-audit", "--no-fund"]
-				run("npm", ["install", ...flags, join(dir, tarball)], project)
+				// Next 14 is end-of-life and has unpatched advisories. Installing it here instead of
+				// declaring it in the project's package.json keeps it out of Dependabot alerts.
+				const deps = name === "next-14" ? ["next@14", "react@18", "react-dom@18"] : []
+				run("npm", ["install", ...flags, join(dir, tarball), ...deps], project)
 			}
 			// The build cache treats `node_modules` as unchanged while the package version is the same.
 			rmSync(join(project, ".next/cache"), { recursive: true, force: true })
