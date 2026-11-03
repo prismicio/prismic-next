@@ -2,9 +2,9 @@
 	"name": "pages-router",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --port=4322 --turbopack",
+		"dev": "next dev --port=4322 --hostname=127.0.0.1",
 		"build": "next build",
-		"start": "next start --port=4322"
+		"start": "next start --port=4322 --hostname=127.0.0.1"
 	},
 	"dependencies": {
 		"@prismicio/client": "^7.22.3",
