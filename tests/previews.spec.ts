@@ -8,8 +8,37 @@ test.describe.configure({ mode: "serial" })
 test("adds the Prismic toolbar script", async ({ appPage, pageDoc, repo }) => {
 	await appPage.goToDocument(pageDoc)
 	await expect(appPage.toolbarScript).toHaveCount(1)
-	const param = await appPage.getToolbarScriptParam("repo")
-	expect(param).toBe(repo.domain)
+	expect(await appPage.getToolbarScriptParam("repo")).toBe(repo.domain)
+	expect(await appPage.getToolbarScriptParam("v")).toBe("5")
+})
+
+test("stores the preview session and clears it on exit", async ({
+	appPage,
+	page,
+	repo,
+	pageDoc,
+	baseURL,
+}) => {
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const { session_id } = await appPage.preview(updatedDocument)
+	await expect(appPage.payload).toContainText("foo")
+	// Prismic sets a cookie with the same name on the repository host.
+	const cookies = await page.context().cookies(baseURL)
+	expect(cookies).toContainEqual(
+		expect.objectContaining({
+			name: cookie.previewSession,
+			value: session_id,
+			path: "/",
+			httpOnly: false,
+			secure: true,
+			sameSite: "None",
+		}),
+	)
+
+	await page.goto("/api/exit-preview")
+	const names = (await page.context().cookies(baseURL)).map((c) => c.name)
+	expect(names).not.toContain(cookie.previewSession)
+	expect(names).not.toContain(cookie.preview)
 })
 
 test("supports previews on published documents", async ({ appPage, repo, pageDoc }) => {
@@ -67,35 +96,46 @@ test("clears the preview cookie on exit", async ({ appPage, page, repo, pageDoc 
 	expect((await page.context().cookies()).map((c) => c.name)).not.toContain(cookie.preview)
 })
 
-// We can't get a real shareable link because we aren't authenticated with a
-// SESSION cookie. Instead, we can simulate what the link does by starting a new
-// preview session and directly navigating to the document. The app's preview
-// resolver URL is bypassed.
-test("supports sharable links", async ({ appPage, repo, pageDoc }) => {
+test("supports sharable links", async ({ appPage, page, repo, pageDoc, baseURL }) => {
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	await repo.createPreviewSession(updatedDocument)
-	await appPage.goToDocument(pageDoc)
+	const path = "/published?query=1#hash"
+	await appPage.share(updatedDocument, path)
+	await expect(page).toHaveURL((url) => url.href.endsWith(path))
 	await expect(appPage.payload).toContainText("foo")
+	const names = (await page.context().cookies(baseURL)).map((c) => c.name)
+	expect(names).toEqual(expect.arrayContaining([cookie.preview, cookie.previewSession]))
+})
+
+test("redirects sharable links only to paths on the website", async ({ page, repo, pageDoc }) => {
+	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
+	const { preview_url, session_id } = await repo.createPreviewSession(updatedDocument)
+	const token = new URL(preview_url).searchParams.get("token")!
+	const paths = [
+		"//evil.com",
+		"/\\evil.com",
+		"https://evil.com",
+		"/a/..//evil.com",
+		"/%2e//evil.com",
+		"/\t/[",
+	]
+	for (const path of paths) {
+		const params = new URLSearchParams({ token, session: session_id, path })
+		const res = await page.request.get(`/api/preview?${params}`, { maxRedirects: 0 })
+		expect(res.headers().location, path).toBe("/")
+	}
 })
 
 test("supports sharable links to unpublished documents", async ({
-	page,
+	appPage,
 	repo,
 	unpublishedPageDoc,
-}, testInfo) => {
-	test.skip(testInfo.project.name !== "app-router", "App Router only")
-
+}) => {
 	const updatedDocument = await repo.createDocumentDraft(
 		unpublishedPageDoc,
 		content({ payload: "foo" }),
 	)
-	const previewSession = await repo.createPreviewSession(updatedDocument)
-	const ref = new URL(previewSession.preview_url).searchParams.get("token")!
-	await page
-		.context()
-		.addCookies([{ name: cookie.preview, value: ref, domain: "localhost", path: "/" }])
-	await page.goto("/unpublished")
-	await expect(page.getByTestId("payload")).toContainText("foo")
+	await appPage.share(updatedDocument, "/unpublished")
+	await expect(appPage.payload).toContainText("foo")
 })
 
 test("restarts a preview that ended in another tab", async ({ embed, repo, pageDoc }, testInfo) => {
@@ -132,6 +172,8 @@ test("starts a preview in place on a published page", async ({
 }, testInfo) => {
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
 
+	// The toolbar's v5 ends previews without a session.
+	await page.route("**/prismic.js?*", (route) => route.abort())
 	await appPage.goToDocument(pageDoc)
 	await expect(appPage.payload).toHaveText("published")
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
@@ -156,8 +198,7 @@ test("starts a preview in place on a published page", async ({
 
 test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	await repo.createPreviewSession(updatedDocument)
-	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints")
+	await appPage.share(updatedDocument, "/with-custom-preview-endpoints/published")
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 })
 	await repo.createDocumentDraft(updatedDocument, content({ payload: "bar" }))
 	await expect(appPage.payload).toContainText("bar")
@@ -165,8 +206,7 @@ test("supports custom update endpoint", async ({ appPage, repo, pageDoc }) => {
 
 test("supports custom exit endpoint", async ({ appPage, repo, pageDoc }) => {
 	const updatedDocument = await repo.createDocumentDraft(pageDoc, content({ payload: "foo" }))
-	await repo.createPreviewSession(updatedDocument)
-	await appPage.goToDocument(updatedDocument, "/with-custom-preview-endpoints")
+	await appPage.share(updatedDocument, "/with-custom-preview-endpoints/published")
 	await expect(appPage.payload).toContainText("foo", { timeout: 30000 })
 	await appPage.exitPreview()
 	await expect(appPage.payload).not.toContainText("foo")
@@ -211,6 +251,8 @@ test("reads any preview ref but ignores the toolbar's inactive cookie", async ({
 }, testInfo) => {
 	test.skip(testInfo.project.name !== "app-router", "App Router only")
 
+	// The toolbar's v5 ends previews without a session.
+	await page.route("**/prismic.js?*", (route) => route.abort())
 	// The master ref stands in for a ref in any format.
 	await page.goto(`/api/preview?token=${masterRef}&documentId=${pageDoc.id}`)
 	const previewRef = page.getByTestId("preview-ref")

@@ -46,7 +46,7 @@ export const PrismicPreview: FC<PrismicPreviewProps> = (props) => {
 
 	const router = useRouter()
 
-	const toolbarSrc = getToolbarSrc(repositoryName)
+	const toolbarSrc = getToolbarSrc(repositoryName, { version: 5 })
 
 	useEffect(() => {
 		const controller = new AbortController()
