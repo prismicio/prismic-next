@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.4.0](https://github.com/prismicio/prismic-next/compare/v2.3.4...v2.4.0) (2026-11-04)
+
+
+### Features
+
+* support Prismic toolbar v5 previews ([#175](https://github.com/prismicio/prismic-next/issues/175)) ([e2c99b3](https://github.com/prismicio/prismic-next/commit/e2c99b33e52fab91e928cfaa89f3cbe365fcc7b9))
+
 ## [2.3.4](https://github.com/prismicio/prismic-next/compare/v2.3.3...v2.3.4) (2026-10-16)
 
 
