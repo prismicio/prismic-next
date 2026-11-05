@@ -2,12 +2,12 @@
 	"name": "cache-components",
 	"private": true,
 	"scripts": {
-		"dev": "next dev --port=4323 --turbopack",
+		"dev": "next dev --port=4323 --hostname=127.0.0.1",
 		"build": "next build",
-		"start": "next start --port=4323"
+		"start": "next start --port=4323 --hostname=127.0.0.1"
 	},
 	"dependencies": {
-		"@prismicio/client": "^7.22.3",
+		"@prismicio/client": "^7.23.0",
 		"@prismicio/next": "*",
 		"next": "16.4.2",
 		"react": "19.3.1",

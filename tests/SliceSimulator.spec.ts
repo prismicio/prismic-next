@@ -25,7 +25,7 @@ for (const { name, port } of PROJECTS) {
 		let server: ChildProcess
 
 		test.beforeAll(async () => {
-			server = spawn("npx", ["next", "start", "--port", String(port)], {
+			server = spawn("npx", ["next", "start", "--port", String(port), "--hostname", "127.0.0.1"], {
 				cwd: join(ROOT, "e2e-projects", name),
 				detached: true,
 				stdio: ["ignore", "ignore", "inherit"],
