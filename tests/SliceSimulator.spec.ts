@@ -14,7 +14,6 @@ const EDITOR_URL = "https://slice-simulator-e2e.prismic.io"
 const PROJECTS = [
 	{ name: "app-router", port: 4324 }, // Next.js 16
 	{ name: "next-15", port: 4325 },
-	{ name: "next-14", port: 4326 },
 ]
 
 // Lets the public editor origin embed the simulator from localhost.
