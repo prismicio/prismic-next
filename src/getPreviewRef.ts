@@ -15,7 +15,6 @@ import { cookie as prismicCookie } from "@prismicio/client"
  * 	```
  *
  * @returns The active preview ref, or `undefined` if no preview session is active.
- * @experimental
  */
 export async function getPreviewRef(): Promise<string | undefined> {
 	// Need this to avoid the following Next.js build-time error:
