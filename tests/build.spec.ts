@@ -12,7 +12,7 @@ function run(file: string, args: string[], cwd: string) {
 	execFileSync(file, args, { cwd, stdio: ["ignore", "ignore", "inherit"] })
 }
 
-for (const name of ["app-router", "pages-router", "next-15"]) {
+for (const name of ["app-router", "pages-router", "next-15", "cache-components"]) {
 	test.describe.serial(name, () => {
 		const project = join(ROOT, "e2e-projects", name)
 
