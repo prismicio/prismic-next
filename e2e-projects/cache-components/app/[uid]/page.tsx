@@ -11,11 +11,8 @@ async function fetchPage(uid: string, ref?: string) {
 		.getByUID("page", uid, { ref })
 		.catch(() => notFound())
 	cacheTagPrismicPages([page])
-	if (ref) {
-		cacheLife("minutes")
-	} else {
-		cacheLife("max")
-	}
+	if (ref) cacheLife("minutes")
+	else cacheLife("max")
 	return page
 }
 
