@@ -12,7 +12,6 @@ import { getPrismicCacheTags } from "./getPrismicCacheTags"
  * revalidated when any of its nested documents change.
  *
  * @param pages - A set of Prismic pages used to tag the cache entry.
- * @experimental
  *
  * @see {@link https://nextjs.org/docs/app/api-reference/functions/cacheTag}
  */
