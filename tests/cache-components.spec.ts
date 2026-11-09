@@ -1,6 +1,10 @@
 import { test, expect } from "./infra"
 import { content } from "./infra/content/page"
 
+// The `repo` fixture logs in to Prismic, and traces record request bodies,
+// which include the account's credentials.
+test.use({ trace: "off" })
+
 test("revalidates cached pages with revalidatePrismicPages", async ({
 	appPage,
 	page,
