@@ -24,11 +24,6 @@ export { getSlices } from "./getSlices"
 
 export { imgixLoader } from "./imgixLoader"
 
-export type { CreateClientConfig } from "./types"
-
-export { createLocaleRedirect } from "./createLocaleRedirect"
-export type { CreateLocaleRedirectConfig } from "./createLocaleRedirect"
-
 export { getPrismicCacheTags } from "./getPrismicCacheTags"
 
 export { cacheTagPrismicPages } from "./cacheTagPrismicPages"

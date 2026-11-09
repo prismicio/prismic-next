@@ -103,7 +103,18 @@ class AppPage {
 
 	async preview(document: CoreAPIDocument) {
 		const previewSession = await this.repository.createPreviewSession(document)
-		await this.page.goto(previewSession.preview_url)
+		// The editor adds the session for websites that opt into the toolbar's v5.
+		await this.page.goto(`${previewSession.preview_url}&session=${previewSession.session_id}`)
+		return previewSession
+	}
+
+	/** Opens a share link, which goes through the app's preview route to `path`. */
+	async share(document: CoreAPIDocument, path: string) {
+		const { preview_url, session_id } = await this.repository.createPreviewSession(document)
+		const token = new URL(preview_url).searchParams.get("token")!
+		await this.page.goto(
+			`/api/preview?${new URLSearchParams({ token, session: session_id, path })}`,
+		)
 	}
 
 	async waitForToolbar() {

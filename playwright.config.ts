@@ -36,6 +36,8 @@ export default defineConfig({
 		{
 			name: "build",
 			testMatch: "build.spec.ts",
+			// The cache-components project prerenders pages from the e2e repository.
+			dependencies: ["setup"],
 			timeout: 5 * 60_000,
 		},
 		{

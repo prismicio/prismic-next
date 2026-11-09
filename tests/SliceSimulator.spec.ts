@@ -14,7 +14,6 @@ const EDITOR_URL = "https://slice-simulator-e2e.prismic.io"
 const PROJECTS = [
 	{ name: "app-router", port: 4324 }, // Next.js 16
 	{ name: "next-15", port: 4325 },
-	{ name: "next-14", port: 4326 },
 ]
 
 // Lets the public editor origin embed the simulator from localhost.
@@ -26,7 +25,7 @@ for (const { name, port } of PROJECTS) {
 		let server: ChildProcess
 
 		test.beforeAll(async () => {
-			server = spawn("npx", ["next", "start", "--port", String(port)], {
+			server = spawn("npx", ["next", "start", "--port", String(port), "--hostname", "127.0.0.1"], {
 				cwd: join(ROOT, "e2e-projects", name),
 				detached: true,
 				stdio: ["ignore", "ignore", "inherit"],

@@ -25,6 +25,3 @@ export { setPreviewData } from "./setPreviewData"
 export type { SetPreviewDataConfig } from "./setPreviewData"
 
 export type { CreateClientConfig } from "./types"
-
-export { createLocaleRedirect } from "../createLocaleRedirect"
-export type { CreateLocaleRedirectConfig } from "../createLocaleRedirect"

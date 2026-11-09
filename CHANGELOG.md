@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/prismicio/prismic-next/compare/v2.4.0...v3.0.0) (2026-11-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* `@prismicio/next` requires Next.js 15 or later.
+
+### Features
+
+* drop support for Next.js 13 and 14 ([#179](https://github.com/prismicio/prismic-next/issues/179)) ([5bdcfa1](https://github.com/prismicio/prismic-next/commit/5bdcfa1a0dbba2ea0d6227e2c2c6792a0209e73e))
+* mark Cache Components helpers as stable ([#181](https://github.com/prismicio/prismic-next/issues/181)) ([62fb1c0](https://github.com/prismicio/prismic-next/commit/62fb1c0c2b10252f01a3b9cee4729ab7f17cc256))
+
+## [2.4.0](https://github.com/prismicio/prismic-next/compare/v2.3.4...v2.4.0) (2026-11-04)
+
+
+### Features
+
+* support Prismic toolbar v5 previews ([#175](https://github.com/prismicio/prismic-next/issues/175)) ([e2c99b3](https://github.com/prismicio/prismic-next/commit/e2c99b33e52fab91e928cfaa89f3cbe365fcc7b9))
+
 ## [2.3.4](https://github.com/prismicio/prismic-next/compare/v2.3.3...v2.3.4) (2026-10-16)
 
 
