@@ -108,7 +108,6 @@ export class Repo {
 		const url = new URL("previews/session/draft", this.urls.core)
 		url.searchParams.set("previewId", config.id)
 		url.searchParams.set("documentId", stableDocument.id)
-		url.searchParams.set("versionId", stableDocument.versions[0].version_id)
 		const res = await this.#auth.get(url.toString())
 		return await res.json()
 	}
@@ -158,6 +157,7 @@ export class Repo {
 			tags: [],
 		}
 		const res = await this.#auth.put(url.toString(), { data })
+		assert(res.ok(), `Could not save a draft of document ${document.id} (${res.status()}).`)
 		return await res.json()
 	}
 
