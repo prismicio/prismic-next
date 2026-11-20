@@ -107,8 +107,6 @@ export class Repo {
 		assert(config, "At least one preview must be configured.")
 		const url = new URL("previews/session/draft", this.urls.core)
 		url.searchParams.set("previewId", config.id)
-		// The editor sends `versionId` only for archived versions. Without it, the
-		// session follows later saves of the draft.
 		url.searchParams.set("documentId", stableDocument.id)
 		const res = await this.#auth.get(url.toString())
 		return await res.json()
