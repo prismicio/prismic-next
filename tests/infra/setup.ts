@@ -92,7 +92,16 @@ setup("probe toolbar CDN edges", async () => {
 		const { [name]: _, ...rest } = chrome
 		variants.push([`chrome-${name}`, rest])
 	}
-	variants.push(["origin+br only", { origin: chrome.origin, "accept-encoding": "br" }])
+	const min = { origin: chrome.origin, "accept-encoding": "br" }
+	variants.push(["origin+br", min])
+	for (const priority of ["u=0", "u=1", "u=3", "u=5", "u=1, i", "i"])
+		variants.push([`origin+br+priority:${priority}`, { ...min, priority }])
+	variants.push(["br+priority:u=1 (no origin)", { "accept-encoding": "br", priority: "u=1" }])
+	variants.push([
+		"origin+gzip+priority:u=1",
+		{ ...min, "accept-encoding": "gzip", priority: "u=1" },
+	])
+	variants.push(["origin+priority:u=1 (no ae)", { origin: chrome.origin, priority: "u=1" }])
 	const log = (ip: string, proto: string, name: string, h: Record<string, unknown>) =>
 		console.info(
 			"[diag] setup edge2",
@@ -122,7 +131,13 @@ setup("probe toolbar CDN edges", async () => {
 			log(ip, "h1", name, h1)
 			const h2 = await new Promise<Record<string, unknown>>((resolve) => {
 				const session = http2.connect("https://static.cdn.prismic.io", {
-					lookup: (_h, _o, cb) => cb(null, ip, 4),
+					lookup: (_h, o, cb) =>
+						(o as { all?: boolean }).all
+							? (cb as unknown as (e: null, a: { address: string; family: number }[]) => void)(
+									null,
+									[{ address: ip, family: 4 }],
+								)
+							: cb(null, ip, 4),
 				})
 				session.on("error", (e) => resolve({ error: String(e) }))
 				const req = session.request({ ":path": path, ...headers })
