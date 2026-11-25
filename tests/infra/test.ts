@@ -125,10 +125,55 @@ export const test = base.extend<Fixtures>({
 				}, url)
 				.then((out) => console.info(tag, "probe", JSON.stringify(out)))
 				.catch((e) => console.info(tag, "probe failed", String(e)))
-			import("node:dns/promises")
-				.then((dns) => dns.lookup("static.cdn.prismic.io", { all: true }))
-				.then((a) => console.info(tag, "dns", JSON.stringify(a)))
-				.catch((e) => console.info(tag, "dns failed", String(e)))
+			void (async () => {
+				const dns = await import("node:dns/promises")
+				const https = await import("node:https")
+				const ips = (await dns.lookup("static.cdn.prismic.io", { all: true, family: 4 })).map(
+					(a) => a.address,
+				)
+				const origins = [
+					"",
+					"http://localhost:4321",
+					"http://localhost:4322",
+					"https://example.com",
+				]
+				const encodings = ["", "gzip", "br", "gzip, deflate, br, zstd"]
+				for (const ip of ips)
+					for (const origin of origins)
+						for (const encoding of encodings) {
+							const h = await new Promise<Record<string, unknown>>((resolve) => {
+								const req = https.get(
+									url,
+									{
+										headers: {
+											...(origin && { origin }),
+											...(encoding && { "accept-encoding": encoding }),
+										},
+										lookup: (_h, _o, cb) => cb(null, [{ address: ip, family: 4 }]),
+									},
+									(res) => {
+										res.resume()
+										resolve({ status: res.statusCode, ...res.headers })
+									},
+								)
+								req.on("error", (e) => resolve({ error: String(e) }))
+							})
+							console.info(
+								tag,
+								"edge",
+								ip,
+								`origin=${origin || "none"}`,
+								`ae=${encoding || "none"}`,
+								h.status ?? h.error,
+								`acao=${h["access-control-allow-origin"]}`,
+								`ce=${h["content-encoding"]}`,
+								`age=${h.age}`,
+								`xcache=${h["x-cache"]}`,
+								`pop=${h["x-amz-cf-pop"]}`,
+								`vary=${h.vary}`,
+							)
+						}
+			})().catch((e) => console.info(tag, "edge failed", String(e)))
 		})
 		const appPage = new AppPage(page, repo)
 		await use(appPage)
