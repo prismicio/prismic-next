@@ -72,7 +72,32 @@ export const test = base.extend<Fixtures>({
 			return page.frameLocator("iframe")
 		})
 	},
-	appPage: async ({ page, repo }, use) => {
+	appPage: async ({ page, repo }, use, testInfo) => {
+		const tag = `[diag] ${testInfo.project.name} › ${testInfo.title} #${testInfo.retry}`
+		page.on("request", (req) => {
+			if (req.url().includes("static.cdn.prismic.io"))
+				console.info(tag, "request", req.url(), JSON.stringify(req.headers()))
+		})
+		page.on("response", async (res) => {
+			if (!res.url().includes("static.cdn.prismic.io")) return
+			const addr = await res.serverAddr().catch(() => null)
+			console.log(
+				tag,
+				"response",
+				res.status(),
+				res.url(),
+				JSON.stringify(addr),
+				res.fromServiceWorker(),
+				JSON.stringify(await res.allHeaders()),
+			)
+		})
+		page.on("requestfailed", (req) => {
+			console.info(tag, "requestfailed", req.url(), req.failure()?.errorText)
+		})
+		page.on("console", (msg) => {
+			if (msg.type() === "error" || msg.type() === "warning")
+				console.info(tag, "console", msg.type(), msg.text().replace(/\s+/g, " ").slice(0, 400))
+		})
 		const appPage = new AppPage(page, repo)
 		await use(appPage)
 	},
