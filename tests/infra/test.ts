@@ -91,12 +91,44 @@ export const test = base.extend<Fixtures>({
 				JSON.stringify(await res.allHeaders()),
 			)
 		})
+		page.on("framenavigated", (frame) => {
+			if (frame === page.mainFrame()) console.info(tag, "navigated", frame.url())
+		})
 		page.on("requestfailed", (req) => {
 			console.info(tag, "requestfailed", req.url(), req.failure()?.errorText)
 		})
 		page.on("console", (msg) => {
 			if (msg.type() === "error" || msg.type() === "warning")
 				console.info(tag, "console", msg.type(), msg.text().replace(/\s+/g, " ").slice(0, 400))
+			if (!msg.text().includes("Could not load the preview")) return
+			const url = "https://static.cdn.prismic.io/prismic-toolbar/79d8e5e5/v5.js"
+			page
+				.evaluate(async (url) => {
+					const out: string[] = [location.href]
+					for (const init of [{ mode: "cors" }, { mode: "no-cors" }] as RequestInit[]) {
+						try {
+							const r = await fetch(url, { ...init, cache: "no-store" })
+							out.push(
+								`${init.mode} ${r.status} ${r.type} acao=${r.headers.get("access-control-allow-origin")}`,
+							)
+						} catch (e) {
+							out.push(`${init.mode} threw ${String(e)}`)
+						}
+					}
+					try {
+						await import(/* webpackIgnore: true */ url + "?retry=" + Date.now())
+						out.push("re-import ok")
+					} catch (e) {
+						out.push(`re-import threw ${String(e)}`)
+					}
+					return out
+				}, url)
+				.then((out) => console.info(tag, "probe", JSON.stringify(out)))
+				.catch((e) => console.info(tag, "probe failed", String(e)))
+			import("node:dns/promises")
+				.then((dns) => dns.lookup("static.cdn.prismic.io", { all: true }))
+				.then((a) => console.info(tag, "dns", JSON.stringify(a)))
+				.catch((e) => console.info(tag, "dns failed", String(e)))
 		})
 		const appPage = new AppPage(page, repo)
 		await use(appPage)
