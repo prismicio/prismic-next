@@ -63,3 +63,49 @@ setup("create repo", async ({ page, prismic }) => {
 	})
 	await repository.publishDocument(imageDocument.id)
 })
+
+setup("probe toolbar CDN edges", async () => {
+	const dns = await import("node:dns/promises")
+	const https = await import("node:https")
+	const url = "https://static.cdn.prismic.io/prismic-toolbar/79d8e5e5/v5.js"
+	const ips = (await dns.lookup("static.cdn.prismic.io", { all: true, family: 4 })).map(
+		(a) => a.address,
+	)
+	const origins = ["", "http://localhost:4321", "http://localhost:4322", "https://example.com"]
+	const encodings = ["", "gzip", "br", "gzip, deflate, br, zstd"]
+	for (const ip of ips)
+		for (const origin of origins)
+			for (const encoding of encodings) {
+				const h = await new Promise<Record<string, unknown>>((resolve) => {
+					const req = https.get(
+						url,
+						{
+							headers: {
+								...(origin && { origin }),
+								...(encoding && { "accept-encoding": encoding }),
+							},
+							lookup: (_h, _o, cb) => cb(null, [{ address: ip, family: 4 }]),
+						},
+						(res) => {
+							res.resume()
+							resolve({ status: res.statusCode, ...res.headers })
+						},
+					)
+					req.on("error", (e) => resolve({ error: String(e) }))
+				})
+				console.info(
+					"[diag] setup edge",
+					ip,
+					`origin=${origin || "none"}`,
+					`ae=${encoding || "none"}`,
+					h.status ?? h.error,
+					`acao=${h["access-control-allow-origin"]}`,
+					`ce=${h["content-encoding"]}`,
+					`age=${h.age}`,
+					`xcache=${h["x-cache"]}`,
+					`pop=${h["x-amz-cf-pop"]}`,
+					`vary=${h.vary}`,
+					`via=${h.via}`,
+				)
+			}
+})
